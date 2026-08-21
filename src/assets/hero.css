@@ -1,0 +1,25 @@
+.intro-text {
+  width: min(100%, 980px);
+  max-width: none;
+}
+
+.intro h1 {
+  white-space: normal;
+}
+
+.current-role {
+  display: inline-flex;
+  align-items: center;
+  margin: 20px 0 0;
+  padding: 9px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font: 600 0.82rem 'DM Sans', Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.intro-text > p:not(.overline):not(.current-role) {
+  white-space: pre-line;
+}

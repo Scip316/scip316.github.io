@@ -1,0 +1,44 @@
+.last-updated {
+  align-self: flex-end;
+  color: #c7c7c2;
+  font: 0.62rem 'DM Sans', Arial, sans-serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.brand {
+  position: relative;
+  overflow: hidden;
+  padding: 8px 10px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-shadow: 1px 0 0 #ffffff70;
+}
+
+.brand::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -35%;
+  width: 20%;
+  content: '';
+  background: linear-gradient(90deg, transparent, #ffffff80, transparent);
+  transform: skewX(-18deg);
+  animation: brand-scan 4s ease-in-out infinite;
+}
+
+@keyframes brand-scan {
+  0%, 58% { left: -35%; }
+  82%, 100% { left: 115%; }
+}
+
+@media (max-width: 700px) {
+  .last-updated {
+    display: block;
+    margin-top: 26px;
+  }
+}
