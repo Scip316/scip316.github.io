@@ -1,4 +1,4 @@
-export const profile = {
+export const profile_declaration = {
   name: 'Darrel Lim',
   role: 'Current role: NSF (National Service Full-Time)',
   lastUpdated: '22 Aug 2026',

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { certifications, experience, profile, projects, socials } from './data/portfolio'
+import {
+  certifications,
+  experience,
+  profile_declaration,
+  projects,
+  socials,
+} from './data/portfolio'
 type Section = 'work' | 'projects' | 'credentials'
 const openSection = ref<Section | null>(null)
 const menuOpen = ref(false)
@@ -41,8 +47,8 @@ const closeMenu = () => (menuOpen.value = false)
     <section id="intro" class="intro">
       <div class="intro-text">
         <h1>Greetings, I am Darrel.</h1>
-        <p class="current-role">{{ profile.role }}</p>
-        <p>{{ profile.intro }}</p>
+        <p class="current-role">{{ profile_declaration.role }}</p>
+        <p>{{ profile_declaration.intro }}</p>
       </div>
     </section>
     <section id="work-experience" class="content-section">
@@ -130,7 +136,9 @@ const closeMenu = () => (menuOpen.value = false)
     <div>
       <p class="overline">Contact me</p>
       <h2>Let's build something useful.</h2>
-      <a class="email" :href="`mailto:${profile.email}`">{{ profile.email }}</a>
+      <a class="email" :href="`mailto:${profile_declaration.email}`">{{
+        profile_declaration.email
+      }}</a>
     </div>
     <nav aria-label="Social links">
       <a
@@ -142,6 +150,8 @@ const closeMenu = () => (menuOpen.value = false)
         >{{ social.name }} ↗</a
       >
     </nav>
-    <time class="last-updated" datetime="2026-08-22">Last updated: {{ profile.lastUpdated }}</time>
+    <time class="last-updated" datetime="2026-08-22"
+      >Last updated: {{ profile_declaration.lastUpdated }}</time
+    >
   </footer>
 </template>
