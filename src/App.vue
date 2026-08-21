@@ -11,7 +11,10 @@ const closeMenu = () => (menuOpen.value = false)
 
 <template>
   <header class="site-header">
-    <a class="brand" href="#intro">SCIP</a>
+    <a class="brand" href="#intro" aria-label="SCIP — back to top"
+      ><span class="brand-symbol" aria-hidden="true">S</span
+      ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
+    >
     <nav class="desktop-nav" aria-label="Main navigation">
       <a href="#intro">Home</a><a href="#work-experience">Work Experience</a
       ><a href="#projects">Projects</a><a href="#certificates">Certificates</a

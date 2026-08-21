@@ -1,5 +1,5 @@
 export const profile = {
-  name: 'Darrel Dominic Lim',
+  name: 'Darrel Lim',
   role: 'Current role: NSF (National Service Full-Time)',
   lastUpdated: '22 Aug 2026',
   location: 'Singapore',
