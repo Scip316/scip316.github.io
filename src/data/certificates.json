@@ -29,6 +29,16 @@
       "description": "Completed foundational training in psychological first aid.",
       "headerPhotos": ["/certificates/psychological-first-aid-course.pdf"],
       "featured": false
+    },
+    {
+      "name": "St. Patrick's School Combined Leadership Training 2018",
+      "issuer": "MASTEREIGN ENRICHMENT GROUP",
+      "date": "2018-10",
+      "displayDate": "Oct 2018",
+      "type": "Course attendance",
+      "description": "Completed leadership training as part of becoming a student leader.",
+      "headerPhotos": ["/certificates/Combine Leadership Training.pdf"],
+      "featured": false
     }
   ]
 }

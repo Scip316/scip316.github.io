@@ -27,6 +27,16 @@
         "/achievements/lag-and-crash-3.0-certificate.pdf"
       ],
       "featured": true
+    },
+    {
+      "name": "Hackathon 2022 Safe in the Woods",
+      "issuer": "Sembawang GRC",
+      "date": "2022-09",
+      "displayDate": "Sep 2022",
+      "type": "Competition Participation",
+      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods competition.",
+      "headerPhotos": ["/achievements/Hackathon 2022 Safe in the Woods.pdf"],
+      "featured": false
     }
   ]
 }
