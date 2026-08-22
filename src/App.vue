@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import CertificateListView from './views/CertificateListView.vue'
 import ProjectListView from './views/ProjectListView.vue'
 import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
@@ -138,18 +138,63 @@ const moveAchievement = (direction: 'next' | 'previous') => {
   else previousAchievement()
   startAchievementRotation()
 }
+
+const updateCurrentPath = () => {
+  currentPath.value = window.location.pathname
+}
+
+const handleInternalNavigation = async (event: MouseEvent) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey ||
+    !(event.target instanceof Element)
+  ) {
+    return
+  }
+
+  const link = event.target.closest('a[href]') as HTMLAnchorElement | null
+  if (!link || link.target || link.hasAttribute('download')) return
+
+  const destination = new URL(link.href)
+  const isSameDocument =
+    destination.origin === window.location.origin &&
+    destination.pathname === window.location.pathname &&
+    destination.search === window.location.search
+
+  if (destination.origin !== window.location.origin || isSameDocument) return
+
+  event.preventDefault()
+  window.history.pushState({}, '', `${destination.pathname}${destination.search}${destination.hash}`)
+  updateCurrentPath()
+  menuOpen.value = false
+
+  await nextTick()
+  if (destination.hash) {
+    document.getElementById(decodeURIComponent(destination.hash.slice(1)))?.scrollIntoView()
+  } else {
+    window.scrollTo(0, 0)
+  }
+}
+
 onMounted(() => {
   startWorkRotation()
   startProjectRotation()
   startCertificateRotation()
   startAchievementRotation()
-  window.addEventListener('popstate', () => (currentPath.value = window.location.pathname))
+  window.addEventListener('popstate', updateCurrentPath)
+  document.addEventListener('click', handleInternalNavigation)
 })
 onUnmounted(() => {
   stopWorkRotation()
   stopProjectRotation()
   stopCertificateRotation()
   stopAchievementRotation()
+  window.removeEventListener('popstate', updateCurrentPath)
+  document.removeEventListener('click', handleInternalNavigation)
 })
 const closeMenu = () => (menuOpen.value = false)
 </script>
