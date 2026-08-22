@@ -8,6 +8,8 @@ import achievementData from './data/achievements.json'
 import certificateData from './data/certificates.json'
 import { profile_declaration, socials } from './data/portfolio'
 import projectData from './data/projects.json'
+import { primaryHeaderPhoto } from './utils/primaryHeaderPhoto'
+import { sortAlphabetically } from './utils/sortAlphabetically'
 import workExperienceData from './data/work-experience.json'
 import { sortByNewestDate } from './utils/sortByNewestDate'
 
@@ -15,12 +17,14 @@ const menuOpen = ref(false)
 const currentPath = ref(window.location.pathname)
 const achievements = sortByNewestDate(achievementData.achievements)
 const certifications = sortByNewestDate(certificateData.certifications)
-const projects = projectData.projects
+const projects = sortByNewestDate(projectData.projects)
 const detailSlug = computed(() => {
   const pathSegments = currentPath.value.split('/').filter(Boolean)
   return pathSegments[pathSegments.length - 1] ?? ''
 })
-const workExperiences = workExperienceData.experiences.filter((experience) => experience.featured)
+const workExperiences = sortByNewestDate(
+  workExperienceData.experiences.filter((experience) => experience.featured),
+)
 const featuredProjects = projects.filter((project) => project.featured)
 const featuredCertificates = certifications.filter((certificate) => certificate.featured)
 const featuredAchievements = achievements.filter((achievement) => achievement.featured)
@@ -30,6 +34,7 @@ const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
 const activeFeatureMediaIndices = ref<Record<string, number>>({})
 const featureMediaTouchStarts = new Map<string, number>()
+const featureMediaSwiped = new Set<string>()
 const displayedWorkIndex = computed(() => activeWorkIndex.value)
 let workCarouselTimer: number | undefined
 let projectCarouselTimer: number | undefined
@@ -75,10 +80,22 @@ const endFeatureMediaSwipe = (name: string, mediaCount: number, event: TouchEven
   const startPosition = featureMediaTouchStarts.get(name)
   const endPosition = event.changedTouches[0]?.clientX
   featureMediaTouchStarts.delete(name)
-  if (startPosition === undefined || endPosition === undefined || Math.abs(endPosition - startPosition) < 36)
+  if (
+    startPosition === undefined ||
+    endPosition === undefined ||
+    Math.abs(endPosition - startPosition) < 36
+  )
     return
 
+  featureMediaSwiped.add(name)
   changeFeatureMedia(name, mediaCount, endPosition < startPosition ? 'next' : 'previous')
+}
+const handleFeatureMediaClick = (name: string, event: MouseEvent) => {
+  if (!featureMediaSwiped.has(name)) return
+
+  featureMediaSwiped.delete(name)
+  event.preventDefault()
+  event.stopPropagation()
 }
 const startWorkRotation = () => {
   stopWorkRotation()
@@ -193,7 +210,11 @@ const handleInternalNavigation = async (event: MouseEvent) => {
   if (destination.origin !== window.location.origin || isSameDocument) return
 
   event.preventDefault()
-  window.history.pushState({}, '', `${destination.pathname}${destination.search}${destination.hash}`)
+  window.history.pushState(
+    {},
+    '',
+    `${destination.pathname}${destination.search}${destination.hash}`,
+  )
   updateCurrentPath()
   menuOpen.value = false
 
@@ -299,22 +320,81 @@ const closeMenu = () => (menuOpen.value = false)
                 :href="`/experience/${item.detailPageSlug}`"
               >
                 <div
+                  v-if="item.headerPhotos.length"
+                  class="work-card-image work-card-media"
+                  @touchstart.passive="startFeatureMediaSwipe(item.id, $event)"
+                  @touchend="endFeatureMediaSwipe(item.id, item.headerPhotos.length, $event)"
+                  @click="handleFeatureMediaClick(item.id, $event)"
+                >
+                  <div
+                    class="work-card-media-track"
+                    :style="{
+                      transform: `translateX(-${activeFeatureMediaIndex(item.id) * 100}%)`,
+                    }"
+                  >
+                    <div
+                      v-for="(media, mediaIndex) in item.headerPhotos"
+                      :key="media"
+                      class="work-card-media-slide"
+                    >
+                      <img :src="media" :alt="`${item.title} image ${mediaIndex + 1}`" />
+                    </div>
+                  </div>
+                  <div v-if="item.headerPhotos.length > 1" class="work-card-media-controls">
+                    <button
+                      type="button"
+                      aria-label="Previous work image"
+                      @click.stop.prevent="
+                        changeFeatureMedia(item.id, item.headerPhotos.length, 'previous')
+                      "
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Next work image"
+                      @click.stop.prevent="
+                        changeFeatureMedia(item.id, item.headerPhotos.length, 'next')
+                      "
+                    >
+                      →
+                    </button>
+                  </div>
+                  <div v-if="item.headerPhotos.length > 1" class="work-card-media-dots">
+                    <button
+                      v-for="(_, mediaIndex) in item.headerPhotos"
+                      :key="mediaIndex"
+                      type="button"
+                      :class="{
+                        'is-active-work-media': mediaIndex === activeFeatureMediaIndex(item.id),
+                      }"
+                      :aria-label="`Show work image ${mediaIndex + 1}`"
+                      @click.stop.prevent="selectFeatureMedia(item.id, mediaIndex)"
+                    ></button>
+                  </div>
+                </div>
+                <div
+                  v-else
                   class="work-card-image"
                   :style="{
-                    backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${item.headerPhoto})`,
+                    backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${primaryHeaderPhoto(item.headerPhotos)})`,
                   }"
-                >
-                  <span>{{ item.title }}</span>
-                </div>
+                ></div>
                 <div class="work-card-body">
                   <p class="card-label">{{ item.period }}</p>
                   <h3>{{ item.title }}</h3>
                   <p class="workplace">{{ item.workplace }}</p>
                   <p>{{ item.summary }}</p>
                   <ul>
-                    <li v-for="skill in item.skills" :key="skill">{{ skill }}</li>
+                    <li v-for="skill in sortAlphabetically(item.skills)" :key="skill">
+                      {{ skill }}
+                    </li>
                   </ul>
-                  <span class="work-card-link">View experience <b aria-hidden="true">↗</b></span>
+                  <span class="work-card-link"
+                    ><span class="work-card-link-label"
+                      >View experience <b aria-hidden="true">↗</b></span
+                    ></span
+                  >
                 </div>
               </a>
             </div>
@@ -402,7 +482,7 @@ const closeMenu = () => (menuOpen.value = false)
           <div class="showcase-section-heading">
             <div>
               <p class="overline">Credentials</p>
-              <h2>Credentials & highlights.</h2>
+              <h2>Credentials & Activities.</h2>
             </div>
             <div class="showcase-section-actions">
               <p>Milestones that I encounter and conqured</p>

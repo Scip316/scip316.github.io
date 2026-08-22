@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import WorkMediaGallery from '../components/WorkMediaGallery.vue'
 import workExperienceData from '../data/work-experience.json'
+import { sortByNewestDate } from '../utils/sortByNewestDate'
+
+const workExperiences = sortByNewestDate(workExperienceData.experiences)
 </script>
 
 <template>
@@ -16,7 +20,7 @@ import workExperienceData from '../data/work-experience.json'
   <main class="experience-page">
     <header class="experience-page-header">
       <a href="/" class="back-link">← Back to portfolio</a>
-      <p>Work history / {{ workExperienceData.experiences.length }} roles</p>
+      <p>Work history / {{ workExperiences.length }} roles</p>
     </header>
     <section class="experience-page-title">
       <p class="page-kicker">All work experience</p>
@@ -24,18 +28,15 @@ import workExperienceData from '../data/work-experience.json'
     </section>
     <section class="experience-grid" aria-label="Work experience">
       <a
-        v-for="item in workExperienceData.experiences"
+        v-for="item in workExperiences"
         :key="item.id"
         :href="`/experience/${item.detailPageSlug}`"
         class="experience-grid-card"
-        ><div
+        ><WorkMediaGallery
           class="experience-grid-image"
-          :style="{
-            backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${item.headerPhoto})`,
-          }"
-        >
-          <span>{{ item.title }}</span>
-        </div>
+          :photos="item.headerPhotos"
+          :title="item.title"
+        />
         <div class="experience-grid-content">
           <p class="page-kicker">{{ item.period }}</p>
           <h2>{{ item.title }}</h2>

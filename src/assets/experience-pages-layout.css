@@ -51,6 +51,102 @@
   font-weight: 600;
 }
 
+.experience-description {
+  max-width: none;
+}
+
+.experience-detail-content {
+  grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.55fr);
+  gap: clamp(36px, 4vw, 65px);
+}
+
+.experience-description p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.experience-description p + p {
+  margin-top: 24px;
+}
+
+.experience-description h2 {
+  margin: 42px 0 16px;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  letter-spacing: -0.035em;
+}
+
+.work-media-gallery {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #414141;
+  touch-action: pan-y;
+}
+
+.work-media-gallery-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.35s ease;
+}
+
+.work-media-gallery-slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.work-media-gallery-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-media-gallery-controls {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  left: 12px;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.work-media-gallery-controls button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ffffff8a;
+  background: #151515c9;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.work-media-gallery-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.work-media-gallery-dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff85;
+  cursor: pointer;
+}
+
+.work-media-gallery-dots button.is-active-work-media {
+  background: #fff;
+}
+
 @media (max-width: 760px) {
   .experience-page {
     width: 100%;

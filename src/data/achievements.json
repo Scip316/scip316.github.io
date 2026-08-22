@@ -6,7 +6,7 @@
       "date": "2023-04 - 2024-09",
       "displayDate": "Apr 2023 - Sep 2024",
       "type": "Academic honour",
-      "description": "Awarded across four semesters for consistent academic performance.",
+      "description": "Awarded across four semesters for consistent academic performance in my diploma cohort.",
       "headerPhotos": [
         "/achievements/2022_2_DRH.pdf",
         "/achievements/2023_1_DRH.pdf",
@@ -21,7 +21,7 @@
       "date": "2023-04",
       "displayDate": "Apr 2023",
       "type": "Competition Participation",
-      "description": "Participated in the Lag & Crash 3.0 cybersecurity competition.",
+      "description": "Participated in the Lag & Crash 3.0 CTF compeition. Achieved top 25 team ranking.",
       "headerPhotos": [
         "/achievements/lag-and-crash-3.0-photo.png",
         "/achievements/lag-and-crash-3.0-certificate.pdf"
@@ -34,7 +34,7 @@
       "date": "2022-09",
       "displayDate": "Sep 2022",
       "type": "Competition Participation",
-      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods competition.",
+      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods competition. Reached top 6 and presented to the GC judges.",
       "headerPhotos": ["/achievements/Hackathon 2022 Safe in the Woods.pdf"],
       "featured": false
     }

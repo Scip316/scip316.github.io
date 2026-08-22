@@ -24,12 +24,89 @@
   text-transform: uppercase;
 }
 
+.work-card-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.work-card-media-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.35s ease;
+}
+
+.work-card-media-slide {
+  min-width: 100%;
+  height: 100%;
+}
+
+.work-card-media-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card-media-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.work-card-media-controls {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.work-card-media-controls button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ffffff8a;
+  background: #151515c9;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.work-card-media-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.work-card-media-dots button {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff85;
+  cursor: pointer;
+}
+
+.work-card-media-dots button.is-active-work-media {
+  background: #fff;
+}
+
 .work-card-body {
   display: flex;
   flex-direction: column;
   min-height: 0;
   padding: clamp(20px, 3vw, 38px);
-  background: #f7f7f4;
+  background: #dfdfda;
   color: #1b1b1b;
 }
 
@@ -82,6 +159,30 @@
   font: 0.65rem 'DM Mono', monospace;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.work-card-link-label {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 7px;
+}
+
+.work-card-link-label::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  content: '';
+  background: #cf4636;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.work-card:hover .work-card-link-label::after,
+.work-card:focus-visible .work-card-link-label::after {
+  transform: scaleX(1);
 }
 
 .work-card-link b {

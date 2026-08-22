@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import projectData from '../data/projects.json'
+import { sortByNewestDate } from '../utils/sortByNewestDate'
 
-const projects = projectData.projects
+const projects = sortByNewestDate(projectData.projects)
 </script>
 
 <template>

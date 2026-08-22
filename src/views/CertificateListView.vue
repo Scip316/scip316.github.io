@@ -51,11 +51,11 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
   <main class="experience-page certificate-page">
     <header class="experience-page-header">
       <a href="/" class="back-link">← Back to portfolio</a>
-      <p>{{ certificates.length }} credentials / {{ achievements.length }} highlights</p>
+      <p>{{ certificates.length }} credentials / {{ achievements.length }} Activities</p>
     </header>
     <section class="experience-page-title">
       <p class="page-kicker">Credentials archive</p>
-      <h1>Credentials<br />& highlights.</h1>
+      <h1>Credentials<br />& Activities.</h1>
     </section>
     <section class="credential-columns" aria-label="Credentials and achievements">
       <section class="credential-column" aria-labelledby="certifications-title">
@@ -149,7 +149,7 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
       <section class="credential-column" aria-labelledby="achievements-title">
         <header class="credential-column-heading">
           <p class="page-kicker">Honours & activities</p>
-          <h2 id="achievements-title">Highlights.</h2>
+          <h2 id="achievements-title">Activities.</h2>
           <p>Academic honours and competition involvement earned through consistent effort.</p>
         </header>
         <div class="credential-list">
