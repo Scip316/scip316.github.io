@@ -5,7 +5,7 @@ const projects = projectData.projects
 </script>
 
 <template>
-  <header class="site-header"><a class="brand" href="/" aria-label="SCIP — back to top"><span class="brand-symbol" aria-hidden="true">S</span><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a><a href="/certificates">Certificates</a><a href="/#contact">Contact</a></nav></header>
+  <header class="site-header"><a class="brand" href="/" aria-label="SCIP — back to top"><span class="brand-symbol" aria-hidden="true">S</span><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a><a href="/certificates">Credentials</a><a href="/#contact">Contact</a></nav></header>
   <main class="experience-page project-page">
     <header class="experience-page-header project-page-header"><a href="/" class="back-link">← Back to portfolio</a><p>All projects / {{ projects.length }} builds</p></header>
     <section class="experience-page-title"><p class="page-kicker">Project archive</p><h1>Things I’ve<br />built.</h1></section>

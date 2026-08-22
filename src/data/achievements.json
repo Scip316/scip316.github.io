@@ -1,0 +1,36 @@
+{
+  "achievements": [
+    {
+      "name": "Director's Roll of Honour — Y3S1",
+      "issuer": "Republic Polytechnic",
+      "date": "2024-09",
+      "displayDate": "Sep 2024",
+      "type": "Academic honour",
+      "featured": true
+    },
+    {
+      "name": "Director's Roll of Honour — Y2S2",
+      "issuer": "Republic Polytechnic",
+      "date": "2024-04",
+      "displayDate": "Apr 2024",
+      "type": "Academic honour",
+      "featured": true
+    },
+    {
+      "name": "Director's Roll of Honour — Y2S1",
+      "issuer": "Republic Polytechnic",
+      "date": "2023-10",
+      "displayDate": "Oct 2023",
+      "type": "Academic honour",
+      "featured": true
+    },
+    {
+      "name": "Director's Roll of Honour — Y1S2",
+      "issuer": "Republic Polytechnic",
+      "date": "2023-04",
+      "displayDate": "Apr 2023",
+      "type": "Academic honour",
+      "featured": true
+    }
+  ]
+}
