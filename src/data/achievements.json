@@ -1,35 +1,33 @@
 {
   "achievements": [
     {
-      "name": "Director's Roll of Honour — Y3S1",
+      "name": "Director's Roll of Honour — [Y1S2, Y2S1, Y2S2, Y3S1]",
       "issuer": "Republic Polytechnic",
-      "date": "2024-09",
-      "displayDate": "Sep 2024",
+      "date": "2023-04 - 2024-09",
+      "displayDate": "Apr 2023 - Sep 2024",
       "type": "Academic honour",
+      "headerPhotos": [],
       "featured": true
     },
     {
-      "name": "Director's Roll of Honour — Y2S2",
-      "issuer": "Republic Polytechnic",
-      "date": "2024-04",
-      "displayDate": "Apr 2024",
-      "type": "Academic honour",
-      "featured": true
+      "name": "Psychological First Aid Course",
+      "issuer": "Singapore Emergency Responder Academy",
+      "date": "2019-07",
+      "displayDate": "Jul 2019",
+      "type": "Certificate of Attendance",
+      "headerPhotos": [],
+      "featured": false
     },
     {
-      "name": "Director's Roll of Honour — Y2S1",
-      "issuer": "Republic Polytechnic",
-      "date": "2023-10",
-      "displayDate": "Oct 2023",
-      "type": "Academic honour",
-      "featured": true
-    },
-    {
-      "name": "Director's Roll of Honour — Y1S2",
-      "issuer": "Republic Polytechnic",
+      "name": "Lag & Crash 3.0",
+      "issuer": "Polytechnic Cybersecurity Interest Groups",
       "date": "2023-04",
       "displayDate": "Apr 2023",
-      "type": "Academic honour",
+      "type": "Competition Participation",
+      "headerPhotos": [
+        "/achievements/lag-and-crash-3.0-photo.png",
+        "/achievements/lag-and-crash-3.0-certificate.pdf"
+      ],
       "featured": true
     }
   ]
