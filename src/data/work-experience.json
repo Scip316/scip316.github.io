@@ -1,0 +1,102 @@
+{
+  "experiences": [
+    {
+      "id": "demo-devops-engineer-2025-01",
+      "title": "DevOps Engineer",
+      "workplace": "NCS/IRAS",
+      "startDate": "2024 Mar",
+      "endDate": null,
+      "period": "2024 Mar - 2025 Feb",
+      "headerPhoto": "/work-experience/experience-01.png",
+      "skills": [
+        "YAML",
+        "Azure DevOps",
+        "Azure Kubernetes Service (AKS)",
+        "Helm",
+        "Kubernetes",
+        "SonarQuube",
+        "Mend",
+        "Pods"
+      ],
+      "summary": "Worked as a DevSecOps (DSO) Engineer in IRAS on the IRIN3 project. Assisted in the development and maintance for numerous application pipeline, troubleshooting their pods in AKS and served as a help desk for thet team",
+      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "endorsements": [
+        {
+          "name": "Test1",
+          "quote": "Optional endorsement or testimonial quote.",
+          "role": "Endorser role and organisation"
+        },
+        {
+          "name": "Test2",
+          "quote": "Optional endorsement or testimonial quote.",
+          "role": "Endorser role and organisation"
+        }
+      ],
+      "detailPageSlug": "demo-devops-engineer-2025-01",
+      "featured": true
+    },
+    {
+      "id": "experience-02",
+      "title": "Role title",
+      "workplace": "Company or organisation",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM",
+      "period": "MMM YYYY — MMM YYYY",
+      "headerPhoto": "/work-experience/experience-02.png",
+      "skills": ["Skill one", "Skill two", "Skill three"],
+      "summary": "A short description for the gallery card. Keep this to one or two sentences.",
+      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "endorsements": [
+        {
+          "quote": "Optional endorsement or testimonial quote.",
+          "name": "Endorser name",
+          "role": "Endorser role and organisation"
+        }
+      ],
+      "detailPageSlug": "experience-02",
+      "featured": true
+    },
+    {
+      "id": "experience-03",
+      "title": "Role title",
+      "workplace": "Company or organisation",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM",
+      "period": "MMM YYYY — MMM YYYY",
+      "headerPhoto": "/work-experience/experience-03.png",
+      "skills": ["Skill one", "Skill two", "Skill three"],
+      "summary": "A short description for the gallery card. Keep this to one or two sentences.",
+      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "endorsements": [
+        {
+          "quote": "Optional endorsement or testimonial quote.",
+          "name": "Endorser name",
+          "role": "Endorser role and organisation"
+        }
+      ],
+      "detailPageSlug": "experience-03",
+      "featured": true
+    },
+    {
+      "id": "experience-04",
+      "title": "Role title",
+      "workplace": "Company or organisation",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM",
+      "period": "MMM YYYY — MMM YYYY",
+      "headerPhoto": "/work-experience/experience-03.png",
+      "skills": ["Skill one", "Skill two", "Skill three"],
+      "summary": "A short description for the gallery card. Keep this to one or two sentences.",
+      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "endorsements": [
+        {
+          "quote": "Optional endorsement or testimonial quote.",
+          "name": "Endorser name",
+          "role": "Endorser role and organisation"
+        }
+      ],
+      "detailPageSlug": "experience-03",
+      "featured": false
+    }
+  ]
+}

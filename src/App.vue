@@ -1,28 +1,81 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
+import WorkExperienceListView from './views/WorkExperienceListView.vue'
 import {
   certifications,
-  experience,
   profile_declaration,
   projects,
   socials,
 } from './data/portfolio'
-type Section = 'work' | 'projects' | 'credentials'
+import workExperienceData from './data/work-experience.json'
+
+type Section = 'projects' | 'credentials'
 const openSection = ref<Section | null>(null)
 const menuOpen = ref(false)
+const currentPath = ref(window.location.pathname)
+const detailSlug = computed(() => {
+  const pathSegments = currentPath.value.split('/').filter(Boolean)
+  return pathSegments[pathSegments.length - 1] ?? ''
+})
+const workExperiences = workExperienceData.experiences.filter((experience) => experience.featured)
+const activeWorkIndex = ref(1)
+const isWorkSlideAnimating = ref(true)
+const carouselWorkExperiences = computed(() => [
+  workExperiences[workExperiences.length - 1],
+  ...workExperiences,
+  workExperiences[0],
+])
+const displayedWorkIndex = computed(() => {
+  if (activeWorkIndex.value === 0) return workExperiences.length - 1
+  if (activeWorkIndex.value === workExperiences.length + 1) return 0
+  return activeWorkIndex.value - 1
+})
+let workCarouselTimer: number | undefined
+
+const nextWork = () => {
+  if (activeWorkIndex.value < workExperiences.length + 1) activeWorkIndex.value += 1
+}
+const previousWork = () => {
+  if (activeWorkIndex.value > 0) activeWorkIndex.value -= 1
+}
+const resetWorkSlide = () => {
+  if (activeWorkIndex.value !== 0 && activeWorkIndex.value !== workExperiences.length + 1) return
+  isWorkSlideAnimating.value = false
+  activeWorkIndex.value = activeWorkIndex.value === 0 ? workExperiences.length : 1
+  window.requestAnimationFrame(() => {
+    isWorkSlideAnimating.value = true
+  })
+}
+const startWorkRotation = () => {
+  stopWorkRotation()
+  workCarouselTimer = window.setInterval(nextWork, 4500)
+}
+const stopWorkRotation = () => {
+  if (workCarouselTimer) {
+    window.clearInterval(workCarouselTimer)
+    workCarouselTimer = undefined
+  }
+}
+onMounted(() => {
+  startWorkRotation()
+  window.addEventListener('popstate', () => (currentPath.value = window.location.pathname))
+})
+onUnmounted(stopWorkRotation)
 const toggleSection = (section: Section) =>
   (openSection.value = openSection.value === section ? null : section)
 const closeMenu = () => (menuOpen.value = false)
 </script>
 
 <template>
+  <div v-if="currentPath === '/'">
   <header class="site-header">
     <a class="brand" href="#intro" aria-label="SCIP — back to top"
       ><span class="brand-symbol" aria-hidden="true">S</span
       ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
     >
     <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="#intro">Home</a><a href="#work-experience">Work Experience</a
+      <a href="#intro">Home</a><a href="/experience">Work Experience</a
       ><a href="#projects">Projects</a><a href="#certificates">Certificates</a
       ><a href="#contact">Contact</a>
     </nav>
@@ -37,7 +90,7 @@ const closeMenu = () => (menuOpen.value = false)
     </button>
     <nav v-if="menuOpen" id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
       <a href="#intro" @click="closeMenu">Home</a
-      ><a href="#work-experience" @click="closeMenu">Work Experience</a
+      ><a href="/experience" @click="closeMenu">Work Experience</a
       ><a href="#projects" @click="closeMenu">Projects</a
       ><a href="#certificates" @click="closeMenu">Certificates</a
       ><a href="#contact" @click="closeMenu">Contact</a>
@@ -51,23 +104,19 @@ const closeMenu = () => (menuOpen.value = false)
         <p>{{ profile_declaration.intro }}</p>
       </div>
     </section>
-    <section id="work-experience" class="content-section">
-      <button
-        class="accordion-title"
-        type="button"
-        :aria-expanded="openSection === 'work'"
-        @click="toggleSection('work')"
-      >
-        <span>Work Experience</span
-        ><span class="arrow">{{ openSection === 'work' ? '−' : '+' }}</span>
-      </button>
-      <div v-if="openSection === 'work'" class="accordion-content">
-        <article v-for="item in experience" :key="item.company" class="detail-card">
-          <p class="card-label">{{ item.period }}</p>
-          <h2>{{ item.role }}</h2>
-          <p class="card-subtitle">{{ item.company }}</p>
-          <p>{{ item.description }}</p>
-        </article>
+    <section id="work-experience" class="work-gallery">
+      <div class="work-gallery-inner">
+        <div class="work-gallery-heading"><div><p class="overline">Career highlights</p><h2>Work experience.</h2></div><div class="work-gallery-actions"><p>Showcasing the roles I’ve taken on, the work I’ve contributed to, and the skills I’ve developed along the way.</p><div class="work-controls"><button type="button" aria-label="Previous experience" @click="previousWork">←</button><span>{{ String(displayedWorkIndex + 1).padStart(2, '0') }} / {{ String(workExperiences.length).padStart(2, '0') }}</span><button type="button" aria-label="Next experience" @click="nextWork">→</button></div></div></div>
+        <div class="work-card-row" @mouseenter="stopWorkRotation" @mouseleave="startWorkRotation">
+          <div class="work-card-track" :class="{ 'is-resetting': !isWorkSlideAnimating }" :style="{ transform: `translateX(-${activeWorkIndex * 100}%)` }" @transitionend="resetWorkSlide">
+          <a v-for="(item, index) in carouselWorkExperiences" :key="`${item.id}-${index}`" class="work-card" :href="`/experience/${item.detailPageSlug}`">
+            <div class="work-card-image" :style="{ backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${item.headerPhoto})` }"><span>{{ item.title }}</span></div>
+            <div class="work-card-body"><p class="card-label">{{ item.period }}</p><h3>{{ item.title }}</h3><p class="workplace">{{ item.workplace }}</p><p>{{ item.summary }}</p><ul><li v-for="skill in item.skills" :key="skill">{{ skill }}</li></ul><span class="work-card-link">View experience <b aria-hidden="true">↗</b></span></div>
+          </a>
+          </div>
+          <div class="work-progress-track" aria-hidden="true"><span :key="displayedWorkIndex" class="work-progress"></span></div>
+        </div>
+        <a class="view-all-work" href="/experience">View all work experiences <span aria-hidden="true">→</span></a>
       </div>
     </section>
     <section id="projects" class="content-section">
@@ -154,4 +203,7 @@ const closeMenu = () => (menuOpen.value = false)
       >Last updated: {{ profile_declaration.lastUpdated }}</time
     >
   </footer>
+  </div>
+  <WorkExperienceListView v-else-if="currentPath === '/experience'" />
+  <WorkExperienceDetailView v-else :slug="detailSlug" />
 </template>

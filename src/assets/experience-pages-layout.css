@@ -1,0 +1,60 @@
+.experience-page {
+  width: min(88vw, 1720px);
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  --experience-small-text: 0.9rem;
+}
+
+.experience-page .page-kicker,
+.experience-page .back-link,
+.experience-page-header p {
+  font-size: var(--experience-small-text);
+  letter-spacing: 0.07em;
+}
+
+.detail-skills li {
+  padding: 7px 10px;
+  font-size: 0.78rem;
+}
+
+.endorsement-grid footer {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.endorsement-grid footer span {
+  display: inline;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.endorsement-grid blockquote > p {
+  margin: 20px 0 0;
+}
+
+.experience-grid-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.experience-grid-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.experience-card-link {
+  margin-top: auto;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .experience-page {
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
