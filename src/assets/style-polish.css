@@ -2,9 +2,10 @@
   --label-size: 0.9rem;
 }
 
-.work-controls,
+.showcase-controls,
 .work-card-body .card-label,
 .work-card-link,
+.showcase-link,
 .experience-card-link {
   font-size: var(--label-size);
 }

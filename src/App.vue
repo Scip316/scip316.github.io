@@ -136,10 +136,10 @@ const closeMenu = () => (menuOpen.value = false)
         <p>{{ profile_declaration.intro }}</p>
       </div>
     </section>
-    <section id="work-experience" class="work-gallery">
-      <div class="work-gallery-inner">
-        <div class="work-gallery-heading"><div><p class="overline">Career highlights</p><h2>Work experience.</h2></div><div class="work-gallery-actions"><p>Showcasing the roles I’ve taken on, the work I’ve contributed to, and the skills I’ve developed along the way.</p><div class="work-controls"><button type="button" aria-label="Previous experience" @click="previousWork">←</button><span>{{ String(displayedWorkIndex + 1).padStart(2, '0') }} / {{ String(workExperiences.length).padStart(2, '0') }}</span><button type="button" aria-label="Next experience" @click="nextWork">→</button></div></div></div>
-        <div class="work-card-row" @mouseenter="stopWorkRotation" @mouseleave="startWorkRotation">
+    <section id="work-experience" class="showcase-section showcase-section--work">
+      <div class="showcase-section-inner">
+        <div class="showcase-section-heading"><div><p class="overline">Career highlights</p><h2>Work experience.</h2></div><div class="showcase-section-actions"><p>Showcasing the roles I’ve taken on, the work I’ve contributed to, and the skills I’ve developed along the way.</p><div class="showcase-controls"><button type="button" aria-label="Previous experience" @click="previousWork">←</button><span>{{ String(displayedWorkIndex + 1).padStart(2, '0') }} / {{ String(workExperiences.length).padStart(2, '0') }}</span><button type="button" aria-label="Next experience" @click="nextWork">→</button></div></div></div>
+        <div class="showcase-frame work-card-row" @mouseenter="stopWorkRotation" @mouseleave="startWorkRotation">
           <div class="work-card-stage">
           <a v-for="(item, index) in workExperiences" :key="item.id" class="work-card" :class="workCardPosition(index)" :href="`/experience/${item.detailPageSlug}`">
             <div class="work-card-image" :style="{ backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${item.headerPhoto})` }"><span>{{ item.title }}</span></div>
@@ -148,13 +148,13 @@ const closeMenu = () => (menuOpen.value = false)
           </div>
           <div class="work-progress-track" aria-hidden="true"><span :key="displayedWorkIndex" class="work-progress"></span></div>
         </div>
-        <a class="view-all-work" href="/experience">View all work experiences <span aria-hidden="true">→</span></a>
+        <a class="showcase-link" href="/experience">View all work experiences <span aria-hidden="true">→</span></a>
       </div>
     </section>
-    <section id="projects" class="feature-gallery project-gallery">
-      <div class="feature-gallery-inner">
-        <div class="feature-gallery-heading"><div><p class="overline">Featured builds</p><h2>Projects.</h2></div><div class="feature-gallery-actions"><p>A closer look at the products and experiments I’ve built to turn ideas into useful experiences.</p><div class="feature-controls"><button type="button" aria-label="Previous project" @click="previousProject">←</button><span>{{ String(activeProjectIndex + 1).padStart(2, '0') }} / {{ String(featuredProjects.length).padStart(2, '0') }}</span><button type="button" aria-label="Next project" @click="nextProject">→</button></div></div></div>
-        <div class="home-feature-row" @mouseenter="stopProjectRotation" @mouseleave="startProjectRotation">
+    <section id="projects" class="showcase-section showcase-section--projects">
+      <div class="showcase-section-inner">
+        <div class="showcase-section-heading"><div><p class="overline">Featured builds</p><h2>Projects.</h2></div><div class="showcase-section-actions"><p>A closer look at the products and experiments I’ve built to turn ideas into useful experiences.</p><div class="showcase-controls"><button type="button" aria-label="Previous project" @click="previousProject">←</button><span>{{ String(activeProjectIndex + 1).padStart(2, '0') }} / {{ String(featuredProjects.length).padStart(2, '0') }}</span><button type="button" aria-label="Next project" @click="nextProject">→</button></div></div></div>
+        <div class="showcase-frame home-feature-row" @mouseenter="stopProjectRotation" @mouseleave="startProjectRotation">
           <Transition name="project-home-shift" mode="out-in">
             <article :key="activeProject.id" class="home-project-card">
               <div class="home-project-visual" :class="`visual-${activeProject.visual}`"><span>{{ activeProject.visualLabel }}</span></div>
@@ -162,18 +162,18 @@ const closeMenu = () => (menuOpen.value = false)
             </article>
           </Transition>
         </div>
-        <a class="view-all-feature" href="/projects">View all projects <span aria-hidden="true">→</span></a>
+        <a class="showcase-link" href="/projects">View all projects <span aria-hidden="true">→</span></a>
       </div>
     </section>
-    <section id="certificates" class="feature-gallery certificate-gallery">
-      <div class="feature-gallery-inner">
-        <div class="feature-gallery-heading"><div><p class="overline">Featured credentials</p><h2>Certificates.</h2></div><div class="feature-gallery-actions"><p>Milestones that reflect the skills, knowledge, and discipline I’m continuing to build.</p><div class="feature-controls"><button type="button" aria-label="Previous certificate" @click="previousCertificate">←</button><span>{{ String(activeCertificateIndex + 1).padStart(2, '0') }} / {{ String(featuredCertificates.length).padStart(2, '0') }}</span><button type="button" aria-label="Next certificate" @click="nextCertificate">→</button></div></div></div>
-        <div class="home-feature-row" @mouseenter="stopCertificateRotation" @mouseleave="startCertificateRotation">
+    <section id="certificates" class="showcase-section showcase-section--certificates">
+      <div class="showcase-section-inner">
+        <div class="showcase-section-heading"><div><p class="overline">Featured credentials</p><h2>Certificates.</h2></div><div class="showcase-section-actions"><p>Milestones that reflect the skills, knowledge, and discipline I’m continuing to build.</p><div class="showcase-controls"><button type="button" aria-label="Previous certificate" @click="previousCertificate">←</button><span>{{ String(activeCertificateIndex + 1).padStart(2, '0') }} / {{ String(featuredCertificates.length).padStart(2, '0') }}</span><button type="button" aria-label="Next certificate" @click="nextCertificate">→</button></div></div></div>
+        <div class="showcase-frame home-feature-row" @mouseenter="stopCertificateRotation" @mouseleave="startCertificateRotation">
           <Transition name="certificate-home-scan" mode="out-in">
             <article :key="activeCertificate.name" class="home-certificate-card"><div class="home-certificate-index"><span>Credential</span><strong>{{ String(activeCertificateIndex + 1).padStart(2, '0') }}</strong></div><div class="home-certificate-body"><p class="card-label">{{ activeCertificate.displayDate }}</p><h3>{{ activeCertificate.name }}</h3><p>{{ activeCertificate.issuer }}</p></div></article>
           </Transition>
         </div>
-        <a class="view-all-feature" href="/certificates">View all certificates <span aria-hidden="true">→</span></a>
+        <a class="showcase-link" href="/certificates">View all certificates <span aria-hidden="true">→</span></a>
       </div>
     </section>
   </main>
@@ -197,46 +197,3 @@ const closeMenu = () => (menuOpen.value = false)
   <CertificateListView v-else-if="currentPath === '/certificates'" />
   <WorkExperienceDetailView v-else :slug="detailSlug" />
 </template>
-
-<style scoped>
-.feature-gallery { padding: 22px clamp(20px, 5vw, 72px) 78px; background: var(--background); color: var(--text); }
-.feature-gallery-inner { width: min(100%, clamp(1000px, 58vw, 1360px)); margin: 0 auto; padding-top: 45px; border-top: 1px solid var(--text); }
-.feature-gallery-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 310px); align-items: start; gap: 32px; margin-bottom: 34px; }
-.feature-gallery h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.4rem); letter-spacing: -.055em; line-height: 1; }
-.feature-gallery .overline { font-size: .9rem; }
-.feature-gallery-actions { display: grid; gap: 20px; }
-.feature-gallery-actions > p { margin: 0; color: var(--muted); font-size: .9rem; }
-.feature-controls { display: flex; align-items: center; justify-content: start; gap: 12px; color: var(--muted); font: .66rem 'DM Mono', monospace; letter-spacing: .05em; }
-.feature-controls button { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; font-size: 1rem; }
-.feature-controls button:hover { border-color: var(--accent); color: var(--accent); }
-.home-feature-row { overflow: hidden; padding: 16px; border-top: 2px solid #fff; background: #272727; box-shadow: inset 0 0 0 1px #00000025; }
-.home-project-card, .home-certificate-card { display: grid; grid-template-columns: 1.15fr 1fr; min-height: clamp(320px, 20vw, 430px); background: #f7f7f4; color: #1b1b1b; }
-.home-project-visual { position: relative; display: grid; min-height: inherit; place-items: center; overflow: hidden; background-color: #45504a; background-image: linear-gradient(45deg, #ffffff1c 25%, transparent 25%, transparent 75%, #ffffff1c 75%), linear-gradient(45deg, #ffffff1c 25%, transparent 25%, transparent 75%, #ffffff1c 75%); background-size: 40px 40px; background-position: 0 0, 20px 20px; }
-.home-project-visual::after { position: absolute; inset: 0; content: ''; background: linear-gradient(115deg, transparent 38%, #ffffff28 50%, transparent 62%); animation: project-shimmer 4.5s ease-in-out infinite; }
-.home-project-visual.visual-chatbot { background-color: #373e65; }
-.home-project-visual span { z-index: 1; padding: 9px 11px; border: 1px solid #ffffff70; background: #151515cc; color: #fff; font: .66rem 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
-.home-feature-body { display: flex; flex-direction: column; padding: clamp(24px, 4vw, 48px); }
-.home-feature-body .card-label, .home-certificate-body .card-label { color: #c74233; }
-.home-feature-body h3, .home-certificate-body h3 { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); letter-spacing: -.045em; line-height: 1.1; }
-.home-feature-body > p:not(.card-label), .home-certificate-body > p:not(.card-label) { max-width: 400px; margin: 20px 0 0; color: #4e4d49; font-size: .92rem; line-height: 1.6; }
-.home-feature-body ul { display: flex; gap: 6px; flex-wrap: wrap; padding: 0; margin: auto 0 22px; list-style: none; }
-.home-feature-body li { padding: 4px 7px; border: 1px solid #d2d0ca; color: #605f5b; font: .6rem 'DM Mono', monospace; text-transform: uppercase; }
-.home-feature-link { display: block; padding-top: 12px; border-top: 1px solid #d2d0ca; color: #605f5b; font: .65rem 'DM Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
-.home-certificate-index { display: flex; flex-direction: column; justify-content: space-between; padding: 32px; background: #151515; color: #fff; }
-.home-certificate-index span { color: #ffffffa8; font: .68rem 'DM Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
-.home-certificate-index strong { color: var(--accent); font: clamp(4rem, 10vw, 9rem)/.8 'DM Mono', monospace; letter-spacing: -.12em; }
-.home-certificate-body { align-self: center; padding: clamp(24px, 5vw, 62px); }
-.view-all-feature { display: inline-block; margin-top: 35px; padding-bottom: 5px; border-bottom: 2px solid var(--text); color: var(--text); font: .9rem 'DM Mono', monospace; font-weight: 600; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; }
-.view-all-feature:hover { border-color: var(--accent); color: var(--accent); }
-.project-home-shift-enter-active { animation: project-home-shift-in .46s ease both; }
-.project-home-shift-leave-active { animation: project-home-shift-out .24s ease both; }
-.certificate-home-scan-enter-active { animation: certificate-home-scan-in .52s ease both; }
-.certificate-home-scan-leave-active { animation: certificate-home-scan-out .22s ease both; }
-@keyframes project-shimmer { 0%, 30% { transform: translateX(-120%); } 65%, 100% { transform: translateX(120%); } }
-@keyframes project-home-shift-in { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes project-home-shift-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
-@keyframes certificate-home-scan-in { from { clip-path: inset(0 0 100% 0); opacity: 0; } to { clip-path: inset(0); opacity: 1; } }
-@keyframes certificate-home-scan-out { from { clip-path: inset(0); opacity: 1; } to { clip-path: inset(100% 0 0); opacity: 0; } }
-@media (max-width: 700px) { .feature-gallery-inner { width: 100%; } .feature-gallery-heading { display: block; } .feature-gallery-actions { margin-top: 24px; } .home-feature-row { padding: 10px; } .home-project-card, .home-certificate-card { display: block; min-height: 0; } .home-project-visual { min-height: 210px; } .home-feature-body { min-height: 260px; } .home-feature-body ul { margin-top: 22px; } .home-certificate-index { min-height: 175px; } .home-certificate-index strong { font-size: 5rem; } }
-@media (prefers-reduced-motion: reduce) { .home-project-visual::after, .project-home-shift-enter-active, .project-home-shift-leave-active, .certificate-home-scan-enter-active, .certificate-home-scan-leave-active { animation: none; } }
-</style>
