@@ -20,43 +20,32 @@ const detailSlug = computed(() => {
 const workExperiences = workExperienceData.experiences.filter((experience) => experience.featured)
 const featuredProjects = projects.filter((project) => project.featured)
 const featuredCertificates = certifications.filter((certificate) => certificate.featured)
-const activeWorkIndex = ref(1)
+const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
-const isWorkSlideAnimating = ref(true)
 const activeProject = computed(() => featuredProjects[activeProjectIndex.value])
 const activeCertificate = computed(() => featuredCertificates[activeCertificateIndex.value])
-const carouselWorkExperiences = computed(() => [
-  workExperiences[workExperiences.length - 1],
-  ...workExperiences,
-  workExperiences[0],
-])
-const displayedWorkIndex = computed(() => {
-  if (activeWorkIndex.value === 0) return workExperiences.length - 1
-  if (activeWorkIndex.value === workExperiences.length + 1) return 0
-  return activeWorkIndex.value - 1
-})
+const displayedWorkIndex = computed(() => activeWorkIndex.value)
 let workCarouselTimer: number | undefined
 let projectCarouselTimer: number | undefined
 let certificateCarouselTimer: number | undefined
 
 const nextWork = () => {
-  if (activeWorkIndex.value < workExperiences.length + 1) activeWorkIndex.value += 1
+  activeWorkIndex.value = (activeWorkIndex.value + 1) % workExperiences.length
 }
 const previousWork = () => {
-  if (activeWorkIndex.value > 0) activeWorkIndex.value -= 1
+  activeWorkIndex.value = (activeWorkIndex.value - 1 + workExperiences.length) % workExperiences.length
 }
-const resetWorkSlide = () => {
-  if (activeWorkIndex.value !== 0 && activeWorkIndex.value !== workExperiences.length + 1) return
-  isWorkSlideAnimating.value = false
-  activeWorkIndex.value = activeWorkIndex.value === 0 ? workExperiences.length : 1
-  window.requestAnimationFrame(() => {
-    isWorkSlideAnimating.value = true
-  })
+const workCardPosition = (index: number) => {
+  const relativePosition = (index - activeWorkIndex.value + workExperiences.length) % workExperiences.length
+  if (relativePosition === 0) return 'is-active-work-slide'
+  if (relativePosition === 1) return 'is-next-work-slide'
+  if (relativePosition === workExperiences.length - 1) return 'is-previous-work-slide'
+  return 'is-hidden-work-slide'
 }
 const startWorkRotation = () => {
   stopWorkRotation()
-  workCarouselTimer = window.setInterval(nextWork, 4500)
+  if (workExperiences.length > 1) workCarouselTimer = window.setInterval(nextWork, 4600)
 }
 const stopWorkRotation = () => {
   if (workCarouselTimer) {
@@ -151,8 +140,8 @@ const closeMenu = () => (menuOpen.value = false)
       <div class="work-gallery-inner">
         <div class="work-gallery-heading"><div><p class="overline">Career highlights</p><h2>Work experience.</h2></div><div class="work-gallery-actions"><p>Showcasing the roles I’ve taken on, the work I’ve contributed to, and the skills I’ve developed along the way.</p><div class="work-controls"><button type="button" aria-label="Previous experience" @click="previousWork">←</button><span>{{ String(displayedWorkIndex + 1).padStart(2, '0') }} / {{ String(workExperiences.length).padStart(2, '0') }}</span><button type="button" aria-label="Next experience" @click="nextWork">→</button></div></div></div>
         <div class="work-card-row" @mouseenter="stopWorkRotation" @mouseleave="startWorkRotation">
-          <div class="work-card-track" :class="{ 'is-resetting': !isWorkSlideAnimating }" :style="{ transform: `translateX(-${activeWorkIndex * 100}%)` }" @transitionend="resetWorkSlide">
-          <a v-for="(item, index) in carouselWorkExperiences" :key="`${item.id}-${index}`" class="work-card" :href="`/experience/${item.detailPageSlug}`">
+          <div class="work-card-stage">
+          <a v-for="(item, index) in workExperiences" :key="item.id" class="work-card" :class="workCardPosition(index)" :href="`/experience/${item.detailPageSlug}`">
             <div class="work-card-image" :style="{ backgroundImage: `linear-gradient(135deg, #1c1c1c99, #1c1c1c33), url(${item.headerPhoto})` }"><span>{{ item.title }}</span></div>
             <div class="work-card-body"><p class="card-label">{{ item.period }}</p><h3>{{ item.title }}</h3><p class="workplace">{{ item.workplace }}</p><p>{{ item.summary }}</p><ul><li v-for="skill in item.skills" :key="skill">{{ skill }}</li></ul><span class="work-card-link">View experience <b aria-hidden="true">↗</b></span></div>
           </a>
