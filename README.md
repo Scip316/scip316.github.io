@@ -31,3 +31,14 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Run with Docker
+
+Build and run the production site:
+
+```sh
+docker build -t darrel-portfolio .
+docker run --rm -p 8080:80 darrel-portfolio
+```
+
+Open `http://localhost:8080`. The container also supports direct visits to portfolio routes such as `/projects` and `/certificates`.
