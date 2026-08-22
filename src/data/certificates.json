@@ -1,0 +1,25 @@
+{
+  "certifications": [
+    {
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "Amazon Web Services",
+      "date": "2024-04",
+      "displayDate": "Apr 2024",
+      "featured": true
+    },
+    {
+      "name": "Director's Roll of Honour — Y3S1",
+      "issuer": "Republic Polytechnic",
+      "date": "2024-09",
+      "displayDate": "Sep 2024",
+      "featured": true
+    },
+    {
+      "name": "Google Project Management",
+      "issuer": "Google",
+      "date": "2022-03",
+      "displayDate": "Mar 2022",
+      "featured": true
+    }
+  ]
+}

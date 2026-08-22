@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "id": "lunch-box",
+      "title": "Lunch Box",
+      "year": "School project",
+      "category": "Product build",
+      "featured": true,
+      "summary": "A project developed to explore a better food-ordering experience. More details and the final case study are coming soon.",
+      "technologies": ["Web development", "Team project"],
+      "image": "/projects/lunch-box.png",
+      "githubUrl": null,
+      "liveUrl": null,
+      "visual": "lunchbox",
+      "visualLabel": "Lunch Box"
+    },
+    {
+      "id": "ai-chatbot",
+      "title": "AI Chatbot",
+      "year": "Personal project",
+      "category": "AI experiment",
+      "featured": true,
+      "summary": "An exploration of conversational AI and how an assistant can make information and everyday tasks easier to access.",
+      "technologies": ["AI", "Python", "Conversational UX"],
+      "image": "/projects/ai-chatbot.png",
+      "githubUrl": null,
+      "liveUrl": null,
+      "visual": "chatbot",
+      "visualLabel": "AI Chatbot"
+    }
+  ]
+}

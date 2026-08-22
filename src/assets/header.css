@@ -34,7 +34,6 @@
 }
 
 .brand-symbol {
-  position: absolute;
   position: relative;
   display: grid;
   width: 27px;
