@@ -9,11 +9,12 @@ import certificateData from './data/certificates.json'
 import { profile_declaration, socials } from './data/portfolio'
 import projectData from './data/projects.json'
 import workExperienceData from './data/work-experience.json'
+import { sortByNewestDate } from './utils/sortByNewestDate'
 
 const menuOpen = ref(false)
 const currentPath = ref(window.location.pathname)
-const achievements = achievementData.achievements
-const certifications = certificateData.certifications
+const achievements = sortByNewestDate(achievementData.achievements)
+const certifications = sortByNewestDate(certificateData.certifications)
 const projects = projectData.projects
 const detailSlug = computed(() => {
   const pathSegments = currentPath.value.split('/').filter(Boolean)
@@ -375,7 +376,15 @@ const closeMenu = () => (menuOpen.value = false)
                       {{ technology }}
                     </li>
                   </ul>
-                  <span class="home-feature-link">Case study in progress</span>
+                  <a
+                    v-if="project.githubUrl"
+                    class="home-feature-link"
+                    :href="project.githubUrl"
+                    target="_blank"
+                    rel="noreferrer"
+                    >View source <b aria-hidden="true">↗</b></a
+                  >
+                  <span v-else class="home-feature-link">Case study in progress</span>
                 </div>
               </article>
             </div>
@@ -393,7 +402,7 @@ const closeMenu = () => (menuOpen.value = false)
           <div class="showcase-section-heading">
             <div>
               <p class="overline">Credentials</p>
-              <h2>Certifications & achievements.</h2>
+              <h2>Credentials & highlights.</h2>
             </div>
             <div class="showcase-section-actions">
               <p>Milestones that I encounter and conqured</p>
@@ -402,7 +411,7 @@ const closeMenu = () => (menuOpen.value = false)
           <div class="credential-showcase-grid">
             <div class="credential-showcase-panel">
               <div class="credential-showcase-heading">
-                <p>Industry certifications</p>
+                <p>Certificates & training</p>
                 <div class="showcase-controls">
                   <button
                     type="button"
@@ -521,7 +530,7 @@ const closeMenu = () => (menuOpen.value = false)
                       </div>
                     </div>
                     <div v-else class="home-certificate-index">
-                      <span>Certification</span
+                      <span>{{ certificate.type }}</span
                       ><strong>{{ String(index + 1).padStart(2, '0') }}</strong>
                     </div>
                     <div class="home-certificate-body">
@@ -538,7 +547,7 @@ const closeMenu = () => (menuOpen.value = false)
             </div>
             <div class="credential-showcase-panel">
               <div class="credential-showcase-heading">
-                <p>Academic & competition achievements</p>
+                <p>Honours & activities</p>
                 <div class="showcase-controls">
                   <button
                     type="button"
@@ -663,7 +672,10 @@ const closeMenu = () => (menuOpen.value = false)
                     <div class="home-certificate-body">
                       <p class="card-label">{{ achievement.displayDate }}</p>
                       <h3>{{ achievement.name }}</h3>
-                      <p>{{ achievement.issuer }}</p>
+                      <p class="home-certificate-issuer">{{ achievement.issuer }}</p>
+                      <p v-if="achievement.description" class="home-certificate-description">
+                        {{ achievement.description }}
+                      </p>
                     </div>
                   </article>
                 </div>

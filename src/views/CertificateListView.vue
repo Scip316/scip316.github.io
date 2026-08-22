@@ -2,9 +2,10 @@
 import { ref } from 'vue'
 import achievementData from '../data/achievements.json'
 import certificateData from '../data/certificates.json'
+import { sortByNewestDate } from '../utils/sortByNewestDate'
 
-const achievements = achievementData.achievements
-const certificates = certificateData.certifications
+const achievements = sortByNewestDate(achievementData.achievements)
+const certificates = sortByNewestDate(certificateData.certifications)
 const activeMediaIndices = ref<Record<string, number>>({})
 const mediaTouchStarts = new Map<string, number>()
 
@@ -25,7 +26,11 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
   const startPosition = mediaTouchStarts.get(name)
   const endPosition = event.changedTouches[0]?.clientX
   mediaTouchStarts.delete(name)
-  if (startPosition === undefined || endPosition === undefined || Math.abs(endPosition - startPosition) < 36)
+  if (
+    startPosition === undefined ||
+    endPosition === undefined ||
+    Math.abs(endPosition - startPosition) < 36
+  )
     return
 
   changeMedia(name, mediaCount, endPosition < startPosition ? 'next' : 'previous')
@@ -46,18 +51,18 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
   <main class="experience-page certificate-page">
     <header class="experience-page-header">
       <a href="/" class="back-link">← Back to portfolio</a>
-      <p>{{ certificates.length }} certifications / {{ achievements.length }} achievements</p>
+      <p>{{ certificates.length }} credentials / {{ achievements.length }} highlights</p>
     </header>
     <section class="experience-page-title">
       <p class="page-kicker">Credentials archive</p>
-      <h1>Credentials<br />& achievements.</h1>
+      <h1>Credentials<br />& highlights.</h1>
     </section>
     <section class="credential-columns" aria-label="Credentials and achievements">
       <section class="credential-column" aria-labelledby="certifications-title">
         <header class="credential-column-heading">
-          <p class="page-kicker">Industry credentials</p>
-          <h2 id="certifications-title">Certifications.</h2>
-          <p>Professional certifications that support my technology and delivery work.</p>
+          <p class="page-kicker">Certificates & training</p>
+          <h2 id="certifications-title">Credentials.</h2>
+          <p>Industry credentials and training that support my technology and delivery work.</p>
         </header>
         <div class="credential-list">
           <article
@@ -87,7 +92,12 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
                     :src="media"
                     :alt="`${certificate.name} image ${mediaIndex + 1}`"
                   />
-                  <object v-else :data="media" type="application/pdf" :aria-label="certificate.name">
+                  <object
+                    v-else
+                    :data="media"
+                    type="application/pdf"
+                    :aria-label="certificate.name"
+                  >
                     <a :href="media" target="_blank" rel="noreferrer">Open the PDF document</a>
                   </object>
                 </div>
@@ -96,7 +106,9 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
                 <button
                   type="button"
                   aria-label="Previous image"
-                  @click="changeMedia(certificate.name, certificate.headerPhotos.length, 'previous')"
+                  @click="
+                    changeMedia(certificate.name, certificate.headerPhotos.length, 'previous')
+                  "
                 >
                   ←
                 </button>
@@ -120,21 +132,25 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
               </div>
             </div>
             <div v-else class="credential-card-visual">
-              <span>Certification</span><strong>{{ String(index + 1).padStart(2, '0') }}</strong>
+              <span>{{ certificate.type }}</span
+              ><strong>{{ String(index + 1).padStart(2, '0') }}</strong>
             </div>
             <div class="credential-card-content">
               <p class="page-kicker">{{ certificate.displayDate }}</p>
               <h3>{{ certificate.name }}</h3>
-              <p>{{ certificate.issuer }}</p>
+              <p class="credential-card-issuer">{{ certificate.issuer }}</p>
+              <p v-if="certificate.description" class="credential-card-description">
+                {{ certificate.description }}
+              </p>
             </div>
           </article>
         </div>
       </section>
       <section class="credential-column" aria-labelledby="achievements-title">
         <header class="credential-column-heading">
-          <p class="page-kicker">Academic & competition</p>
-          <h2 id="achievements-title">Achievements.</h2>
-          <p>School honours and milestones earned through consistent effort.</p>
+          <p class="page-kicker">Honours & activities</p>
+          <h2 id="achievements-title">Highlights.</h2>
+          <p>Academic honours and competition involvement earned through consistent effort.</p>
         </header>
         <div class="credential-list">
           <article
@@ -164,7 +180,12 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
                     :src="media"
                     :alt="`${achievement.name} image ${mediaIndex + 1}`"
                   />
-                  <object v-else :data="media" type="application/pdf" :aria-label="achievement.name">
+                  <object
+                    v-else
+                    :data="media"
+                    type="application/pdf"
+                    :aria-label="achievement.name"
+                  >
                     <a :href="media" target="_blank" rel="noreferrer">Open the PDF document</a>
                   </object>
                 </div>
@@ -173,7 +194,9 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
                 <button
                   type="button"
                   aria-label="Previous image"
-                  @click="changeMedia(achievement.name, achievement.headerPhotos.length, 'previous')"
+                  @click="
+                    changeMedia(achievement.name, achievement.headerPhotos.length, 'previous')
+                  "
                 >
                   ←
                 </button>
@@ -203,7 +226,10 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
             <div class="credential-card-content">
               <p class="page-kicker">{{ achievement.displayDate }}</p>
               <h3>{{ achievement.name }}</h3>
-              <p>{{ achievement.issuer }}</p>
+              <p class="credential-card-issuer">{{ achievement.issuer }}</p>
+              <p v-if="achievement.description" class="credential-card-description">
+                {{ achievement.description }}
+              </p>
             </div>
           </article>
         </div>
@@ -282,14 +308,18 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
 
 .credential-card-visual span {
   color: #ffffffa8;
-  font: 0.65rem 'DM Mono', monospace;
+  font:
+    0.65rem 'DM Mono',
+    monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .credential-card-visual strong {
   color: var(--accent);
-  font: 4.6rem / 0.8 'DM Mono', monospace;
+  font:
+    4.6rem / 0.8 'DM Mono',
+    monospace;
   letter-spacing: -0.14em;
 }
 
@@ -389,6 +419,19 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
   margin: 16px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.credential-card-content .credential-card-issuer {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.credential-card-content .credential-card-description {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
 }
 
 @media (max-width: 760px) {

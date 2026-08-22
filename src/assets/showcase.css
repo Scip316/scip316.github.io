@@ -320,6 +320,7 @@
   color: #605f5b;
   font: 0.65rem 'DM Mono', monospace;
   letter-spacing: 0.04em;
+  text-decoration: none;
   text-transform: uppercase;
 }
 
@@ -427,6 +428,16 @@
 .home-certificate-body {
   align-self: center;
   padding: clamp(24px, 5vw, 62px);
+}
+
+.home-certificate-body .home-certificate-issuer {
+  margin: 20px 0 0;
+}
+
+.home-certificate-body .home-certificate-description {
+  margin: 9px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 @keyframes project-shimmer {

@@ -5,6 +5,8 @@
       "issuer": "Amazon Web Services",
       "date": "2024-04",
       "displayDate": "Apr 2024",
+      "type": "Industry certification",
+      "description": "Foundational cloud credential from Amazon Web Services.",
       "headerPhotos": ["/certificates/aws-certified-cloud-practitioner-certificate.pdf"],
       "featured": true
     },
@@ -13,8 +15,20 @@
       "issuer": "Google",
       "date": "2022-03",
       "displayDate": "Mar 2022",
+      "type": "Professional certificate",
+      "description": "Coursework focused on practical project-management foundations.",
       "headerPhotos": ["/certificates/google-project-management-certificate.pdf"],
       "featured": true
+    },
+    {
+      "name": "Psychological First Aid Course",
+      "issuer": "Singapore Emergency Responder Academy",
+      "date": "2019-07",
+      "displayDate": "Jul 2019",
+      "type": "Course attendance",
+      "description": "Completed foundational training in psychological first aid.",
+      "headerPhotos": ["/certificates/psychological-first-aid-course.pdf"],
+      "featured": false
     }
   ]
 }
