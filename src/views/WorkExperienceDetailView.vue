@@ -68,7 +68,11 @@ const descriptionSections = computed<DescriptionSection[]>(() => {
             class="experience-description-section"
           >
             <h2>{{ section.title }}</h2>
-            <p v-for="paragraph in section.content" :key="paragraph" v-html="formatInlineMarkdown(paragraph)"></p>
+            <p
+              v-for="paragraph in section.content"
+              :key="paragraph"
+              v-html="formatInlineMarkdown(paragraph)"
+            ></p>
           </section>
         </div>
       </div>

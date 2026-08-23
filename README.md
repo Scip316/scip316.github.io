@@ -1,44 +1,33 @@
-# web_project
+# Darrel Lim — Portfolio
 
-This template should help get you started developing with Vue 3 in Vite.
+Personal portfolio built with Vue 3, TypeScript, and Vite. It includes work experience, projects, credentials, and achievements, with content maintained through JSON files in `src/data/`.
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## Development
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Production build
 
 ```sh
 npm run build
 ```
 
-### Run with Docker
+The production files are generated in `dist/`.
 
-Build and run the production site:
+## Content and media
+
+- Update portfolio content in `src/data/`.
+- Store public images, PDFs, and other media in `public/`.
+- Reference public media with root-relative paths, for example: `/projects/Lunch_Box.jpg`.
+
+## Docker
 
 ```sh
 docker build -t darrel-portfolio .
 docker run --rm -p 8080:80 darrel-portfolio
 ```
 
-Open `http://localhost:8080`. The container also supports direct visits to portfolio routes such as `/projects` and `/certificates`.
+The Nginx configuration supports direct visits to portfolio routes such as `/projects`, `/experience`, and `/certificates`.

@@ -34,7 +34,6 @@ const projects = sortByNewestDate(projectData.projects)
       >
         <div
           class="experience-grid-image project-list-image"
-          :class="`visual-${project.visual}`"
           :style="{
             backgroundColor: '#202020',
             backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
@@ -42,8 +41,7 @@ const projects = sortByNewestDate(projectData.projects)
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain',
           }"
-        >
-        </div>
+        ></div>
         <div class="experience-grid-content">
           <p class="page-kicker">{{ project.category }} · {{ project.year }}</p>
           <h2>{{ project.title }}</h2>
@@ -100,9 +98,6 @@ const projects = sortByNewestDate(projectData.projects)
   inset: 0;
   content: '';
   background: linear-gradient(115deg, transparent 38%, #ffffff28 50%, transparent 62%);
-}
-.project-list-image.visual-chatbot {
-  background-color: #373e65;
 }
 .project-summary {
   min-height: 72px;

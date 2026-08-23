@@ -446,7 +446,6 @@ const closeMenu = () => (menuOpen.value = false)
               >
                 <div
                   class="home-project-visual"
-                  :class="`visual-${project.visual}`"
                   :style="{
                     backgroundColor: '#202020',
                     backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
@@ -454,8 +453,7 @@ const closeMenu = () => (menuOpen.value = false)
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
                   }"
-                >
-                </div>
+                ></div>
                 <div class="home-feature-body">
                   <p class="card-label">{{ project.category }} · {{ project.year }}</p>
                   <h3>{{ project.title }}</h3>

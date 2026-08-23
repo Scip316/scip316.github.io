@@ -18,9 +18,7 @@
       ],
       "headerPhotos": ["/projects/Lunch_Box.jpg"],
       "githubUrl": "https://github.com/Scip316/C206_Lunch_Box_GA",
-      "liveUrl": null,
-      "visual": "lunchbox",
-      "visualLabel": "Lunch Box"
+      "liveUrl": null
     },
     {
       "id": "ai-chatbot",
@@ -32,9 +30,7 @@
       "technologies": ["AI", "Python", "Conversational UX"],
       "headerPhotos": ["/projects/Garena_AI.png"],
       "githubUrl": null,
-      "liveUrl": null,
-      "visual": "chatbot",
-      "visualLabel": "AI Chatbot"
+      "liveUrl": null
     }
   ]
 }
