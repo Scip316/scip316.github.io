@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import aboutContent from '../data/about.json'
 import { profile_declaration, socials } from '../data/portfolio'
+import { sortByNewestDate } from '../utils/sortByNewestDate'
 
 const aboutSectionIds = ['profile', 'about-history'] as const
 type AboutSectionId = (typeof aboutSectionIds)[number]
@@ -9,10 +10,18 @@ const activeAboutSection = ref<AboutSectionId>('profile')
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
 const timelineProgress = ref(0)
 const timelineNodeOffsets = ref<number[]>([])
-const timelineStartYear = aboutContent.timeline[0]?.year ?? ''
-const timelineEndYear = aboutContent.timeline[aboutContent.timeline.length - 1]?.year ?? ''
+const timeline = computed(() =>
+  sortByNewestDate(
+    aboutContent.timeline.map((section) => {
+      const entries = sortByNewestDate(section.entries)
+      return { ...section, entries, date: entries[0]?.date }
+    }),
+  ),
+)
+const timelineStartYear = computed(() => timeline.value[0]?.year ?? '')
+const timelineEndYear = computed(() => timeline.value[timeline.value.length - 1]?.year ?? '')
 const activeTimelineYearIndex = computed(() =>
-  aboutContent.timeline.findIndex((section) => section.year === activeTimelineYear.value),
+  timeline.value.findIndex((section) => section.year === activeTimelineYear.value),
 )
 
 const updateActiveAboutSection = () => {
@@ -25,8 +34,8 @@ const updateActiveAboutSection = () => {
 
   activeAboutSection.value = activeSection
 
-  let activeYear = aboutContent.timeline[0]?.year ?? ''
-  for (const timelineSection of aboutContent.timeline) {
+  let activeYear = timeline.value[0]?.year ?? ''
+  for (const timelineSection of timeline.value) {
     const section = document.getElementById(`timeline-${timelineSection.year}`)
     if (section && section.getBoundingClientRect().top <= 180) activeYear = timelineSection.year
   }
@@ -45,7 +54,7 @@ const updateActiveAboutSection = () => {
 
     timelineProgress.value = Math.min(Math.max((scrollY - start) / span, 0), 1) * 100
 
-    timelineNodeOffsets.value = aboutContent.timeline.map((section) => {
+    timelineNodeOffsets.value = timeline.value.map((section) => {
       const sectionEl = document.getElementById(`timeline-${section.year}`)
       if (!sectionEl) return 0
       const sectionTop = sectionEl.getBoundingClientRect().top + scrollY
@@ -141,10 +150,7 @@ onUnmounted(() => {
       <section class="about-journey" aria-label="Journey timeline">
         <p class="page-kicker">Journey / timeline</p>
         <div class="about-timeline">
-          <nav
-            class="about-timeline-nav"
-            aria-label="Journey years"
-          >
+          <nav class="about-timeline-nav" aria-label="Journey years">
             <span
               class="about-timeline-rail-year is-start"
               :class="{ 'is-lit': timelineProgress <= 0 }"
@@ -158,14 +164,14 @@ onUnmounted(() => {
               >{{ timelineEndYear }}</span
             >
             <a
-              v-for="(timelineSection, index) in aboutContent.timeline"
+              v-for="(timelineSection, index) in timeline"
               :key="timelineSection.year"
               class="about-timeline-node"
               :href="`#timeline-${timelineSection.year}`"
               :class="{
                 'is-active': activeTimelineYear === timelineSection.year,
                 'is-reached': index <= activeTimelineYearIndex,
-                'is-endpoint': index === 0 || index === aboutContent.timeline.length - 1,
+                'is-endpoint': index === 0 || index === timeline.length - 1,
               }"
               :style="{ top: `${timelineNodeOffsets[index] ?? 0}%` }"
               :aria-label="timelineSection.year"
@@ -185,7 +191,7 @@ onUnmounted(() => {
           </nav>
           <div class="about-timeline-content">
             <section
-              v-for="timelineSection in aboutContent.timeline"
+              v-for="timelineSection in timeline"
               :id="`timeline-${timelineSection.year}`"
               :key="timelineSection.year"
               class="about-timeline-year"
@@ -522,8 +528,12 @@ onUnmounted(() => {
 }
 
 .about-timeline-year + .about-timeline-year {
-  margin-top: clamp(28px, 3.5vw, 48px);
-  border-top: 1px solid var(--line);
+  padding-top: clamp(14px, 1.8vw, 24px);
+  margin-top: 0;
+}
+
+.about-timeline-year:not(:last-child) {
+  padding-bottom: 0;
 }
 
 .about-timeline-year {
