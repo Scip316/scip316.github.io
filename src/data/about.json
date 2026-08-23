@@ -1,0 +1,21 @@
+{
+  "profilePhoto": "/work_experiences/IRAS.jpg",
+  "details": [
+    { "label": "Full name", "value": "Darrel Dominic Lim De Xiang" },
+    { "label": "Date of Birth", "value": "06 March 2005" },
+    { "label": "Current role", "value": "NSF (National Service Full-Time)" },
+    { "label": "Based in", "value": "Singapore" }
+  ],
+  "history": [
+    {
+      "title": "A little about me",
+      "body": "Hi there, I am Darrel. My main career interest lies within the field of cloud technology and automation. I am also curious about the healthcare and psychology sectors, and I am open to exploring those fields.",
+      "body2": ""
+    },
+    {
+      "title": "Current chapter",
+      "body": "Currently serving in the Singapore Armed Forces as an NSF ASA in G1-Army, the HR of the Army.",
+      "body2": ""
+    }
+  ]
+}

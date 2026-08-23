@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import AboutView from './views/AboutView.vue'
 import CertificateListView from './views/CertificateListView.vue'
 import ProjectListView from './views/ProjectListView.vue'
+import SiteFooter from './components/SiteFooter.vue'
 import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
 import WorkExperienceListView from './views/WorkExperienceListView.vue'
 import achievementData from './data/achievements.json'
@@ -34,6 +35,14 @@ const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
 const activeFeatureMediaIndices = ref<Record<string, number>>({})
+const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
+type HomeSectionId = (typeof homeSectionIds)[number]
+const activeHomeSection = ref<HomeSectionId | null>(null)
+const homeRailHasClearedHero = ref(false)
+const homeSectionRailTop = ref(118)
+const showHomeSectionRail = computed(
+  () => homeRailHasClearedHero.value && activeHomeSection.value !== null,
+)
 const featureMediaTouchStarts = new Map<string, number>()
 const featureMediaSwiped = new Set<string>()
 const displayedWorkIndex = computed(() => activeWorkIndex.value)
@@ -186,6 +195,29 @@ const updateCurrentPath = () => {
   currentPath.value = window.location.pathname
 }
 
+const updateActiveHomeSection = () => {
+  let activeSection: HomeSectionId | null = null
+  const introSection = document.getElementById('intro')
+  const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
+
+  homeRailHasClearedHero.value = Boolean(
+    introSection &&
+      introSection.getBoundingClientRect().bottom <= headerHeight + introSection.offsetHeight * 0.5,
+  )
+  homeSectionRailTop.value = introSection
+    ? Math.max(118, Math.round(introSection.getBoundingClientRect().bottom + 24))
+    : 118
+
+  for (const sectionId of homeSectionIds) {
+    const section = document.getElementById(sectionId)
+    if (section && section.getBoundingClientRect().top <= 180) {
+      activeSection = sectionId
+    }
+  }
+
+  activeHomeSection.value = activeSection
+}
+
 const handleInternalNavigation = async (event: MouseEvent) => {
   if (
     event.defaultPrevented ||
@@ -232,7 +264,10 @@ onMounted(() => {
   startProjectRotation()
   startCertificateRotation()
   startAchievementRotation()
+  updateActiveHomeSection()
   window.addEventListener('popstate', updateCurrentPath)
+  window.addEventListener('scroll', updateActiveHomeSection, { passive: true })
+  window.addEventListener('resize', updateActiveHomeSection)
   document.addEventListener('click', handleInternalNavigation)
 })
 onUnmounted(() => {
@@ -241,6 +276,8 @@ onUnmounted(() => {
   stopCertificateRotation()
   stopAchievementRotation()
   window.removeEventListener('popstate', updateCurrentPath)
+  window.removeEventListener('scroll', updateActiveHomeSection)
+  window.removeEventListener('resize', updateActiveHomeSection)
   document.removeEventListener('click', handleInternalNavigation)
 })
 const closeMenu = () => (menuOpen.value = false)
@@ -282,6 +319,27 @@ const closeMenu = () => (menuOpen.value = false)
           <p>{{ profile_declaration.intro }}</p>
         </div>
       </section>
+      <nav
+        class="home-section-rail"
+        :class="{ 'is-visible': showHomeSectionRail }"
+        :style="{ top: `${homeSectionRailTop}px` }"
+        :aria-hidden="!showHomeSectionRail"
+        aria-label="On this page"
+      >
+        <p>On this page</p>
+        <a href="#intro" :class="{ 'is-active': activeHomeSection === 'intro' }"
+          ><span>01</span> Intro</a
+        >
+        <a href="#work-experience" :class="{ 'is-active': activeHomeSection === 'work-experience' }"
+          ><span>02</span> Work</a
+        >
+        <a href="#projects" :class="{ 'is-active': activeHomeSection === 'projects' }"
+          ><span>03</span> Projects</a
+        >
+        <a href="#credentials" :class="{ 'is-active': activeHomeSection === 'credentials' }"
+          ><span>04</span> Credentials</a
+        >
+      </nav>
       <section id="work-experience" class="showcase-section showcase-section--work">
         <div class="showcase-section-inner">
           <div class="showcase-section-heading">
@@ -785,4 +843,5 @@ const closeMenu = () => (menuOpen.value = false)
   <CertificateListView v-else-if="currentPath === '/certificates'" />
   <AboutView v-else-if="currentPath === '/about'" />
   <WorkExperienceDetailView v-else :slug="detailSlug" />
+  <SiteFooter />
 </template>
