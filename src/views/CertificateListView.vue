@@ -45,7 +45,7 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
     </a>
     <nav class="desktop-nav" aria-label="Main navigation">
       <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
-      ><a href="/certificates">Credentials</a><a href="/#contact">Contact</a>
+      ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
     </nav>
   </header>
   <main class="experience-page certificate-page">
