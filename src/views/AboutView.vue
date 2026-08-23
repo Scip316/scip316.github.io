@@ -1,6 +1,39 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
 import aboutContent from '../data/about.json'
 import { profile_declaration, socials } from '../data/portfolio'
+
+const aboutSectionIds = ['profile', 'about-history'] as const
+type AboutSectionId = (typeof aboutSectionIds)[number]
+const activeAboutSection = ref<AboutSectionId>('profile')
+const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
+
+const updateActiveAboutSection = () => {
+  let activeSection: AboutSectionId = 'profile'
+
+  for (const sectionId of aboutSectionIds) {
+    const section = document.getElementById(sectionId)
+    if (section && section.getBoundingClientRect().top <= 180) activeSection = sectionId
+  }
+
+  activeAboutSection.value = activeSection
+
+  let activeYear = aboutContent.timeline[0]?.year ?? ''
+  for (const timelineSection of aboutContent.timeline) {
+    const section = document.getElementById(`timeline-${timelineSection.year}`)
+    if (section && section.getBoundingClientRect().top <= 180) activeYear = timelineSection.year
+  }
+  activeTimelineYear.value = activeYear
+}
+
+onMounted(() => {
+  updateActiveAboutSection()
+  window.addEventListener('scroll', updateActiveAboutSection, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', updateActiveAboutSection)
+})
 </script>
 
 <template>
@@ -21,7 +54,17 @@ import { profile_declaration, socials } from '../data/portfolio'
       <p>About / {{ profile_declaration.location }}</p>
     </header>
 
-    <section class="about-profile-grid" aria-label="Profile overview">
+    <nav class="home-section-rail about-section-rail is-visible" aria-label="On this page">
+      <p>On this page</p>
+      <a href="#profile" :class="{ 'is-active': activeAboutSection === 'profile' }"
+        ><span>01</span> Profile</a
+      >
+      <a href="#about-history" :class="{ 'is-active': activeAboutSection === 'about-history' }"
+        ><span>02</span> About me</a
+      >
+    </nav>
+
+    <section id="profile" class="about-profile-grid" aria-label="Profile overview">
       <figure class="about-photo-card">
         <img :src="aboutContent.profilePhoto" :alt="`${profile_declaration.name} at IRAS`" />
       </figure>
@@ -51,17 +94,55 @@ import { profile_declaration, socials } from '../data/portfolio'
       </section>
     </section>
 
-    <section class="about-history" aria-label="About and history">
+    <section id="about-history" class="about-history" aria-label="About and history">
       <header class="about-history-heading">
         <p class="page-kicker">About / history</p>
-        <p>Last updated: {{ profile_declaration.lastUpdated }}</p>
       </header>
-      <div class="about-history-list">
-        <article v-for="section in aboutContent.history" :key="section.title">
-          <h1>{{ section.title }}</h1>
-          <p>{{ section.body }}</p>
-        </article>
-      </div>
+
+      <section class="about-introduction" aria-labelledby="about-introduction-title">
+        <h1 id="about-introduction-title">{{ aboutContent.introduction.title }}</h1>
+        <div>
+          <p v-for="paragraph in aboutContent.introduction.body" :key="paragraph">
+            {{ paragraph }}
+          </p>
+        </div>
+      </section>
+
+      <section class="about-journey" aria-label="Journey timeline">
+        <p class="page-kicker">Journey / timeline</p>
+        <div class="about-timeline">
+          <nav class="about-timeline-nav" aria-label="Journey years">
+            <a
+              v-for="(timelineSection, index) in aboutContent.timeline"
+              :key="timelineSection.year"
+              :href="`#timeline-${timelineSection.year}`"
+              :class="{ 'is-active': activeTimelineYear === timelineSection.year }"
+              ><span>{{ String(index + 1).padStart(2, '0') }}</span
+              >{{ timelineSection.year }}</a
+            >
+          </nav>
+          <div class="about-timeline-content">
+            <section
+              v-for="timelineSection in aboutContent.timeline"
+              :id="`timeline-${timelineSection.year}`"
+              :key="timelineSection.year"
+              class="about-timeline-year"
+            >
+              <h1>{{ timelineSection.year }}</h1>
+              <article
+                v-for="entry in timelineSection.entries"
+                :key="entry.title"
+                class="about-timeline-entry"
+              >
+                <h2>{{ entry.title }}</h2>
+                <div>
+                  <p v-for="paragraph in entry.body" :key="paragraph">{{ paragraph }}</p>
+                </div>
+              </article>
+            </section>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
 </template>
@@ -71,11 +152,46 @@ import { profile_declaration, socials } from '../data/portfolio'
   padding-bottom: clamp(72px, 8vw, 130px);
 }
 
+.about-section-rail {
+  top: 118px;
+  left: clamp(24px, 3vw, 60px);
+  min-width: 205px;
+  padding: 20px 22px 20px 23px;
+}
+
+.about-section-rail p {
+  margin-bottom: 12px;
+  font-size: 0.75rem;
+}
+
+.about-section-rail a {
+  padding: 9px 0;
+  font-size: 0.88rem;
+}
+
+.about-section-rail a::before {
+  left: -24px;
+}
+
+.about-section-rail a.is-active::before {
+  height: 31px;
+}
+
+.about-section-rail a span {
+  width: 36px;
+}
+
 .about-profile-grid {
   display: grid;
   grid-template-columns: minmax(360px, 1.2fr) minmax(300px, 0.85fr) minmax(300px, 0.72fr);
   gap: clamp(18px, 2.5vw, 38px);
   margin-top: clamp(42px, 6vw, 84px);
+}
+
+#profile,
+#about-history,
+.about-timeline-year {
+  scroll-margin-top: 105px;
 }
 
 .about-photo-card,
@@ -181,55 +297,157 @@ import { profile_declaration, socials } from '../data/portfolio'
 }
 
 .about-history-heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--line);
 }
 
-.about-history-heading .page-kicker,
-.about-history-heading > p:last-child {
+.about-history-heading .page-kicker {
   margin: 0;
 }
 
-.about-history-heading > p:last-child {
-  color: var(--muted);
-  font:
-    0.7rem 'DM Mono',
-    monospace;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.about-history-list article {
+.about-introduction {
   display: grid;
-  grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1fr);
-  gap: clamp(28px, 6vw, 120px);
-  padding: clamp(30px, 4vw, 58px) 0;
+  grid-template-columns: minmax(220px, 0.45fr) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 54px);
+  padding: clamp(30px, 4vw, 52px) 0;
 }
 
-.about-history-list article + article {
+.about-introduction h1,
+.about-introduction p {
+  margin: 0;
+}
+
+.about-introduction h1 {
+  font-size: clamp(1.8rem, 3vw, 3.1rem);
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.about-introduction div {
+  display: grid;
+  gap: 18px;
+}
+
+.about-introduction p {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+  line-height: 1.7;
+}
+
+.about-journey {
+  padding-top: clamp(28px, 4vw, 54px);
   border-top: 1px solid var(--line);
 }
 
-.about-history-list h1,
-.about-history-list p {
+.about-journey > .page-kicker {
+  margin: 0 0 clamp(24px, 3vw, 36px);
+}
+
+.about-timeline {
+  display: grid;
+  grid-template-columns: minmax(108px, 0.14fr) minmax(0, 1fr);
+  gap: clamp(20px, 2.2vw, 42px);
+}
+
+.about-timeline-nav {
+  position: sticky;
+  top: 112px;
+  display: grid;
+  align-self: start;
+  max-height: calc(100vh - 142px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+  scrollbar-color: var(--accent) transparent;
+  scrollbar-width: thin;
+}
+
+.about-timeline-nav a {
+  position: relative;
+  padding: 9px 0;
+  color: var(--muted);
+  font:
+    0.78rem 'DM Mono',
+    monospace;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.about-timeline-nav a::before {
+  position: absolute;
+  top: 50%;
+  left: -17px;
+  width: 2px;
+  height: 0;
+  content: '';
+  background: var(--accent);
+  transform: translateY(-50%);
+  transition: height 0.2s ease;
+}
+
+.about-timeline-nav a:hover,
+.about-timeline-nav a.is-active {
+  color: var(--accent);
+}
+
+.about-timeline-nav a.is-active::before {
+  height: 24px;
+}
+
+.about-timeline-nav span {
+  display: inline-block;
+  width: 34px;
+}
+
+.about-timeline-year + .about-timeline-year {
+  border-top: 1px solid var(--line);
+}
+
+.about-timeline-year {
+  padding: 0 0 clamp(36px, 5vw, 68px);
+}
+
+.about-timeline-year h1,
+.about-timeline-entry h2,
+.about-timeline-entry p {
   margin: 0;
 }
 
-.about-history-list h1 {
-  font-size: clamp(1.8rem, 3vw, 3.2rem);
+.about-timeline-year h1 {
+  margin-bottom: clamp(18px, 2.4vw, 28px);
+  font-size: clamp(2.25rem, 3.4vw, 3.75rem);
+  font-weight: 600;
   letter-spacing: -0.055em;
-  line-height: 1;
+  line-height: 0.95;
 }
 
-.about-history-list p {
-  max-width: 760px;
+.about-timeline-entry {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.38fr) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 52px);
+  padding: clamp(20px, 2vw, 28px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-timeline-entry h2 {
+  font-size: clamp(1.2rem, 1.55vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.16;
+}
+
+.about-timeline-entry p {
+  max-width: 720px;
   color: var(--muted);
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  line-height: 1.7;
-  white-space: pre-line;
+  font-size: clamp(0.96rem, 1.1vw, 1.07rem);
+  line-height: 1.65;
+}
+
+.about-timeline-entry p + p {
+  margin-top: 12px;
 }
 
 @media (max-width: 960px) {
@@ -245,7 +463,9 @@ import { profile_declaration, socials } from '../data/portfolio'
 
 @media (max-width: 650px) {
   .about-profile-grid,
-  .about-history-list article {
+  .about-timeline,
+  .about-introduction,
+  .about-timeline-entry {
     grid-template-columns: 1fr;
   }
 
@@ -264,8 +484,21 @@ import { profile_declaration, socials } from '../data/portfolio'
     min-height: 320px;
   }
 
-  .about-history-heading {
-    display: grid;
+  .about-timeline-nav {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0;
+    border: 0;
+  }
+
+  .about-timeline-nav a {
+    padding: 10px;
+    border: 1px solid var(--line);
+  }
+
+  .about-timeline-nav a::before {
+    display: none;
   }
 }
 </style>

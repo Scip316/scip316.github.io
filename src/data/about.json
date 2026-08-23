@@ -6,16 +6,49 @@
     { "label": "Current role", "value": "NSF (National Service Full-Time)" },
     { "label": "Based in", "value": "Singapore" }
   ],
-  "history": [
+  "introduction": {
+    "title": "A little about me",
+    "body": [
+      "Hi there, I’m Darrel. My main career interests lie in cloud technology and automation. I’m also curious about the healthcare and psychology sectors, and I’m open to exploring opportunities in those fields. Outside of work, I spend my free time with friends and family, playing games, and trying new activities. My goal is to become a project manager in the future or to mentor the next generation, as I enjoy helping and teaching others.",
+      "After my National Service, I will study for a Bachelor of Science in Information Systems at Singapore Management University, continuing from my Diploma in Information Technology at Republic Polytechnic."
+    ]
+  },
+  "timeline": [
     {
-      "title": "A little about me",
-      "body": "Hi there, I am Darrel. My main career interest lies within the field of cloud technology and automation. I am also curious about the healthcare and psychology sectors, and I am open to exploring those fields.",
-      "body2": ""
+      "year": "2025",
+      "entries": [
+        {
+          "title": "Republic Polytechnic",
+          "body": [
+            "Completed my Diploma in Information Technology, where I built a foundation in software development and cloud technology."
+          ]
+        },
+        {
+          "title": "DBS Asia Hub — Junior Application Developer",
+          "body": [
+            "Worked with two other interns to integrate a scanner feature into a web application built with Angular and Spring Boot.",
+            "I was responsible for configuring the scanner, connecting it to the frontend controls, and ensuring payloads reached the backend correctly."
+          ]
+        },
+        {
+          "title": "Singapore Armed Forces — Admin Support Assistant",
+          "body": [
+            "Began National Service as an NSF ASA in G1-Army, supporting data-related tasks, ad hoc requests, and team projects."
+          ]
+        }
+      ]
     },
     {
-      "title": "Current chapter",
-      "body": "Currently serving in the Singapore Armed Forces as an NSF ASA in G1-Army, the HR of the Army.",
-      "body2": ""
+      "year": "2024",
+      "entries": [
+        {
+          "title": "NCS / IRAS — DevOps Engineer",
+          "body": [
+            "Joined the IRIN3 project as a DevSecOps Engineer, supporting CI/CD pipelines, Azure services, AKS operations, and application-team queries.",
+            "The role strengthened my interest in cloud technology, automation, and how engineering teams deliver software in real working environments."
+          ]
+        }
+      ]
     }
   ]
 }
