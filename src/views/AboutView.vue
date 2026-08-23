@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import aboutContent from '../data/about.json'
 import { profile_declaration, socials } from '../data/portfolio'
 
@@ -7,6 +7,13 @@ const aboutSectionIds = ['profile', 'about-history'] as const
 type AboutSectionId = (typeof aboutSectionIds)[number]
 const activeAboutSection = ref<AboutSectionId>('profile')
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
+const timelineProgress = ref(0)
+const timelineNodeOffsets = ref<number[]>([])
+const timelineStartYear = aboutContent.timeline[0]?.year ?? ''
+const timelineEndYear = aboutContent.timeline[aboutContent.timeline.length - 1]?.year ?? ''
+const activeTimelineYearIndex = computed(() =>
+  aboutContent.timeline.findIndex((section) => section.year === activeTimelineYear.value),
+)
 
 const updateActiveAboutSection = () => {
   let activeSection: AboutSectionId = 'profile'
@@ -24,15 +31,38 @@ const updateActiveAboutSection = () => {
     if (section && section.getBoundingClientRect().top <= 180) activeYear = timelineSection.year
   }
   activeTimelineYear.value = activeYear
+
+  const timelineContent = document.querySelector('.about-timeline-content')
+
+  if (timelineContent) {
+    const contentRect = timelineContent.getBoundingClientRect()
+    const scrollY = window.scrollY
+    const contentTop = contentRect.top + scrollY
+    const contentBottom = contentTop + contentRect.height
+    const start = contentTop - window.innerHeight * 0.35
+    const end = contentBottom - window.innerHeight
+    const span = Math.max(end - start, 1)
+
+    timelineProgress.value = Math.min(Math.max((scrollY - start) / span, 0), 1) * 100
+
+    timelineNodeOffsets.value = aboutContent.timeline.map((section) => {
+      const sectionEl = document.getElementById(`timeline-${section.year}`)
+      if (!sectionEl) return 0
+      const sectionTop = sectionEl.getBoundingClientRect().top + scrollY
+      return Math.min(Math.max(((sectionTop - start) / span) * 100, 0), 100)
+    })
+  }
 }
 
 onMounted(() => {
   updateActiveAboutSection()
   window.addEventListener('scroll', updateActiveAboutSection, { passive: true })
+  window.addEventListener('resize', updateActiveAboutSection)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', updateActiveAboutSection)
+  window.removeEventListener('resize', updateActiveAboutSection)
 })
 </script>
 
@@ -111,15 +141,47 @@ onUnmounted(() => {
       <section class="about-journey" aria-label="Journey timeline">
         <p class="page-kicker">Journey / timeline</p>
         <div class="about-timeline">
-          <nav class="about-timeline-nav" aria-label="Journey years">
+          <nav
+            class="about-timeline-nav"
+            aria-label="Journey years"
+          >
+            <span
+              class="about-timeline-rail-year is-start"
+              :class="{ 'is-lit': timelineProgress <= 0 }"
+              aria-hidden="true"
+              >{{ timelineStartYear }}</span
+            >
+            <span
+              class="about-timeline-rail-year is-end"
+              :class="{ 'is-lit': timelineProgress >= 100 }"
+              aria-hidden="true"
+              >{{ timelineEndYear }}</span
+            >
             <a
               v-for="(timelineSection, index) in aboutContent.timeline"
               :key="timelineSection.year"
+              class="about-timeline-node"
               :href="`#timeline-${timelineSection.year}`"
-              :class="{ 'is-active': activeTimelineYear === timelineSection.year }"
-              ><span>{{ String(index + 1).padStart(2, '0') }}</span
-              >{{ timelineSection.year }}</a
+              :class="{
+                'is-active': activeTimelineYear === timelineSection.year,
+                'is-reached': index <= activeTimelineYearIndex,
+                'is-endpoint': index === 0 || index === aboutContent.timeline.length - 1,
+              }"
+              :style="{ top: `${timelineNodeOffsets[index] ?? 0}%` }"
+              :aria-label="timelineSection.year"
+            ></a>
+            <div
+              class="about-timeline-cursor"
+              aria-hidden="true"
+              :style="{ top: `${timelineProgress}%` }"
             >
+              <span
+                v-if="timelineProgress > 0 && timelineProgress < 100"
+                class="about-timeline-cursor-year"
+                >{{ activeTimelineYear }}</span
+              >
+              <span class="about-timeline-cursor-arrow"></span>
+            </div>
           </nav>
           <div class="about-timeline-content">
             <section
@@ -318,9 +380,9 @@ onUnmounted(() => {
 }
 
 .about-introduction h1 {
-  font-size: clamp(1.8rem, 3vw, 3.1rem);
-  letter-spacing: -0.065em;
-  line-height: 0.98;
+  font-size: clamp(1.7rem, 2.5vw, 2.5rem);
+  letter-spacing: -0.05em;
+  line-height: 1.05;
 }
 
 .about-introduction div {
@@ -345,56 +407,113 @@ onUnmounted(() => {
 }
 
 .about-timeline {
-  display: grid;
-  grid-template-columns: minmax(108px, 0.14fr) minmax(0, 1fr);
-  gap: clamp(20px, 2.2vw, 42px);
+  position: relative;
+  display: block;
 }
 
 .about-timeline-nav {
-  position: sticky;
-  top: 112px;
-  display: grid;
-  align-self: start;
-  max-height: calc(100vh - 142px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-left: 16px;
-  border-left: 1px solid var(--line);
-  scrollbar-color: var(--accent) transparent;
-  scrollbar-width: thin;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * clamp(28px, 5vw, 72px) - 92px);
+  z-index: 1;
+  width: 84px;
 }
 
-.about-timeline-nav a {
-  position: relative;
-  padding: 9px 0;
+.about-timeline-rail-year {
+  position: absolute;
+  left: 64px;
+  z-index: 2;
+  display: flex;
+  width: max-content;
   color: var(--muted);
   font:
-    0.78rem 'DM Mono',
+    0.9rem 'DM Mono',
     monospace;
   letter-spacing: 0.04em;
-  text-decoration: none;
-  transition: color 0.2s ease;
 }
 
-.about-timeline-nav a::before {
-  position: absolute;
-  top: 50%;
-  left: -17px;
-  width: 2px;
-  height: 0;
-  content: '';
-  background: var(--accent);
-  transform: translateY(-50%);
-  transition: height 0.2s ease;
+.about-timeline-node.is-endpoint {
+  display: none;
 }
 
-.about-timeline-nav a:hover,
-.about-timeline-nav a.is-active {
+.about-timeline-rail-year.is-start {
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.about-timeline-rail-year.is-end {
+  bottom: 0;
+  transform: translate(-50%, 50%);
+}
+
+.about-timeline-rail-year.is-lit {
   color: var(--accent);
 }
 
-.about-timeline-nav a.is-active::before {
-  height: 24px;
+.about-timeline-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 64px;
+  width: 2px;
+  background: var(--line);
+}
+
+.about-timeline-node {
+  position: absolute;
+  left: 65px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  transform: translate(-50%, -50%);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.about-timeline-node:hover,
+.about-timeline-node.is-reached {
+  border-color: var(--accent);
+}
+
+.about-timeline-node.is-active {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.about-timeline-cursor {
+  position: absolute;
+  top: 0%;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+  width: 66px;
+  transform: translateY(-50%);
+  transition: top 0.18s ease-out;
+}
+
+.about-timeline-cursor-year {
+  color: var(--accent);
+  font:
+    500 0.9rem 'DM Mono',
+    monospace;
+  letter-spacing: 0.04em;
+}
+
+.about-timeline-cursor-arrow {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--accent);
 }
 
 .about-timeline-nav span {
@@ -403,11 +522,20 @@ onUnmounted(() => {
 }
 
 .about-timeline-year + .about-timeline-year {
+  margin-top: clamp(28px, 3.5vw, 48px);
   border-top: 1px solid var(--line);
 }
 
 .about-timeline-year {
-  padding: 0 0 clamp(36px, 5vw, 68px);
+  padding: clamp(28px, 3.5vw, 48px) 0;
+}
+
+.about-timeline-year:first-child {
+  padding-top: 0;
+}
+
+.about-timeline-year:last-child {
+  padding-bottom: clamp(36px, 5vw, 68px);
 }
 
 .about-timeline-year h1,
@@ -417,37 +545,47 @@ onUnmounted(() => {
 }
 
 .about-timeline-year h1 {
-  margin-bottom: clamp(18px, 2.4vw, 28px);
-  font-size: clamp(2.25rem, 3.4vw, 3.75rem);
+  position: sticky;
+  top: 112px;
+  z-index: 2;
+  margin-bottom: clamp(14px, 1.8vw, 22px);
+  padding: 12px 0;
+  background: var(--surface);
+  font-size: clamp(1.75rem, 2.4vw, 2.6rem);
   font-weight: 600;
-  letter-spacing: -0.055em;
-  line-height: 0.95;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 .about-timeline-entry {
   display: grid;
-  grid-template-columns: minmax(220px, 0.38fr) minmax(0, 1fr);
-  gap: clamp(24px, 3vw, 52px);
-  padding: clamp(20px, 2vw, 28px) 0;
+  grid-template-columns: minmax(200px, 0.34fr) minmax(0, 1fr);
+  gap: clamp(20px, 2.6vw, 48px);
+  align-items: baseline;
+  padding: clamp(18px, 1.8vw, 26px) 0;
   border-top: 1px solid var(--line);
 }
 
 .about-timeline-entry h2 {
-  font-size: clamp(1.2rem, 1.55vw, 1.7rem);
+  font-size: clamp(1.02rem, 1.25vw, 1.3rem);
   font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.16;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
 }
 
 .about-timeline-entry p {
   max-width: 720px;
   color: var(--muted);
-  font-size: clamp(0.96rem, 1.1vw, 1.07rem);
-  line-height: 1.65;
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  line-height: 1.7;
 }
 
 .about-timeline-entry p + p {
   margin-top: 12px;
+}
+
+.about-timeline-entry:last-child {
+  border-bottom: 1px solid var(--line);
 }
 
 @media (max-width: 960px) {
@@ -486,19 +624,45 @@ onUnmounted(() => {
 
   .about-timeline-nav {
     position: static;
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+    height: auto;
+    min-height: 0;
     padding: 0;
-    border: 0;
   }
 
-  .about-timeline-nav a {
+  .about-timeline-nav::before,
+  .about-timeline-cursor,
+  .about-timeline-rail-year {
+    display: none;
+  }
+
+  .about-timeline-node {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
     padding: 10px;
     border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--surface);
+    color: var(--text);
+    font:
+      0.75rem 'DM Mono',
+      monospace;
+    letter-spacing: 0.04em;
+    transform: none;
   }
 
-  .about-timeline-nav a::before {
-    display: none;
+  .about-timeline-node::after {
+    content: attr(aria-label);
+  }
+
+  .about-timeline-node.is-active {
+    border-color: var(--accent);
+    background: transparent;
+    box-shadow: none;
   }
 }
 </style>
