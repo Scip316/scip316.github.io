@@ -36,7 +36,7 @@ const projects = sortByNewestDate(projectData.projects)
           class="experience-grid-image project-list-image"
           :class="`visual-${project.visual}`"
           :style="{
-            backgroundColor: '#e6e6e3',
+            backgroundColor: '#202020',
             backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
