@@ -16,18 +16,18 @@ const escapeHtml = (value: string) =>
   )
 const formatInlineMarkdown = (value: string) =>
   escapeHtml(value).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-const descriptionBlocks = computed(() =>
-  (experience.value?.longDescription ?? '')
-    .split(/\n\s*\n/)
-    .filter(Boolean)
-    .map((block) => {
-      const heading = block.match(/^###\s+(.+)/)
-      return {
-        type: heading ? 'heading' : 'paragraph',
-        content: formatInlineMarkdown(heading?.[1] ?? block.replace(/\n/g, ' ')),
-      }
-    }),
-)
+type DescriptionSection = {
+  title: string
+  content: string[]
+}
+
+const descriptionSections = computed<DescriptionSection[]>(() => {
+  const description = experience.value?.longDescription
+  if (Array.isArray(description)) return description as DescriptionSection[]
+  if (!description) return []
+
+  return [{ title: 'Overview', content: [description] }]
+})
 </script>
 
 <template>
@@ -62,10 +62,14 @@ const descriptionBlocks = computed(() =>
       <div>
         <p class="page-kicker">My Responsibilities:</p>
         <div class="experience-description">
-          <template v-for="block in descriptionBlocks" :key="block.content"
-            ><h2 v-if="block.type === 'heading'" v-html="block.content"></h2>
-            <p v-else v-html="block.content"></p
-          ></template>
+          <section
+            v-for="section in descriptionSections"
+            :key="section.title"
+            class="experience-description-section"
+          >
+            <h2>{{ section.title }}</h2>
+            <p v-for="paragraph in section.content" :key="paragraph" v-html="formatInlineMarkdown(paragraph)"></p>
+          </section>
         </div>
       </div>
       <div>

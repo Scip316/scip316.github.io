@@ -26,7 +26,44 @@
         "Mend"
       ],
       "summary": "Worked as a DevSecOps (DSO) Engineer in IRAS on the IRIN3 project. Assisted in the development and maintance for numerous application pipeline, troubleshooting their pods in AKS and served as a help desk for the application team",
-      "longDescription": "### Overview\n\nDuring my fruitful time as a DevSecOps (DSO) Engineer, I assisted in maintaining and updating pipelines while also supporting queries from the Application team. During this time, I helped with three crucial CI/CD pipelines, where I worked closely with my DSO team and the Application team as they underwent a major data migration in Azure Data Factory.\n\n### Pipeline delivery and migration\n\nI supported the updating and testing of the pipelines to ensure that their code was successfully deployed to the various environments: **DEV, SIT, UAT, ORT, and PROD**. In addition, I also helped to promote one of the pipelines from **GCC1 (Government on Commercial Cloud 1) to GCC2 (Government on Commercial Cloud 2)**.\n\nBesides supporting the major pipeline projects, I helped to fine-tune the pipelines' performance by utilising **Kusto Query** to analyse build agent health details from the AKS logs, as well as **Azure Command-Line Interface (CLI)** and **kubectl** to monitor pods in real time and troubleshoot errors. I even went as far as creating my own script to automatically collect pod health logs.\n\nIn addition, I conducted research on third-party tools such as **Lighthouse** to determine their applicability to the project.\n\n### Pipeline and build-agent troubleshooting\n\nRiding on the work I did with the pod health logs, I also helped my team monitor the overall health of our build agents and AKS clusters. Sometimes, the Application team would send a query through the helpdesk asking why their pipeline had failed.\n\nTo understand the issue, I would first identify which stage of the pipeline had failed and check the console logs for more information. Normally, if the failure occurred during the **NPM test**, it meant that their application did not pass the build test.\n\nIf the failure occurred at **SonarQube, Fortify, or Mend**, it meant that their code did not meet IRAS standards or had identified code smells. If this was the case, I would screenshot the reason for the failure and send it back to the developers.\n\nOtherwise, we would dive deeper into the issue by obtaining the build agent name, examining the console logs from **Azure Kubernetes Service (AKS)**, and checking whether the pod still existed. If it did, I would use **kubectl** to access the pod and gather more detailed information for troubleshooting. Sometimes, I would also consult my team when fine-tuning the build agent configuration in the **Helm file**.\n\n### Network infrastructure\n\nOutside of the pipeline and AKS work, I assisted my supervisor in documenting our network infrastructure, particularly the connections between the different DSO infrastructure components.\n\n### Conclusion\n\nOverall, I really enjoyed working there. It was probably the best internship experience I could have asked for. Till this day, I still miss the company of my co-workers and our discussions on how to tackle different tasks and challenges.\n\nBeing a DSO Engineer exposed me to many different **Azure services** and gave me a much better understanding of how they are used in an actual working environment. More importantly, the experience only deepened my interest in **Cloud Technology and automation**.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "During my fruitful time as a DevSecOps (DSO) Engineer, I assisted in maintaining and updating pipelines while also supporting queries from the Application team. During this time, I helped with three crucial CI/CD pipelines, where I worked closely with my DSO team and the Application team as they underwent a major data migration in Azure Data Factory."
+          ]
+        },
+        {
+          "title": "Pipeline delivery and migration",
+          "content": [
+            "I supported the updating and testing of the pipelines to ensure that their code was successfully deployed to the various environments: **DEV, SIT, UAT, ORT, and PROD**. In addition, I also helped to promote one of the pipelines from **GCC1 (Government on Commercial Cloud 1) to GCC2 (Government on Commercial Cloud 2)**.",
+            "Besides supporting the major pipeline projects, I helped to fine-tune the pipelines' performance by utilising **Kusto Query** to analyse build agent health details from the AKS logs, as well as **Azure Command-Line Interface (CLI)** and **kubectl** to monitor pods in real time and troubleshoot errors. I even went as far as creating my own script to automatically collect pod health logs.",
+            "In addition, I conducted research on third-party tools such as **Lighthouse** to determine their applicability to the project."
+          ]
+        },
+        {
+          "title": "Pipeline and build-agent troubleshooting",
+          "content": [
+            "Riding on the work I did with the pod health logs, I also helped my team monitor the overall health of our build agents and AKS clusters. Sometimes, the Application team would send a query through the helpdesk asking why their pipeline had failed.",
+            "To understand the issue, I would first identify which stage of the pipeline had failed and check the console logs for more information. Normally, if the failure occurred during the **NPM test**, it meant that their application did not pass the build test.",
+            "If the failure occurred at **SonarQube, Fortify, or Mend**, it meant that their code did not meet IRAS standards or had identified code smells. If this was the case, I would screenshot the reason for the failure and send it back to the developers.",
+            "Otherwise, we would dive deeper into the issue by obtaining the build agent name, examining the console logs from **Azure Kubernetes Service (AKS)**, and checking whether the pod still existed. If it did, I would use **kubectl** to access the pod and gather more detailed information for troubleshooting. Sometimes, I would also consult my team when fine-tuning the build agent configuration in the **Helm file**."
+          ]
+        },
+        {
+          "title": "Network infrastructure",
+          "content": [
+            "Outside of the pipeline and AKS work, I assisted my supervisor in documenting our network infrastructure, particularly the connections between the different DSO infrastructure components."
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "Overall, I really enjoyed working there. It was probably the best internship experience I could have asked for. Till this day, I still miss the company of my co-workers and our discussions on how to tackle different tasks and challenges.",
+            "Being a DSO Engineer exposed me to many different **Azure services** and gave me a much better understanding of how they are used in an actual working environment. More importantly, the experience only deepened my interest in **Cloud Technology and automation**."
+          ]
+        }
+      ],
       "endorsements": [
         {
           "name": "Test1",
@@ -52,7 +89,26 @@
       "headerPhotos": ["/work_experiences/DBS.png"],
       "skills": ["Angular", "JavaScript", "HTML", "CSS", "Spring Boot", "MySQL"],
       "summary": "Assisted in developing several widgets for a new web application feature. Worked with Spring Boot to handle payloads and connect to the database. Coordinated with my team to ensure that our tasks stayed on track and were completed on time.",
-      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "My time as a Junior Application Developer at DBS was a short, but meaning jounry as i worked together with my other interns to develop a new compoment for a web applicaiton. I help to keep track of task to do and lias with my overseas team for quieries that arises"
+          ]
+        },
+        {
+          "title": "Widget Development",
+          "content": [
+            "I worked with 2 other interns to intergate a scanner function into a web application. The web application was built using Angular and Spring Boot. For my part, I was responsible for the connectivity between the scanner (fi-scanner) and the web application, to the backend (Spring Boot). I work on configuring the scanner paramters and aling it with the frontend web buttons, and ensure that the payloads are sent to the backend correctly. The other 2 intenrs handled the frontend, backend development with SQL DB of the web application. We worked closely together to ensure that our tasks were completed on time and that the web application was functioning correctly."
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "Although my time at DBS was short, I learnt a great deal about web application development through my first full-stack project. I’m very grateful for the mentorship and support I received from my team and fellow interns. Without their guidance, the project would likely have faced many more blockers. I’m thankful for the experience, knowledge, and practical skills I gained during this role."
+          ]
+        }
+      ],
       "detailPageSlug": "Junior_Application_Developer",
       "featured": true
     },

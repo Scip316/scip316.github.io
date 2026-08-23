@@ -71,9 +71,13 @@
 }
 
 .experience-description h2 {
-  margin: 42px 0 16px;
+  margin: 0 0 16px;
   font-size: clamp(1.35rem, 2vw, 1.75rem);
   letter-spacing: -0.035em;
+}
+
+.experience-description-section + .experience-description-section {
+  margin-top: 42px;
 }
 
 .work-media-gallery {
