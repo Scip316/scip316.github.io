@@ -279,17 +279,6 @@
   background-color: #373e65;
 }
 
-.home-project-visual span {
-  z-index: 1;
-  padding: 9px 11px;
-  border: 1px solid #ffffff70;
-  background: #151515cc;
-  color: #fff;
-  font: 0.66rem 'DM Mono', monospace;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
 .home-feature-body {
   display: flex;
   flex-direction: column;

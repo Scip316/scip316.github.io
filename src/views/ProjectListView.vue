@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import projectData from '../data/projects.json'
+import { primaryHeaderPhoto } from '../utils/primaryHeaderPhoto'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
 const projects = sortByNewestDate(projectData.projects)
@@ -31,8 +32,17 @@ const projects = sortByNewestDate(projectData.projects)
         :key="project.id"
         class="experience-grid-card project-list-card"
       >
-        <div class="experience-grid-image project-list-image" :class="`visual-${project.visual}`">
-          <span>{{ project.visualLabel }}</span>
+        <div
+          class="experience-grid-image project-list-image"
+          :class="`visual-${project.visual}`"
+          :style="{
+            backgroundColor: '#e6e6e3',
+            backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'contain',
+          }"
+        >
         </div>
         <div class="experience-grid-content">
           <p class="page-kicker">{{ project.category }} · {{ project.year }}</p>
@@ -93,9 +103,6 @@ const projects = sortByNewestDate(projectData.projects)
 }
 .project-list-image.visual-chatbot {
   background-color: #373e65;
-}
-.project-list-image span {
-  z-index: 1;
 }
 .project-summary {
   min-height: 72px;

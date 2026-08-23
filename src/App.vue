@@ -444,8 +444,17 @@ const closeMenu = () => (menuOpen.value = false)
                 class="showcase-coverflow-card home-project-card"
                 :class="projectCardPosition(index)"
               >
-                <div class="home-project-visual" :class="`visual-${project.visual}`">
-                  <span>{{ project.visualLabel }}</span>
+                <div
+                  class="home-project-visual"
+                  :class="`visual-${project.visual}`"
+                  :style="{
+                    backgroundColor: '#e6e6e3',
+                    backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'contain',
+                  }"
+                >
                 </div>
                 <div class="home-feature-body">
                   <p class="card-label">{{ project.category }} · {{ project.year }}</p>
