@@ -31,7 +31,7 @@ const projects = sortByNewestDate(projectData.projects)
             backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
           }"
         ></div>
         <div class="experience-grid-content">

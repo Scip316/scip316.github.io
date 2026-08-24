@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import AboutView from './views/AboutView.vue'
 import CertificateListView from './views/CertificateListView.vue'
+import MediaCarousel from './components/MediaCarousel.vue'
 import ProjectListView from './views/ProjectListView.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import SiteHeader from './components/SiteHeader.vue'
@@ -34,7 +35,6 @@ const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
-const activeFeatureMediaIndices = ref<Record<string, number>>({})
 const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
 type HomeSectionId = (typeof homeSectionIds)[number]
 const activeHomeSection = ref<HomeSectionId | null>(null)
@@ -43,13 +43,45 @@ const homeSectionRailTop = ref(118)
 const showHomeSectionRail = computed(
   () => homeRailHasClearedHero.value && activeHomeSection.value !== null,
 )
-const featureMediaTouchStarts = new Map<string, number>()
-const featureMediaSwiped = new Set<string>()
 const displayedWorkIndex = computed(() => activeWorkIndex.value)
-let workCarouselTimer: number | undefined
-let projectCarouselTimer: number | undefined
-let certificateCarouselTimer: number | undefined
-let achievementCarouselTimer: number | undefined
+const carouselInterval = 4600
+const createResumableRotation = (advance: () => void, itemCount: () => number) => {
+  let timer: number | undefined
+  let deadline = 0
+  let remaining = carouselInterval
+
+  const schedule = (delay: number) => {
+    if (itemCount() < 2) return
+
+    deadline = performance.now() + delay
+    timer = window.setTimeout(() => {
+      timer = undefined
+      remaining = carouselInterval
+      advance()
+      schedule(carouselInterval)
+    }, delay)
+  }
+
+  const start = () => {
+    if (timer !== undefined) return
+    schedule(remaining)
+  }
+
+  const stop = () => {
+    if (timer === undefined) return
+    remaining = Math.max(0, deadline - performance.now())
+    window.clearTimeout(timer)
+    timer = undefined
+  }
+
+  const restart = () => {
+    stop()
+    remaining = carouselInterval
+    start()
+  }
+
+  return { start, stop, restart }
+}
 
 const nextWork = () => {
   activeWorkIndex.value = (activeWorkIndex.value + 1) % workExperiences.length
@@ -73,66 +105,12 @@ const certificateCardPosition = (index: number) =>
   coverflowPosition(index, activeCertificateIndex.value, featuredCertificates.length)
 const achievementCardPosition = (index: number) =>
   coverflowPosition(index, activeAchievementIndex.value, featuredAchievements.length)
-const activeFeatureMediaIndex = (name: string) => activeFeatureMediaIndices.value[name] ?? 0
-const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
-const changeFeatureMedia = (name: string, mediaCount: number, direction: 'next' | 'previous') => {
-  const currentIndex = activeFeatureMediaIndex(name)
-  const change = direction === 'next' ? 1 : -1
-  activeFeatureMediaIndices.value[name] = (currentIndex + change + mediaCount) % mediaCount
-}
-const selectFeatureMedia = (name: string, index: number) => {
-  activeFeatureMediaIndices.value[name] = index
-}
-const startFeatureMediaSwipe = (name: string, event: TouchEvent) => {
-  featureMediaTouchStarts.set(name, event.touches[0]?.clientX ?? 0)
-}
-const endFeatureMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
-  const startPosition = featureMediaTouchStarts.get(name)
-  const endPosition = event.changedTouches[0]?.clientX
-  featureMediaTouchStarts.delete(name)
-  if (
-    startPosition === undefined ||
-    endPosition === undefined ||
-    Math.abs(endPosition - startPosition) < 36
-  )
-    return
-
-  featureMediaSwiped.add(name)
-  changeFeatureMedia(name, mediaCount, endPosition < startPosition ? 'next' : 'previous')
-}
-const handleFeatureMediaClick = (name: string, event: MouseEvent) => {
-  if (!featureMediaSwiped.has(name)) return
-
-  featureMediaSwiped.delete(name)
-  event.preventDefault()
-  event.stopPropagation()
-}
-const startWorkRotation = () => {
-  stopWorkRotation()
-  if (workExperiences.length > 1) workCarouselTimer = window.setInterval(nextWork, 4600)
-}
-const stopWorkRotation = () => {
-  if (workCarouselTimer) {
-    window.clearInterval(workCarouselTimer)
-    workCarouselTimer = undefined
-  }
-}
 const nextProject = () => {
   activeProjectIndex.value = (activeProjectIndex.value + 1) % featuredProjects.length
 }
 const previousProject = () => {
   activeProjectIndex.value =
     (activeProjectIndex.value - 1 + featuredProjects.length) % featuredProjects.length
-}
-const startProjectRotation = () => {
-  stopProjectRotation()
-  if (featuredProjects.length > 1) projectCarouselTimer = window.setInterval(nextProject, 4600)
-}
-const stopProjectRotation = () => {
-  if (projectCarouselTimer) {
-    window.clearInterval(projectCarouselTimer)
-    projectCarouselTimer = undefined
-  }
 }
 const nextCertificate = () => {
   activeCertificateIndex.value = (activeCertificateIndex.value + 1) % featuredCertificates.length
@@ -141,17 +119,6 @@ const previousCertificate = () => {
   activeCertificateIndex.value =
     (activeCertificateIndex.value - 1 + featuredCertificates.length) % featuredCertificates.length
 }
-const startCertificateRotation = () => {
-  stopCertificateRotation()
-  if (featuredCertificates.length > 1)
-    certificateCarouselTimer = window.setInterval(nextCertificate, 4600)
-}
-const stopCertificateRotation = () => {
-  if (certificateCarouselTimer) {
-    window.clearInterval(certificateCarouselTimer)
-    certificateCarouselTimer = undefined
-  }
-}
 const nextAchievement = () => {
   activeAchievementIndex.value = (activeAchievementIndex.value + 1) % featuredAchievements.length
 }
@@ -159,36 +126,37 @@ const previousAchievement = () => {
   activeAchievementIndex.value =
     (activeAchievementIndex.value - 1 + featuredAchievements.length) % featuredAchievements.length
 }
-const startAchievementRotation = () => {
-  stopAchievementRotation()
-  if (featuredAchievements.length > 1)
-    achievementCarouselTimer = window.setInterval(nextAchievement, 4600)
-}
-const stopAchievementRotation = () => {
-  if (achievementCarouselTimer) {
-    window.clearInterval(achievementCarouselTimer)
-    achievementCarouselTimer = undefined
-  }
-}
+const workRotation = createResumableRotation(nextWork, () => workExperiences.length)
+const projectRotation = createResumableRotation(nextProject, () => featuredProjects.length)
+const certificateRotation = createResumableRotation(nextCertificate, () => featuredCertificates.length)
+const achievementRotation = createResumableRotation(nextAchievement, () => featuredAchievements.length)
+const startWorkRotation = workRotation.start
+const stopWorkRotation = workRotation.stop
+const startProjectRotation = projectRotation.start
+const stopProjectRotation = projectRotation.stop
+const startCertificateRotation = certificateRotation.start
+const stopCertificateRotation = certificateRotation.stop
+const startAchievementRotation = achievementRotation.start
+const stopAchievementRotation = achievementRotation.stop
 const moveWork = (direction: 'next' | 'previous') => {
   if (direction === 'next') nextWork()
   else previousWork()
-  startWorkRotation()
+  workRotation.restart()
 }
 const moveProject = (direction: 'next' | 'previous') => {
   if (direction === 'next') nextProject()
   else previousProject()
-  startProjectRotation()
+  projectRotation.restart()
 }
 const moveCertificate = (direction: 'next' | 'previous') => {
   if (direction === 'next') nextCertificate()
   else previousCertificate()
-  startCertificateRotation()
+  certificateRotation.restart()
 }
 const moveAchievement = (direction: 'next' | 'previous') => {
   if (direction === 'next') nextAchievement()
   else previousAchievement()
-  startAchievementRotation()
+  achievementRotation.restart()
 }
 
 const updateCurrentPath = () => {
@@ -350,60 +318,12 @@ onUnmounted(() => {
                 :class="workCardPosition(index)"
                 :href="`/experience/${item.detailPageSlug}`"
               >
-                <div
+                <MediaCarousel
                   v-if="item.headerPhotos.length"
-                  class="work-card-image work-card-media"
-                  @touchstart.passive="startFeatureMediaSwipe(item.id, $event)"
-                  @touchend="endFeatureMediaSwipe(item.id, item.headerPhotos.length, $event)"
-                  @click="handleFeatureMediaClick(item.id, $event)"
-                >
-                  <div
-                    class="work-card-media-track"
-                    :style="{
-                      transform: `translateX(-${activeFeatureMediaIndex(item.id) * 100}%)`,
-                    }"
-                  >
-                    <div
-                      v-for="(media, mediaIndex) in item.headerPhotos"
-                      :key="media"
-                      class="work-card-media-slide"
-                    >
-                      <img :src="media" :alt="`${item.title} image ${mediaIndex + 1}`" />
-                    </div>
-                  </div>
-                  <div v-if="item.headerPhotos.length > 1" class="work-card-media-controls">
-                    <button
-                      type="button"
-                      aria-label="Previous work image"
-                      @click.stop.prevent="
-                        changeFeatureMedia(item.id, item.headerPhotos.length, 'previous')
-                      "
-                    >
-                      ←
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="Next work image"
-                      @click.stop.prevent="
-                        changeFeatureMedia(item.id, item.headerPhotos.length, 'next')
-                      "
-                    >
-                      →
-                    </button>
-                  </div>
-                  <div v-if="item.headerPhotos.length > 1" class="work-card-media-dots">
-                    <button
-                      v-for="(_, mediaIndex) in item.headerPhotos"
-                      :key="mediaIndex"
-                      type="button"
-                      :class="{
-                        'is-active-work-media': mediaIndex === activeFeatureMediaIndex(item.id),
-                      }"
-                      :aria-label="`Show work image ${mediaIndex + 1}`"
-                      @click.stop.prevent="selectFeatureMedia(item.id, mediaIndex)"
-                    ></button>
-                  </div>
-                </div>
+                  class="work-card-image"
+                  :media="item.headerPhotos"
+                  :title="item.title"
+                />
                 <div
                   v-else
                   class="work-card-image"
@@ -561,92 +481,12 @@ onUnmounted(() => {
                     class="showcase-coverflow-card home-certificate-card"
                     :class="certificateCardPosition(index)"
                   >
-                    <div
+                    <MediaCarousel
                       v-if="certificate.headerPhotos.length"
                       class="home-certificate-media"
-                      @touchstart.passive="startFeatureMediaSwipe(certificate.name, $event)"
-                      @touchend="
-                        endFeatureMediaSwipe(
-                          certificate.name,
-                          certificate.headerPhotos.length,
-                          $event,
-                        )
-                      "
-                    >
-                      <div
-                        class="home-certificate-media-track"
-                        :style="{
-                          transform: `translateX(-${activeFeatureMediaIndex(certificate.name) * 100}%)`,
-                        }"
-                      >
-                        <div
-                          v-for="(media, mediaIndex) in certificate.headerPhotos"
-                          :key="media"
-                          class="home-certificate-media-slide"
-                        >
-                          <img
-                            v-if="!isPdf(media)"
-                            :src="media"
-                            :alt="`${certificate.name} image ${mediaIndex + 1}`"
-                          />
-                          <object
-                            v-else
-                            :data="media"
-                            type="application/pdf"
-                            :aria-label="certificate.name"
-                          >
-                            <a :href="media" target="_blank" rel="noreferrer">Open PDF</a>
-                          </object>
-                        </div>
-                      </div>
-                      <div
-                        v-if="certificate.headerPhotos.length > 1"
-                        class="home-certificate-media-controls"
-                      >
-                        <button
-                          type="button"
-                          aria-label="Previous image"
-                          @click="
-                            changeFeatureMedia(
-                              certificate.name,
-                              certificate.headerPhotos.length,
-                              'previous',
-                            )
-                          "
-                        >
-                          ←
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Next image"
-                          @click="
-                            changeFeatureMedia(
-                              certificate.name,
-                              certificate.headerPhotos.length,
-                              'next',
-                            )
-                          "
-                        >
-                          →
-                        </button>
-                      </div>
-                      <div
-                        v-if="certificate.headerPhotos.length > 1"
-                        class="home-certificate-media-dots"
-                      >
-                        <button
-                          v-for="(_, mediaIndex) in certificate.headerPhotos"
-                          :key="mediaIndex"
-                          type="button"
-                          :class="{
-                            'is-active-feature-media':
-                              mediaIndex === activeFeatureMediaIndex(certificate.name),
-                          }"
-                          :aria-label="`Show image ${mediaIndex + 1}`"
-                          @click="selectFeatureMedia(certificate.name, mediaIndex)"
-                        ></button>
-                      </div>
-                    </div>
+                      :media="certificate.headerPhotos"
+                      :title="certificate.name"
+                    />
                     <div v-else class="home-certificate-index">
                       <span>{{ certificate.type }}</span
                       ><strong>{{ String(index + 1).padStart(2, '0') }}</strong>
@@ -697,92 +537,12 @@ onUnmounted(() => {
                     class="showcase-coverflow-card home-certificate-card"
                     :class="achievementCardPosition(index)"
                   >
-                    <div
+                    <MediaCarousel
                       v-if="achievement.headerPhotos.length"
                       class="home-certificate-media"
-                      @touchstart.passive="startFeatureMediaSwipe(achievement.name, $event)"
-                      @touchend="
-                        endFeatureMediaSwipe(
-                          achievement.name,
-                          achievement.headerPhotos.length,
-                          $event,
-                        )
-                      "
-                    >
-                      <div
-                        class="home-certificate-media-track"
-                        :style="{
-                          transform: `translateX(-${activeFeatureMediaIndex(achievement.name) * 100}%)`,
-                        }"
-                      >
-                        <div
-                          v-for="(media, mediaIndex) in achievement.headerPhotos"
-                          :key="media"
-                          class="home-certificate-media-slide"
-                        >
-                          <img
-                            v-if="!isPdf(media)"
-                            :src="media"
-                            :alt="`${achievement.name} image ${mediaIndex + 1}`"
-                          />
-                          <object
-                            v-else
-                            :data="media"
-                            type="application/pdf"
-                            :aria-label="achievement.name"
-                          >
-                            <a :href="media" target="_blank" rel="noreferrer">Open PDF</a>
-                          </object>
-                        </div>
-                      </div>
-                      <div
-                        v-if="achievement.headerPhotos.length > 1"
-                        class="home-certificate-media-controls"
-                      >
-                        <button
-                          type="button"
-                          aria-label="Previous image"
-                          @click="
-                            changeFeatureMedia(
-                              achievement.name,
-                              achievement.headerPhotos.length,
-                              'previous',
-                            )
-                          "
-                        >
-                          ←
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Next image"
-                          @click="
-                            changeFeatureMedia(
-                              achievement.name,
-                              achievement.headerPhotos.length,
-                              'next',
-                            )
-                          "
-                        >
-                          →
-                        </button>
-                      </div>
-                      <div
-                        v-if="achievement.headerPhotos.length > 1"
-                        class="home-certificate-media-dots"
-                      >
-                        <button
-                          v-for="(_, mediaIndex) in achievement.headerPhotos"
-                          :key="mediaIndex"
-                          type="button"
-                          :class="{
-                            'is-active-feature-media':
-                              mediaIndex === activeFeatureMediaIndex(achievement.name),
-                          }"
-                          :aria-label="`Show image ${mediaIndex + 1}`"
-                          @click="selectFeatureMedia(achievement.name, mediaIndex)"
-                        ></button>
-                      </div>
-                    </div>
+                      :media="achievement.headerPhotos"
+                      :title="achievement.name"
+                    />
                     <div v-else class="home-certificate-index">
                       <span>{{ achievement.type }}</span
                       ><strong>{{ String(index + 1).padStart(2, '0') }}</strong>
