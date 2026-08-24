@@ -9,7 +9,6 @@ type AboutSectionId = (typeof aboutSectionIds)[number]
 const activeAboutSection = ref<AboutSectionId>('profile')
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
 const timelineProgress = ref(0)
-const timelineNodeOffsets = ref<number[]>([])
 const timeline = computed(() =>
   sortByNewestDate(
     aboutContent.timeline.map((section) => {
@@ -18,12 +17,12 @@ const timeline = computed(() =>
     }),
   ),
 )
-const timelineStartYear = computed(() => timeline.value[0]?.year ?? '')
-const timelineEndYear = computed(() => timeline.value[timeline.value.length - 1]?.year ?? '')
-const activeTimelineYearIndex = computed(() =>
-  timeline.value.findIndex((section) => section.year === activeTimelineYear.value),
+const timelineNodeOffsets = ref<number[]>(
+  timeline.value.map((_, index) => (index / Math.max(timeline.value.length - 1, 1)) * 100),
 )
-
+const isTimelineNodeActive = computed(() =>
+  timelineNodeOffsets.value.some((offset) => Math.abs(offset - timelineProgress.value) < 5),
+)
 const updateActiveAboutSection = () => {
   let activeSection: AboutSectionId = 'profile'
 
@@ -35,9 +34,12 @@ const updateActiveAboutSection = () => {
   activeAboutSection.value = activeSection
 
   let activeYear = timeline.value[0]?.year ?? ''
+  const yearThreshold = window.innerHeight * 0.42
   for (const timelineSection of timeline.value) {
     const section = document.getElementById(`timeline-${timelineSection.year}`)
-    if (section && section.getBoundingClientRect().top <= 180) activeYear = timelineSection.year
+    if (section && section.getBoundingClientRect().top <= yearThreshold) {
+      activeYear = timelineSection.year
+    }
   }
   activeTimelineYear.value = activeYear
 
@@ -48,18 +50,13 @@ const updateActiveAboutSection = () => {
     const scrollY = window.scrollY
     const contentTop = contentRect.top + scrollY
     const contentBottom = contentTop + contentRect.height
-    const start = contentTop - window.innerHeight * 0.35
-    const end = contentBottom - window.innerHeight
+    const start = contentTop - 112
+    const end = Math.max(contentBottom - window.innerHeight + 112, start + 1)
     const span = Math.max(end - start, 1)
 
     timelineProgress.value = Math.min(Math.max((scrollY - start) / span, 0), 1) * 100
-
-    timelineNodeOffsets.value = timeline.value.map((section) => {
-      const sectionEl = document.getElementById(`timeline-${section.year}`)
-      if (!sectionEl) return 0
-      const sectionTop = sectionEl.getBoundingClientRect().top + scrollY
-      return Math.min(Math.max(((sectionTop - start) / span) * 100, 0), 100)
-    })
+    const lastIndex = Math.max(timeline.value.length - 1, 1)
+    timelineNodeOffsets.value = timeline.value.map((_, index) => (index / lastIndex) * 100)
   }
 }
 
@@ -151,43 +148,27 @@ onUnmounted(() => {
         <p class="page-kicker">Journey / timeline</p>
         <div class="about-timeline">
           <nav class="about-timeline-nav" aria-label="Journey years">
-            <span
-              class="about-timeline-rail-year is-start"
-              :class="{ 'is-lit': timelineProgress <= 0 }"
-              aria-hidden="true"
-              >{{ timelineStartYear }}</span
-            >
-            <span
-              class="about-timeline-rail-year is-end"
-              :class="{ 'is-lit': timelineProgress >= 100 }"
-              aria-hidden="true"
-              >{{ timelineEndYear }}</span
-            >
             <a
               v-for="(timelineSection, index) in timeline"
               :key="timelineSection.year"
-              class="about-timeline-node"
+              class="about-timeline-rail-year"
               :href="`#timeline-${timelineSection.year}`"
               :class="{
                 'is-active': activeTimelineYear === timelineSection.year,
-                'is-reached': index <= activeTimelineYearIndex,
-                'is-endpoint': index === 0 || index === timeline.length - 1,
               }"
               :style="{ top: `${timelineNodeOffsets[index] ?? 0}%` }"
-              :aria-label="timelineSection.year"
-            ></a>
-            <div
+              >{{ timelineSection.year }}</a
+            >
+            <a
               class="about-timeline-cursor"
-              aria-hidden="true"
+              :href="`#timeline-${activeTimelineYear}`"
               :style="{ top: `${timelineProgress}%` }"
             >
-              <span
-                v-if="timelineProgress > 0 && timelineProgress < 100"
-                class="about-timeline-cursor-year"
-                >{{ activeTimelineYear }}</span
-              >
               <span class="about-timeline-cursor-arrow"></span>
-            </div>
+              <span v-if="!isTimelineNodeActive" class="about-timeline-cursor-year">
+                {{ activeTimelineYear }}
+              </span>
+            </a>
           </nav>
           <div class="about-timeline-content">
             <section
@@ -414,47 +395,42 @@ onUnmounted(() => {
 
 .about-timeline {
   position: relative;
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(145px, 0.13fr) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 48px);
 }
 
 .about-timeline-nav {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(-1 * clamp(28px, 5vw, 72px) - 92px);
+  position: sticky;
+  top: 112px;
   z-index: 1;
-  width: 84px;
+  align-self: start;
+  width: 100%;
+  height: min(560px, calc(100vh - 160px));
+  min-height: 360px;
 }
 
 .about-timeline-rail-year {
   position: absolute;
-  left: 64px;
+  left: 82px;
   z-index: 2;
   display: flex;
-  width: max-content;
+  min-width: 62px;
+  justify-content: center;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  background: var(--surface);
   color: var(--muted);
   font:
-    0.9rem 'DM Mono',
+    0.74rem 'DM Mono',
     monospace;
   letter-spacing: 0.04em;
-}
-
-.about-timeline-node.is-endpoint {
-  display: none;
-}
-
-.about-timeline-rail-year.is-start {
-  top: 0;
-  transform: translate(-50%, -50%);
-}
-
-.about-timeline-rail-year.is-end {
-  bottom: 0;
-  transform: translate(-50%, 50%);
-}
-
-.about-timeline-rail-year.is-lit {
-  color: var(--accent);
+  text-decoration: none;
+  transform: translate(-100%, -50%);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
 .about-timeline-nav::before {
@@ -462,69 +438,48 @@ onUnmounted(() => {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 64px;
+  left: 92px;
   width: 2px;
   background: var(--line);
 }
 
-.about-timeline-node {
-  position: absolute;
-  left: 65px;
-  width: 9px;
-  height: 9px;
-  border: 2px solid var(--line);
-  border-radius: 50%;
-  background: var(--surface);
-  transform: translate(-50%, -50%);
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.about-timeline-node:hover,
-.about-timeline-node.is-reached {
+.about-timeline-rail-year:hover,
+.about-timeline-rail-year.is-active {
   border-color: var(--accent);
-}
-
-.about-timeline-node.is-active {
-  border-color: var(--accent);
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
 }
 
 .about-timeline-cursor {
   position: absolute;
-  top: 0%;
-  left: 0;
+  left: 93px;
+  z-index: 3;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 7px;
-  width: 66px;
+  gap: 8px;
+  color: var(--accent);
+  text-decoration: none;
   transform: translateY(-50%);
   transition: top 0.18s ease-out;
 }
 
 .about-timeline-cursor-year {
-  color: var(--accent);
+  min-width: 62px;
+  padding: 7px 9px;
+  border: 1px solid var(--accent);
+  background: var(--surface);
   font:
-    500 0.9rem 'DM Mono',
+    500 0.74rem 'DM Mono',
     monospace;
+  text-align: center;
   letter-spacing: 0.04em;
 }
 
 .about-timeline-cursor-arrow {
   width: 0;
   height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 8px solid var(--accent);
-}
-
-.about-timeline-nav span {
-  display: inline-block;
-  width: 34px;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 13px solid var(--accent);
 }
 
 .about-timeline-year + .about-timeline-year {
@@ -555,12 +510,7 @@ onUnmounted(() => {
 }
 
 .about-timeline-year h1 {
-  position: sticky;
-  top: 112px;
-  z-index: 2;
   margin-bottom: clamp(14px, 1.8vw, 22px);
-  padding: 12px 0;
-  background: var(--surface);
   font-size: clamp(1.75rem, 2.4vw, 2.6rem);
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -637,25 +587,22 @@ onUnmounted(() => {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+    width: auto;
     height: auto;
-    min-height: 0;
-    padding: 0;
+    margin-bottom: 24px;
   }
 
   .about-timeline-nav::before,
-  .about-timeline-cursor,
-  .about-timeline-rail-year {
+  .about-timeline-cursor {
     display: none;
   }
 
-  .about-timeline-node {
+  .about-timeline-rail-year {
     position: static;
     display: block;
     width: auto;
-    height: auto;
     padding: 10px;
     border: 1px solid var(--line);
-    border-radius: 0;
     background: var(--surface);
     color: var(--text);
     font:
@@ -665,14 +612,9 @@ onUnmounted(() => {
     transform: none;
   }
 
-  .about-timeline-node::after {
-    content: attr(aria-label);
-  }
-
-  .about-timeline-node.is-active {
+  .about-timeline-rail-year.is-active {
     border-color: var(--accent);
-    background: transparent;
-    box-shadow: none;
+    color: var(--accent);
   }
 }
 </style>
