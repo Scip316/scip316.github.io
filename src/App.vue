@@ -4,6 +4,7 @@ import AboutView from './views/AboutView.vue'
 import CertificateListView from './views/CertificateListView.vue'
 import ProjectListView from './views/ProjectListView.vue'
 import SiteFooter from './components/SiteFooter.vue'
+import SiteHeader from './components/SiteHeader.vue'
 import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
 import WorkExperienceListView from './views/WorkExperienceListView.vue'
 import achievementData from './data/achievements.json'
@@ -15,7 +16,6 @@ import { sortAlphabetically } from './utils/sortAlphabetically'
 import workExperienceData from './data/work-experience.json'
 import { sortByNewestDate } from './utils/sortByNewestDate'
 
-const menuOpen = ref(false)
 const currentPath = ref(window.location.pathname)
 const achievements = sortByNewestDate(achievementData.achievements)
 const certifications = sortByNewestDate(certificateData.certifications)
@@ -249,8 +249,6 @@ const handleInternalNavigation = async (event: MouseEvent) => {
     `${destination.pathname}${destination.search}${destination.hash}`,
   )
   updateCurrentPath()
-  menuOpen.value = false
-
   await nextTick()
   if (destination.hash) {
     document.getElementById(decodeURIComponent(destination.hash.slice(1)))?.scrollIntoView()
@@ -280,37 +278,11 @@ onUnmounted(() => {
   window.removeEventListener('resize', updateActiveHomeSection)
   document.removeEventListener('click', handleInternalNavigation)
 })
-const closeMenu = () => (menuOpen.value = false)
 </script>
 
 <template>
   <div v-if="currentPath === '/'">
-    <header class="site-header">
-      <a class="brand" href="#intro" aria-label="SCIP — back to top"
-        ><span class="brand-symbol" aria-hidden="true">S</span
-        ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
-      >
-      <nav class="desktop-nav" aria-label="Main navigation">
-        <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
-        ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
-      </nav>
-      <button
-        class="menu-button"
-        type="button"
-        :aria-expanded="menuOpen"
-        aria-controls="mobile-nav"
-        @click="menuOpen = !menuOpen"
-      >
-        <span class="sr-only">Toggle menu</span>☰
-      </button>
-      <nav v-if="menuOpen" id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
-        <a href="/" @click="closeMenu">Home</a
-        ><a href="/experience" @click="closeMenu">Work Experience</a
-        ><a href="/projects" @click="closeMenu">Projects</a
-        ><a href="/certificates" @click="closeMenu">Credentials</a
-        ><a href="/about" @click="closeMenu">About Me</a>
-      </nav>
-    </header>
+    <SiteHeader home />
     <main>
       <section id="intro" class="intro">
         <div class="intro-text">

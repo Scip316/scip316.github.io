@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import SiteHeader from '../components/SiteHeader.vue'
 import aboutContent from '../data/about.json'
 import { profile_declaration, socials } from '../data/portfolio'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
@@ -73,16 +74,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="SCIP — back to top"
-      ><span class="brand-symbol" aria-hidden="true">S</span
-      ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
-    >
-    <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
-      ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
-    </nav>
-  </header>
+  <SiteHeader />
 
   <main class="experience-page about-page">
     <header class="experience-page-header">
@@ -548,7 +540,7 @@ onUnmounted(() => {
   border-bottom: 1px solid var(--line);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   .about-profile-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -559,7 +551,7 @@ onUnmounted(() => {
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 760px) {
   .about-profile-grid,
   .about-timeline,
   .about-introduction,

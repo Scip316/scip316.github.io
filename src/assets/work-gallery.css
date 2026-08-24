@@ -177,7 +177,7 @@
   font-size: 0.9rem;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .work-card {
     display: block;
   }

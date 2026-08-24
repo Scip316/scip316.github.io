@@ -174,7 +174,7 @@ body {
     --header: #0d0d0d;
   }
 }
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .desktop-nav {
     display: none;
   }

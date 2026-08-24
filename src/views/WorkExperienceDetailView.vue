@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import SiteHeader from '../components/SiteHeader.vue'
 import WorkMediaGallery from '../components/WorkMediaGallery.vue'
 import workExperienceData from '../data/work-experience.json'
 import { sortAlphabetically } from '../utils/sortAlphabetically'
@@ -31,16 +32,7 @@ const descriptionSections = computed<DescriptionSection[]>(() => {
 </script>
 
 <template>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="SCIP — back to top"
-      ><span class="brand-symbol" aria-hidden="true">S</span
-      ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
-    >
-    <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
-      ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
-    </nav>
-  </header>
+  <SiteHeader />
   <main v-if="experience" class="experience-page experience-detail-page">
     <header class="experience-page-header">
       <a href="/experience" class="back-link">← All work experiences</a>

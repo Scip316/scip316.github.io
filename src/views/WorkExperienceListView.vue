@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WorkMediaGallery from '../components/WorkMediaGallery.vue'
+import SiteHeader from '../components/SiteHeader.vue'
 import workExperienceData from '../data/work-experience.json'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
@@ -7,16 +8,7 @@ const workExperiences = sortByNewestDate(workExperienceData.experiences)
 </script>
 
 <template>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="SCIP — back to top"
-      ><span class="brand-symbol" aria-hidden="true">S</span
-      ><span class="brand-copy">SCIP316<b>/</b>DARREL LIM</span></a
-    >
-    <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
-      ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
-    </nav>
-  </header>
+  <SiteHeader />
   <main class="experience-page">
     <header class="experience-page-header">
       <a href="/" class="back-link">← Back to portfolio</a>
