@@ -289,8 +289,7 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
 
 .credential-list-card {
   display: grid;
-  grid-template-rows: 1fr 1fr;
-  aspect-ratio: 1;
+  grid-template-rows: auto auto;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -298,6 +297,7 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
 
 .credential-card-visual {
   display: flex;
+  aspect-ratio: 4 / 3;
   min-height: 0;
   padding: clamp(18px, 2vw, 24px);
   flex-direction: column;
@@ -405,6 +405,8 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
 }
 
 .credential-card-content {
+  height: 210px;
+  min-height: 210px;
   padding: clamp(18px, 2vw, 24px);
 }
 
@@ -447,6 +449,12 @@ const endMediaSwipe = (name: string, mediaCount: number, event: TouchEvent) => {
     min-height: 0;
   }
 
+  .credential-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1600px) and (min-width: 761px) {
   .credential-list {
     grid-template-columns: 1fr;
   }
