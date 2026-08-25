@@ -25,7 +25,7 @@ const certificates = sortByNewestDate(certificateData.certifications)
         <header class="credential-column-heading">
           <p class="page-kicker">Certificates & training</p>
           <h2 id="certifications-title">Credentials.</h2>
-          <p>Industry credentials and training that support my technology and delivery work.</p>
+          <p>Industry credentials and training that enhance my skills and workflow.</p>
         </header>
         <div class="credential-list">
           <article
@@ -58,7 +58,7 @@ const certificates = sortByNewestDate(certificateData.certifications)
         <header class="credential-column-heading">
           <p class="page-kicker">Honours & activities</p>
           <h2 id="achievements-title">Activities.</h2>
-          <p>Academic honours and competition involvement earned through consistent effort.</p>
+          <p>Academic honours and competition involvement that i partake in.</p>
         </header>
         <div class="credential-list">
           <article
