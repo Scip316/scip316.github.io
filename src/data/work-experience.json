@@ -114,7 +114,7 @@
     },
     {
       "id": "National Service Full-Time (NSF)",
-      "title": "Admin Support Assistant (ASA)",
+      "title": "Admin Support Data Scientist",
       "workplace": "MINDEF | MINDEF Annex",
       "startDate": "2025-08",
       "endDate": null,
@@ -143,13 +143,19 @@
         {
           "title": "Overview",
           "content": [
-            "2 Years of NS - Some people dread it, some people think it's a waste of time. Me? I am spending's 2 years of my life, and i want it to be a meaningful 2 years. weather it was as stroke of luck or fate had plans, i ended up in G1-Army, under people and analystic section where my technical skills were tested everyday. I created mutiple scripts in excel VBA and Python, created different visualtion grapgh in powerbi, and do data collection, analysis, explorational and modelling for the army"
+            "Two years of National Service — some people dread it, while others see it as a waste of time. For me, if I am spending two years of my life here, I want them to be meaningful. As a PES E1, my vocations are limited, and ulimatly I was assign as a Admin Support Assistant (ASA). Whether it was luck or fate, I ended up in G1-Army’s People and Analytics section, where my technical skills were put to the test every day.\n\nDuring my time here, I have created multiple scripts using Excel VBA and Python, built visualisations and dashboards in Power BI, and worked on data collection, analysis, exploration, and modelling for the Army."
           ]
         },
         {
           "title": "Attrition tracking",
           "content": [
-            "1 of my key jobs to help the SAF to track attrition accross the board. I have access to a database system that allows me to access and pull records (also known as mass churning of data). I played a helping hand in updating some defination of attrition, and created different scripts that helps to track the attrition rates every month."
+            "One of my key jobs is to help the SAF track attrition across the board. I assisted in refining the methodology and criteria for attrition, and updated our existing dataset based on the revised criteria. Since attrition tracking is done every month, I developed a Python script that takes in a bunch of inputs and helps populate the attrition timeline across the months. I also worked with other departments to narrow down the granularity of the different attrition types."
+          ]
+        },
+        {
+          "title": "Recommend Role Algorithm",
+          "content": [
+            "Togther with my other NSF (Aarron Loke), we co-work on a major project and recommends a roles that a person is suitable for base on mutiple cirteiras and considerations, which the alogothirm assign weightage for. We collaboarted with alot of the other HR departments are they too are keen in assiting in this model development."
           ]
         },
         {
