@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MediaCarousel from '../components/MediaCarousel.vue'
+import ArchivePageHeader from '../components/ArchivePageHeader.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import achievementData from '../data/achievements.json'
 import certificateData from '../data/certificates.json'
@@ -12,14 +13,11 @@ const certificates = sortByNewestDate(certificateData.certifications)
 <template>
   <SiteHeader />
   <main class="experience-page certificate-page">
-    <header class="experience-page-header">
-      <a href="/" class="back-link">← Back to portfolio</a>
-      <p>{{ certificates.length }} credentials / {{ achievements.length }} Activities</p>
-    </header>
-    <section class="experience-page-title">
-      <p class="page-kicker">Credentials archive</p>
-      <h1>Credentials<br />& Activities.</h1>
-    </section>
+    <ArchivePageHeader
+      :meta="`${certificates.length} credentials / ${achievements.length} activities`"
+      kicker="Credentials archive"
+      >Credentials<br />& Activities.</ArchivePageHeader
+    >
     <section class="credential-columns" aria-label="Credentials and achievements">
       <section class="credential-column" aria-labelledby="certifications-title">
         <header class="credential-column-heading">

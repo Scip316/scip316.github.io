@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import MediaCarousel from '../components/MediaCarousel.vue'
 import SiteHeader from '../components/SiteHeader.vue'
-import WorkMediaGallery from '../components/WorkMediaGallery.vue'
 import workExperienceData from '../data/work-experience.json'
 import { sortAlphabetically } from '../utils/sortAlphabetically'
 const props = defineProps<{ slug: string }>()
@@ -39,9 +39,9 @@ const descriptionSections = computed<DescriptionSection[]>(() => {
       <p>{{ experience.period }}</p>
     </header>
     <section class="experience-detail-hero">
-      <WorkMediaGallery
+      <MediaCarousel
         class="experience-detail-image"
-        :photos="experience.headerPhotos"
+        :media="experience.headerPhotos"
         :title="experience.title"
       />
       <div>

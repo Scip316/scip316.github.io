@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
+import SectionRail from '../components/SectionRail.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import aboutContent from '../data/about.json'
 import { profile_declaration, socials } from '../data/portfolio'
+import { useActiveSection } from '../composables/useActiveSection'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
 const aboutSectionIds = ['profile', 'about-history'] as const
-type AboutSectionId = (typeof aboutSectionIds)[number]
-const activeAboutSection = ref<AboutSectionId>('profile')
+const aboutRailItems = [
+  { id: 'profile', label: 'Profile' },
+  { id: 'about-history', label: 'About me' },
+]
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
 const timelineProgress = ref(0)
 const timeline = computed(() =>
@@ -24,16 +28,7 @@ const timelineNodeOffsets = ref<number[]>(
 const isTimelineNodeActive = computed(() =>
   timelineNodeOffsets.value.some((offset) => Math.abs(offset - timelineProgress.value) < 5),
 )
-const updateActiveAboutSection = () => {
-  let activeSection: AboutSectionId = 'profile'
-
-  for (const sectionId of aboutSectionIds) {
-    const section = document.getElementById(sectionId)
-    if (section && section.getBoundingClientRect().top <= 180) activeSection = sectionId
-  }
-
-  activeAboutSection.value = activeSection
-
+const updateTimelinePosition = () => {
   let activeYear = timeline.value[0]?.year ?? ''
   const yearThreshold = window.innerHeight * 0.42
   for (const timelineSection of timeline.value) {
@@ -61,15 +56,8 @@ const updateActiveAboutSection = () => {
   }
 }
 
-onMounted(() => {
-  updateActiveAboutSection()
-  window.addEventListener('scroll', updateActiveAboutSection, { passive: true })
-  window.addEventListener('resize', updateActiveAboutSection)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', updateActiveAboutSection)
-  window.removeEventListener('resize', updateActiveAboutSection)
+const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, {
+  onUpdate: updateTimelinePosition,
 })
 </script>
 
@@ -82,15 +70,7 @@ onUnmounted(() => {
       <p>About / {{ profile_declaration.location }}</p>
     </header>
 
-    <nav class="home-section-rail about-section-rail is-visible" aria-label="On this page">
-      <p>On this page</p>
-      <a href="#profile" :class="{ 'is-active': activeAboutSection === 'profile' }"
-        ><span>01</span> Profile</a
-      >
-      <a href="#about-history" :class="{ 'is-active': activeAboutSection === 'about-history' }"
-        ><span>02</span> About me</a
-      >
-    </nav>
+    <SectionRail :items="aboutRailItems" :active-id="activeAboutSection" compact />
 
     <section id="profile" class="about-profile-grid" aria-label="Profile overview">
       <figure class="about-photo-card">
@@ -191,35 +171,6 @@ onUnmounted(() => {
 <style scoped>
 .about-page {
   padding-bottom: clamp(72px, 8vw, 130px);
-}
-
-.about-section-rail {
-  top: 118px;
-  left: clamp(24px, 3vw, 60px);
-  min-width: 205px;
-  padding: 20px 22px 20px 23px;
-}
-
-.about-section-rail p {
-  margin-bottom: 12px;
-  font-size: 0.75rem;
-}
-
-.about-section-rail a {
-  padding: 9px 0;
-  font-size: 0.88rem;
-}
-
-.about-section-rail a::before {
-  left: -24px;
-}
-
-.about-section-rail a.is-active::before {
-  height: 31px;
-}
-
-.about-section-rail a span {
-  width: 36px;
 }
 
 .about-profile-grid {
@@ -548,13 +499,6 @@ onUnmounted(() => {
   .about-contact-card {
     grid-column: span 2;
     min-height: 270px;
-  }
-}
-
-/* Keep the fixed page rail from covering the About content on narrower desktops. */
-@media (max-width: 1600px) {
-  .about-section-rail {
-    display: none;
   }
 }
 

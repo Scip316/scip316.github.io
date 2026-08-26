@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import projectData from '../data/projects.json'
+import ArchivePageHeader from '../components/ArchivePageHeader.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import { primaryHeaderPhoto } from '../utils/primaryHeaderPhoto'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
@@ -10,14 +11,12 @@ const projects = sortByNewestDate(projectData.projects)
 <template>
   <SiteHeader />
   <main class="experience-page project-page">
-    <header class="experience-page-header project-page-header">
-      <a href="/" class="back-link">← Back to portfolio</a>
-      <p>All projects / {{ projects.length }} builds</p>
-    </header>
-    <section class="experience-page-title">
-      <p class="page-kicker">Project archive</p>
-      <h1>Projects that<br />I made.</h1>
-    </section>
+    <ArchivePageHeader
+      class="project-page-header"
+      :meta="`All projects / ${projects.length} builds`"
+      kicker="Project archive"
+      >Projects that<br />I made.</ArchivePageHeader
+    >
     <section class="experience-grid project-list-grid" aria-label="Projects">
       <article
         v-for="project in projects"
