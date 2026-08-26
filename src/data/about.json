@@ -9,8 +9,9 @@
   "introduction": {
     "title": "A little about me",
     "body": [
-      "Hi there, I’m Darrel. My main career interests lie in cloud technology and automation. I’m also curious about the healthcare and psychology sectors, and I’m open to exploring opportunities in those fields. Outside of work, I spend my free time with friends and family, playing games, and trying new activities. My goal is to become a project manager in the future or to mentor the next generation, as I enjoy helping and teaching others.",
-      "After my National Service, I will study for a Bachelor of Science in Information Systems at Singapore Management University, continuing from my Diploma in Information Technology at Republic Polytechnic."
+      "Hi there, I’m Darrel. My main career interests lie in cloud technology and automation. However, I am also open to learning IT skills from other sectors. I’m curious about the healthcare and psychology sectors and open to exploring opportunities in those fields. Outside of work, I spend my free time with friends and family, playing games, and trying new activities. My goal is to become a project manager in the future or mentor the next generation, as I enjoy helping and teaching others.",
+
+      "After completing my National Service, I will pursue a Bachelor of Science in Information Systems at Singapore Management University, building on my Diploma in Information Technology from Republic Polytechnic."
     ]
   },
   "timeline": [
@@ -21,7 +22,7 @@
           "title": "Graduated from Republic Polytechnic",
           "date": "2025 Jul",
           "body": [
-            "Completed my Diploma in Information Technology with Merit, where I built a foundation in software development, cisco networking and cloud technology."
+            "Completed my Diploma in Information Technology with Merit, where I built a foundation in software development, Cisco networking, and cloud technology."
           ]
         },
         {
@@ -65,10 +66,10 @@
           ]
         },
         {
-          "title": "Graduated from St's Partick Secondary School",
+          "title": "Graduated from St. Patrick's Secondary School",
           "date": "2022 Jan",
           "body": [
-            "Graduated from St. Patrick’s Secondary School after completing my O-Level examinations."
+            "Graduated from St. Patrick’s Secondary School after completing my O Level examinations."
           ]
         }
       ]
@@ -77,7 +78,7 @@
       "year": "2021",
       "entries": [
         {
-          "title": "Inforcomm Club CCA Vice-Chairmen",
+          "title": "Infocomm Club CCA Vice-Chairman",
           "date": "2021 May",
           "body": [
             "Stepped up as an EXCO member, taking on the role of Vice Chairman. Assisted in setting up and managing the school’s AV control room, including projectors and microphones, monitoring sound levels and audio channels, and managing stage lighting. Also supported the backstage crew with event setups and helped nurture and guide my juniors."
@@ -90,14 +91,14 @@
       "entries": [
         {
           "title": "Promoted to Express Stream",
-          "date": "2019 jan",
-          "body": ["Promoted from Normal Academic Stream to Express Stream"]
+          "date": "2019 Jan",
+          "body": ["Promoted from the Normal Academic Stream to the Express Stream."]
         },
         {
-          "title": "Became part of the Student Council Peer Leader",
-          "date": "2019 jan",
+          "title": "Joined the Student Council Peer Leader Track",
+          "date": "2019 Jan",
           "body": [
-            "Specialised in the Peer Leader track of the student council as I wanted to help support my peers"
+            "Specialised in the Student Council's Peer Leader track, where I supported my peers."
           ]
         }
       ]
@@ -106,14 +107,14 @@
       "year": "2018",
       "entries": [
         {
-          "title": "Enroll into St's Patrick Secondary School",
+          "title": "Enrolled at St. Patrick's Secondary School",
           "date": "2018 Jan",
-          "body": ["Enrolled into St's Patrick Secondary School in the Normal Academic Stream"]
+          "body": ["Enrolled at St. Patrick's Secondary School in the Normal Academic Stream."]
         },
         {
           "title": "Became a Student Leader",
           "date": "2018 Sep",
-          "body": ["Volunterred to be a student leader and pass the interview process"]
+          "body": ["Volunteered to be a student leader and passed the interview process."]
         }
       ]
     },
@@ -123,7 +124,7 @@
         {
           "title": "Graduated from SJIJ (St. Joseph's Institution Junior)",
           "date": "2017 Dec",
-          "body": ["Completed PSLE"]
+          "body": ["Completed PSLE."]
         }
       ]
     },
@@ -133,7 +134,7 @@
         {
           "title": "Joined Floorball CCA",
           "date": "2015 Jan",
-          "body": ["Left inforcomm club and joined floorball"]
+          "body": ["Left the Infocomm Club and joined the Floorball CCA."]
         }
       ]
     },
@@ -141,9 +142,9 @@
       "year": "2013",
       "entries": [
         {
-          "title": "Joined inforcomm club CCA",
+          "title": "Joined the Infocomm Club CCA",
           "date": "2015 Jan",
-          "body": ["Joined inforcomm club"]
+          "body": ["Joined the Infocomm Club."]
         }
       ]
     }

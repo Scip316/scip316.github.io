@@ -15,17 +15,17 @@
         "Azure Kubernetes Service (AKS)",
         "Helm",
         "Kubernetes",
-        "Kubtectl",
+        "kubectl",
         "Pods",
         "Build Agents (Windows & Linux)",
         "Image Hardening",
         "Terraform",
-        "Powershell",
+        "PowerShell",
         "Bash",
-        "SonarQuube",
+        "SonarQube",
         "Mend"
       ],
-      "summary": "Worked as a DevSecOps (DSO) Engineer in IRAS on the IRIN3 project. Assisted in the development and maintance for numerous application pipeline, troubleshooting their pods in AKS and served as a help desk for the application team",
+      "summary": "Worked as a DevSecOps (DSO) Engineer on IRAS's IRIN3 project. Assisted with developing and maintaining application pipelines, troubleshooting pods in AKS, and supporting the application team through the helpdesk.",
       "longDescription": [
         {
           "title": "Overview",
@@ -59,8 +59,8 @@
         {
           "title": "Conclusion",
           "content": [
-            "Overall, I really enjoyed working there. It was probably the best internship experience I could have asked for. Till this day, I still miss the company of my co-workers and our discussions on how to tackle different tasks and challenges.",
-            "Being a DSO Engineer exposed me to many different **Azure services** and gave me a much better understanding of how they are used in an actual working environment. More importantly, the experience only deepened my interest in **Cloud Technology and automation**."
+            "Overall, I really enjoyed working there. It was probably the best internship experience I could have asked for. To this day, I still miss the company of my co-workers and our discussions about how to tackle different tasks and challenges.",
+            "Being a DSO Engineer exposed me to many different **Azure services** and gave me a much better understanding of how they are used in a real working environment. More importantly, the experience deepened my interest in **cloud technology and automation**."
           ]
         }
       ],
@@ -93,13 +93,13 @@
         {
           "title": "Overview",
           "content": [
-            "My time as a Junior Application Developer at DBS was a short, but meaning jounry as i worked together with my other interns to develop a new compoment for a web applicaiton. I help to keep track of task to do and lias with my overseas team for quieries that arises"
+            "My time as a Junior Application Developer at DBS was short but meaningful. I worked with other peers to develop a new component for a web application, kept track of tasks, and liaised with my overseas team on queries that arose."
           ]
         },
         {
           "title": "Widget Development",
           "content": [
-            "I worked with 2 other interns to intergate a scanner function into a web application. The web application was built using Angular and Spring Boot. For my part, I was responsible for the connectivity between the scanner (fi-scanner) and the web application, to the backend (Spring Boot). I work on configuring the scanner paramters and aling it with the frontend web buttons, and ensure that the payloads are sent to the backend correctly. The other 2 intenrs handled the frontend, backend development with SQL DB of the web application. We worked closely together to ensure that our tasks were completed on time and that the web application was functioning correctly."
+            "I worked with two other peers to integrate a scanner function into a web application built with Angular and Spring Boot. I was responsible for connecting the FI scanner to the frontend controls and Spring Boot backend, configuring its parameters, and ensuring payloads were sent correctly. My peers handled the frontend, backend, and SQL database development. We worked closely to complete our tasks on time and ensure the application functioned correctly."
           ]
         },
         {
@@ -123,12 +123,12 @@
       "skills": [
         "Excel",
         "VBA",
-        "PowerBI",
+        "Power BI",
         "Power Apps",
         "M365 Planner",
-        "ReactJS",
-        "NodeJS",
-        "Python Pandas",
+        "React",
+        "Node.js",
+        "pandas",
         "Matplotlib",
         "Seaborn",
         "Data Cleaning",
@@ -136,14 +136,14 @@
         "Data Visualization",
         "Data Modelling",
         "XGBoost",
-        "K-Clustering"
+        "K-Means Clustering"
       ],
-      "summary": "Posted to G1-Army as an Admin Support Assistant (ASA). Responsible for mainly tracking data and helping with AdHoc requests. Churn wide range of data for anaylsis and visualization. Worked closely with the other NSF for group projects. Guide and teach other NSFs on the different datasets and to use it to resolve their current task",
+      "summary": "Posted to G1-Army as an Admin Support Assistant (ASA), where I track data and support ad hoc requests. I work with a wide range of datasets for analysis and visualisation, collaborate with other NSFs on group projects, and guide them in using datasets to support their tasks.",
       "longDescription": [
         {
           "title": "Overview",
           "content": [
-            "Two years of National Service — some people dread it, while others see it as a waste of time. For me, if I am spending two years of my life here, I want them to be meaningful. As a PES E1, my vocations are limited, and ulimatly I was assign as a Admin Support Assistant (ASA). Whether it was luck or fate, I ended up in G1-Army’s People and Analytics section, where my technical skills were put to the test every day.\n\nDuring my time here, I have created multiple scripts using Excel VBA and Python, built visualisations and dashboards in Power BI, and worked on data collection, analysis, exploration, and modelling for the Army."
+            "Two years of National Service — some people dread it, while others see it as a waste of time. For me, if I am spending two years of my life here, I want them to be meaningful. As a PES E1, my vocation options were limited, and I was ultimately assigned as an Admin Support Assistant (ASA). Whether it was luck or fate, I ended up in G1-Army’s People and Analytics section, where my technical skills were put to the test every day.\n\nDuring my time here, I have created multiple scripts using Excel VBA and Python, built visualisations and dashboards in Power BI, and worked on data collection, analysis, exploration, and modelling for the Army."
           ]
         },
         {
@@ -153,21 +153,21 @@
           ]
         },
         {
-          "title": "Recommend Role Algorithm",
+          "title": "Role Recommendation Algorithm",
           "content": [
-            "Togther with my other NSF (Aarron Loke), we co-work on a major project and recommends a roles that a person is suitable for base on mutiple cirteiras and considerations, which the alogothirm assign weightage for. We collaboarted with alot of the other HR departments are they too are keen in assiting in this model development."
+            "Together with another NSF, Aarron Loke, I worked on a major project that recommends roles a person may be suitable for based on multiple criteria and considerations. The algorithm uses both hard and soft rules, with different weightages assigned to the soft criteria based on their importance. We also worked closely with several HR departments, who were keen to support and contribute to the development of the model."
           ]
         },
         {
-          "title": "Ad-Hoc Work",
+          "title": "Ad Hoc Work",
           "content": [
-            "Some of my routine work incldues mass churning of data and updating the current datasets with the new churn infomation. Additionally, I will have ad-hoc request for some data for target audience, whihc i will idenity what data i need to collect, and clean them before submitting them. Sometimes, they will ask for insights or to find if there is an correaltion between certain fields. This requires abit mroe time as there is more data to collect and i would have to plot and make different grapgh/diagrams "
+            "Some of my routine work includes processing large volumes of data and updating our current datasets with new information. I also receive ad hoc requests to look into a specific target audience, where I identify the required data, collect and clean it, and submit the results. Sometimes, I am also asked to provide insights or identify correlations between different fields. These requests usually require additional time for data collection, analysis, and visualisation."
           ]
         },
         {
           "title": "Conclusion",
           "content": [
-            "Although my time at DBS was short, I learnt a great deal about web application development through my first full-stack project. I’m very grateful for the mentorship and support I received from my team and fellow interns. Without their guidance, the project would likely have faced many more blockers. I’m thankful for the experience, knowledge, and practical skills I gained during this role."
+            "As of this moment, my time in G1-Army has strengthened my ability to work with data, communicate my findings clearly, and support a wide range of operational requests. I am grateful for the guidance and support from my fellow NSFs and the wider team, who have helped me grow along the way and made my National Service a meaningful one."
           ]
         }
       ],

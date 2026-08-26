@@ -5,7 +5,7 @@ export const profile_declaration = {
   location: 'Singapore',
   email: 'darreldominiclim316@gmail.com',
   intro:
-    'Aspiring Tech Student with strong interest in Cloud Technology and DevOps.\nCurrently Serving in the Singapore Armed Forces as a NSF ASA in G1-Army.',
+    'Aspiring technology student with a strong interest in cloud technology and DevOps.\nCurrently serving in the Singapore Armed Forces as an NSF ASA in G1-Army.',
 }
 export const socials = [
   { name: 'WhatsApp', url: 'https://wa.me/91210645' },

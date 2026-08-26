@@ -21,7 +21,7 @@
       "date": "2023-04",
       "displayDate": "Apr 2023",
       "type": "Competition Participation",
-      "description": "Participated in the Lag & Crash 3.0 CTF compeition. Achieved top 25 team ranking.",
+      "description": "Participated in the Lag & Crash 3.0 CTF competition and achieved a top-25 team ranking.",
       "headerPhotos": [
         "/achievements/lag-and-crash-3.0-photo.png",
         "/achievements/lag-and-crash-3.0-certificate.pdf"
@@ -33,8 +33,8 @@
       "issuer": "Sembawang GRC",
       "date": "2022-09",
       "displayDate": "Sep 2022",
-      "type": "Competition Participation",
-      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods competition. Reached top 6 and presented to the GC judges.",
+      "type": "Competition participation",
+      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods. Reached the top six and presented to the GRC judges.",
       "headerPhotos": ["/achievements/Hackathon 2022 Safe in the Woods.pdf"],
       "featured": false
     }

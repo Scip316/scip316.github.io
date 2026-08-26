@@ -13,7 +13,6 @@ const aboutRailItems = [
   { id: 'about-history', label: 'About me' },
 ]
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
-const timelineProgress = ref(0)
 const timeline = computed(() =>
   sortByNewestDate(
     aboutContent.timeline.map((section) => {
@@ -25,35 +24,23 @@ const timeline = computed(() =>
 const timelineNodeOffsets = ref<number[]>(
   timeline.value.map((_, index) => (index / Math.max(timeline.value.length - 1, 1)) * 100),
 )
-const isTimelineNodeActive = computed(() =>
-  timelineNodeOffsets.value.some((offset) => Math.abs(offset - timelineProgress.value) < 5),
-)
 const updateTimelinePosition = () => {
   let activeYear = timeline.value[0]?.year ?? ''
-  const yearThreshold = window.innerHeight * 0.42
+  const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
+  const yearThreshold = headerHeight + 72
   for (const timelineSection of timeline.value) {
     const section = document.getElementById(`timeline-${timelineSection.year}`)
     if (section && section.getBoundingClientRect().top <= yearThreshold) {
       activeYear = timelineSection.year
     }
   }
+
+  const lastTimelineYear = timeline.value[timeline.value.length - 1]?.year
+  const hasReachedTimelineEnd =
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+  if (hasReachedTimelineEnd && lastTimelineYear) activeYear = lastTimelineYear
+
   activeTimelineYear.value = activeYear
-
-  const timelineContent = document.querySelector('.about-timeline-content')
-
-  if (timelineContent) {
-    const contentRect = timelineContent.getBoundingClientRect()
-    const scrollY = window.scrollY
-    const contentTop = contentRect.top + scrollY
-    const contentBottom = contentTop + contentRect.height
-    const start = contentTop - 112
-    const end = Math.max(contentBottom - window.innerHeight + 112, start + 1)
-    const span = Math.max(end - start, 1)
-
-    timelineProgress.value = Math.min(Math.max((scrollY - start) / span, 0), 1) * 100
-    const lastIndex = Math.max(timeline.value.length - 1, 1)
-    timelineNodeOffsets.value = timeline.value.map((_, index) => (index / lastIndex) * 100)
-  }
 }
 
 const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, {
@@ -131,25 +118,17 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
               :style="{ top: `${timelineNodeOffsets[index] ?? 0}%` }"
               >{{ timelineSection.year }}</a
             >
-            <a
-              class="about-timeline-cursor"
-              :href="`#timeline-${activeTimelineYear}`"
-              :style="{ top: `${timelineProgress}%` }"
-            >
-              <span class="about-timeline-cursor-arrow"></span>
-              <span v-if="!isTimelineNodeActive" class="about-timeline-cursor-year">
-                {{ activeTimelineYear }}
-              </span>
-            </a>
           </nav>
           <div class="about-timeline-content">
             <section
               v-for="timelineSection in timeline"
               :id="`timeline-${timelineSection.year}`"
-              :key="timelineSection.year"
-              class="about-timeline-year"
-            >
+            :key="timelineSection.year"
+            class="about-timeline-year"
+          >
+            <header class="about-timeline-year-heading">
               <h1>{{ timelineSection.year }}</h1>
+            </header>
               <article
                 v-for="entry in timelineSection.entries"
                 :key="entry.title"
@@ -345,7 +324,7 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
 
 .about-timeline-nav {
   position: sticky;
-  top: 112px;
+  top: 180px;
   z-index: 1;
   align-self: start;
   width: 100%;
@@ -358,11 +337,9 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
   left: 82px;
   z-index: 2;
   display: flex;
-  min-width: 62px;
-  justify-content: center;
-  padding: 7px 9px;
-  border: 1px solid var(--line);
-  background: var(--surface);
+  min-width: 50px;
+  justify-content: flex-end;
+  padding: 3px 0;
   color: var(--muted);
   font:
     0.74rem 'DM Mono',
@@ -371,9 +348,8 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
   text-decoration: none;
   transform: translate(-100%, -50%);
   transition:
-    border-color 0.2s ease,
     color 0.2s ease,
-    background 0.2s ease;
+    transform 0.2s ease;
 }
 
 .about-timeline-nav::before {
@@ -388,41 +364,44 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
 
 .about-timeline-rail-year:hover,
 .about-timeline-rail-year.is-active {
-  border-color: var(--accent);
   color: var(--accent);
+  font-weight: 700;
 }
 
-.about-timeline-cursor {
+.about-timeline-rail-year::before {
   position: absolute;
-  left: 93px;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--accent);
-  text-decoration: none;
+  top: 50%;
+  right: -28px;
+  width: 28px;
+  height: 1px;
+  content: '';
+  background: transparent;
   transform: translateY(-50%);
-  transition: top 0.18s ease-out;
 }
 
-.about-timeline-cursor-year {
-  min-width: 62px;
-  padding: 7px 9px;
-  border: 1px solid var(--accent);
-  background: var(--surface);
-  font:
-    500 0.74rem 'DM Mono',
-    monospace;
-  text-align: center;
-  letter-spacing: 0.04em;
+.about-timeline-rail-year::after {
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  content: '';
+  background: var(--line);
+  transform: translateY(-50%);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
-.about-timeline-cursor-arrow {
-  width: 0;
-  height: 0;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-left: 13px solid var(--accent);
+.about-timeline-rail-year.is-active::before {
+  background: var(--accent);
+}
+
+.about-timeline-rail-year.is-active::after {
+  background: var(--accent);
+  transform: translateY(-50%) scale(1.25);
 }
 
 .about-timeline-year + .about-timeline-year {
@@ -452,11 +431,14 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
   margin: 0;
 }
 
-.about-timeline-year h1 {
+.about-timeline-year-heading {
   margin-bottom: clamp(14px, 1.8vw, 22px);
-  font-size: clamp(1.75rem, 2.4vw, 2.6rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
+}
+
+.about-timeline-year h1 {
+  color: var(--accent);
+  font: 500 clamp(2rem, 3vw, 3.2rem) 'DM Mono', monospace;
+  letter-spacing: -0.08em;
   line-height: 1;
 }
 
@@ -502,6 +484,52 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
   }
 }
 
+@media (max-width: 1400px) {
+  .about-timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .about-timeline-nav {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    margin-bottom: 24px;
+  }
+
+  .about-timeline-nav::before {
+    display: none;
+  }
+
+  .about-timeline-rail-year {
+    position: static;
+    display: block;
+    width: auto;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    font: 0.75rem 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    text-align: center;
+    transform: none;
+  }
+
+  .about-timeline-rail-year::before,
+  .about-timeline-rail-year::after {
+    display: none;
+  }
+
+  .about-timeline-rail-year.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
 @media (max-width: 760px) {
   .about-profile-grid,
   .about-timeline,
@@ -535,8 +563,7 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
     margin-bottom: 24px;
   }
 
-  .about-timeline-nav::before,
-  .about-timeline-cursor {
+  .about-timeline-nav::before {
     display: none;
   }
 
@@ -553,6 +580,11 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
       monospace;
     letter-spacing: 0.04em;
     transform: none;
+  }
+
+  .about-timeline-rail-year::before,
+  .about-timeline-rail-year::after {
+    display: none;
   }
 
   .about-timeline-rail-year.is-active {
