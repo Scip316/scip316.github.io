@@ -139,7 +139,26 @@
         "K-Clustering"
       ],
       "summary": "Posted to G1-Army as an Admin Support Assistant (ASA). Responsible for mainly tracking data and helping with AdHoc requests. Churn wide range of data for anaylsis and visualization. Worked closely with the other NSF for group projects. Guide and teach other NSFs on the different datasets and to use it to resolve their current task",
-      "longDescription": "A fuller account of the role, your responsibilities, the context, and the outcomes you contributed to.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "2 Years of NS - Some people dread it, some people think it's a waste of time. Me? I am spending's 2 years of my life, and i want it to be a meaningful 2 years. weather it was as stroke of luck or fate had plans, i ended up in G1-Army, under people and analystic section where my technical skills were tested everyday. I created mutiple scripts in excel VBA and Python, created different visualtion grapgh in powerbi, and do data collection, analysis, explorational and modelling for the army"
+          ]
+        },
+        {
+          "title": "Routine Work",
+          "content": [
+            "Some of my routine work incldues mass churning of data and updating the curretn datasets with the new churn infomation. Additionally, I will have ad-hoc request for some data for target audience, whihc i will idenity what data i need to collect, and clean them before submitting them. Sometimes, they will ask for insights or to find if there is an correaltion between certain fields. This requires abit mroe time as there is more data to collect and i would have to plot and make different grapgh/diagrams "
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "Although my time at DBS was short, I learnt a great deal about web application development through my first full-stack project. I’m very grateful for the mentorship and support I received from my team and fellow interns. Without their guidance, the project would likely have faced many more blockers. I’m thankful for the experience, knowledge, and practical skills I gained during this role."
+          ]
+        }
+      ],
       "endorsements": [
         {
           "quote": "TBC.",

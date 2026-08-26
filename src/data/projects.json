@@ -21,16 +21,29 @@
       "liveUrl": null
     },
     {
-      "id": "ai-chatbot",
-      "title": "AI Chatbot",
-      "year": "Personal project",
-      "category": "AI experiment",
+      "id": "AI-Gen Image Community Event",
+      "title": "AI-Gen Image Community Event",
+      "year": "2026",
+      "category": "AI Gen",
       "featured": true,
-      "summary": "An exploration of conversational AI and how an assistant can make information and everyday tasks easier to access.",
-      "technologies": ["AI", "Python", "Conversational UX"],
+      "summary": "Participated in Garena Hackation [Digitalised Entertainment]. Our product aims to bring the community together to create an AI-Emote for the vent, where partificpants are split into different teams and each team control different part of the emote.",
+      "technologies": ["AI", "Python", "UI/UX"],
       "headerPhotos": ["/projects/Garena_AI.png"],
       "githubUrl": null,
       "liveUrl": null
+    },
+    {
+      "id": "Telegram Reminder Bot",
+      "title": "Telegram Reminder Bot",
+      "year": "2026",
+      "category": "Telegram Bot",
+      "featured": true,
+      "summary": "A telegram bot that sends reminder message, and sync remidners to google calender.",
+      "technologies": ["Telegram Bot", "Python", "SQL Lite"],
+      "headerPhotos": ["/projects/xxx.png"],
+      "githubUrl": null,
+      "liveUrl": null
     }
+
   ]
 }
