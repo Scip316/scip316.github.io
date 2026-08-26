@@ -551,6 +551,13 @@ onUnmounted(() => {
   }
 }
 
+/* Keep the fixed page rail from covering the About content on narrower desktops. */
+@media (max-width: 1600px) {
+  .about-section-rail {
+    display: none;
+  }
+}
+
 @media (max-width: 760px) {
   .about-profile-grid,
   .about-timeline,
