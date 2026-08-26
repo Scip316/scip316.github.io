@@ -395,12 +395,12 @@ onUnmounted(() => {
                     </li>
                   </ul>
                   <a
-                    v-if="project.githubUrl"
+                    v-if="project.links.length"
                     class="home-feature-link"
-                    :href="project.githubUrl"
+                    :href="project.links[0].url"
                     target="_blank"
                     rel="noreferrer"
-                    >View source <b aria-hidden="true">↗</b></a
+                    >{{ project.links[0].title }} <b aria-hidden="true">↗</b></a
                   >
                   <span v-else class="home-feature-link">Case study in progress</span>
                 </div>

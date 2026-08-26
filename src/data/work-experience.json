@@ -147,9 +147,15 @@
           ]
         },
         {
-          "title": "Routine Work",
+          "title": "Attrition tracking",
           "content": [
-            "Some of my routine work incldues mass churning of data and updating the curretn datasets with the new churn infomation. Additionally, I will have ad-hoc request for some data for target audience, whihc i will idenity what data i need to collect, and clean them before submitting them. Sometimes, they will ask for insights or to find if there is an correaltion between certain fields. This requires abit mroe time as there is more data to collect and i would have to plot and make different grapgh/diagrams "
+            "1 of my key jobs to help the SAF to track attrition accross the board. I have access to a database system that allows me to access and pull records (also known as mass churning of data). I played a helping hand in updating some defination of attrition, and created different scripts that helps to track the attrition rates every month."
+          ]
+        },
+        {
+          "title": "Ad-Hoc Work",
+          "content": [
+            "Some of my routine work incldues mass churning of data and updating the current datasets with the new churn infomation. Additionally, I will have ad-hoc request for some data for target audience, whihc i will idenity what data i need to collect, and clean them before submitting them. Sometimes, they will ask for insights or to find if there is an correaltion between certain fields. This requires abit mroe time as there is more data to collect and i would have to plot and make different grapgh/diagrams "
           ]
         },
         {

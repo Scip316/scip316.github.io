@@ -17,33 +17,63 @@
         "Team project"
       ],
       "headerPhotos": ["/projects/Lunch_Box.jpg"],
-      "githubUrl": "https://github.com/Scip316/C206_Lunch_Box_GA",
-      "liveUrl": null
+      "links": [
+        {
+          "title": "GitHub",
+          "url": "https://github.com/Scip316/C206_Lunch_Box_GA"
+        }
+      ]
     },
     {
       "id": "AI-Gen Image Community Event",
       "title": "AI-Gen Image Community Event",
       "year": "2026",
-      "category": "AI Gen",
+      "category": "Garena AI Build Challenge 2026 · Hackathon",
       "featured": true,
       "summary": "Participated in Garena Hackation [Digitalised Entertainment]. Our product aims to bring the community together to create an AI-Emote for the vent, where partificpants are split into different teams and each team control different part of the emote.",
-      "technologies": ["AI", "Python", "UI/UX"],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Redux Toolkit",
+        "TanStack Query",
+        "Python",
+        "FastAPI",
+        "SQLAlchemy",
+        "Alembic",
+        "SQLite",
+        "WebSockets",
+        "REST APIs",
+        "Ollama",
+        "ComfyUI",
+        "Qwen Image Edit",
+        "Sentence Transformers",
+        "scikit-learn",
+        "NumPy",
+        "Pillow",
+        "Docker",
+        "Docker Compose",
+        "Nginx",
+        "Team project"
+      ],
       "headerPhotos": ["/projects/Garena_AI.png"],
-      "githubUrl": null,
-      "liveUrl": null
+      "links": [
+        {
+          "title": "GitHub",
+          "url": "https://github.com/Scip316/Garena-AI-Build-2026"
+        }
+      ]
     },
     {
       "id": "Telegram Reminder Bot",
-      "title": "Telegram Reminder Bot",
+      "title": "Telegram Reminder Bot (WIP)",
       "year": "2026",
       "category": "Telegram Bot",
       "featured": true,
-      "summary": "A telegram bot that sends reminder message, and sync remidners to google calender.",
-      "technologies": ["Telegram Bot", "Python", "SQL Lite"],
-      "headerPhotos": ["/projects/xxx.png"],
-      "githubUrl": null,
-      "liveUrl": null
+      "summary": "A Telegram bot that allows you to set reminders and sends you a message based on the set time. It also has a built-in message snooze feature and syncs with Google Calendar",
+      "technologies": ["Telegram Bot", "Python", "SQL Lite", "Google Calender"],
+      "headerPhotos": ["/projects/tele_retain.png"],
+      "links": []
     }
-
   ]
 }

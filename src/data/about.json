@@ -18,10 +18,10 @@
       "year": "2025",
       "entries": [
         {
-          "title": "Republic Polytechnic",
+          "title": "Graduated from Republic Polytechnic",
           "date": "2025 Jul",
           "body": [
-            "Completed my Diploma in Information Technology, where I built a foundation in software development and cloud technology."
+            "Completed my Diploma in Information Technology with Merit, where I built a foundation in software development, cisco networking and cloud technology."
           ]
         },
         {
@@ -36,7 +36,7 @@
           "title": "Singapore Armed Forces — Admin Support Assistant",
           "date": "2025 Aug",
           "body": [
-            "Began National Service as an NSF ASA in G1-Army, supporting data-related tasks, ad hoc requests, and team projects."
+            "Began National Service as an NSF ASA in G1-Army, supporting data-related tasks, attrition tracking, ad-hoc requests, and team projects."
           ]
         }
       ]
@@ -51,6 +51,99 @@
             "Joined the IRIN3 project as a DevSecOps Engineer, supporting CI/CD pipelines, Azure services, AKS operations, and application-team queries.",
             "The role strengthened my interest in cloud technology, automation, and how engineering teams deliver software in real working environments."
           ]
+        }
+      ]
+    },
+    {
+      "year": "2022",
+      "entries": [
+        {
+          "title": "Enrolled into Republic Polytechnic",
+          "date": "2022 Apr",
+          "body": [
+            "Enrolled in Republic Polytechnic, pursuing a Diploma in Information Technology."
+          ]
+        },
+        {
+          "title": "Graduated from St's Partick Secondary School",
+          "date": "2022 Jan",
+          "body": [
+            "Graduated from St. Patrick’s Secondary School after completing my O-Level examinations."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2021",
+      "entries": [
+        {
+          "title": "Inforcomm Club CCA Vice-Chairmen",
+          "date": "2021 May",
+          "body": [
+            "Stepped up as an EXCO member, taking on the role of Vice Chairman. Assisted in setting up and managing the school’s AV control room, including projectors and microphones, monitoring sound levels and audio channels, and managing stage lighting. Also supported the backstage crew with event setups and helped nurture and guide my juniors."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2019",
+      "entries": [
+        {
+          "title": "Promoted to Express Stream",
+          "date": "2019 jan",
+          "body": ["Promoted from Normal Academic Stream to Express Stream"]
+        },
+        {
+          "title": "Became part of the Student Council Peer Leader",
+          "date": "2019 jan",
+          "body": [
+            "Specialised in the Peer Leader track of the student council as I wanted to help support my peers"
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2018",
+      "entries": [
+        {
+          "title": "Enroll into St's Patrick Secondary School",
+          "date": "2018 Jan",
+          "body": ["Enrolled into St's Patrick Secondary School in the Normal Academic Stream"]
+        },
+        {
+          "title": "Became a Student Leader",
+          "date": "2018 Sep",
+          "body": ["Volunterred to be a student leader and pass the interview process"]
+        }
+      ]
+    },
+    {
+      "year": "2017",
+      "entries": [
+        {
+          "title": "Graduated from SJIJ (St. Joseph's Institution Junior)",
+          "date": "2017 Dec",
+          "body": ["Completed PSLE"]
+        }
+      ]
+    },
+    {
+      "year": "2016",
+      "entries": [
+        {
+          "title": "Joined Floorball CCA",
+          "date": "2015 Jan",
+          "body": ["Left inforcomm club and joined floorball"]
+        }
+      ]
+    },
+    {
+      "year": "2013",
+      "entries": [
+        {
+          "title": "Joined inforcomm club CCA",
+          "date": "2015 Jan",
+          "body": ["Joined inforcomm club"]
         }
       ]
     }
