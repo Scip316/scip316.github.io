@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue'
+import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist'
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
+import { onMounted, onUnmounted, ref } from 'vue'
+
+GlobalWorkerOptions.workerSrc = pdfWorkerUrl
 
 const props = withDefaults(
   defineProps<{
@@ -12,10 +16,38 @@ const props = withDefaults(
 
 const activeIndex = ref(0)
 const touchStartPosition = ref<number | null>(null)
+const pdfPreviews = ref<Record<string, string>>({})
+const unavailablePdfPreviews = ref<Set<string>>(new Set())
 let suppressLinkNavigation = false
 let suppressNavigationTimer: number | undefined
 
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
+
+const renderPdfPreview = async (path: string) => {
+  const loadingTask = getDocument(path)
+
+  try {
+    const document = await loadingTask.promise
+    const page = await document.getPage(1)
+    const viewport = page.getViewport({ scale: 1.5 })
+    const canvas = window.document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (!context) throw new Error('Canvas is unavailable')
+
+    canvas.width = Math.ceil(viewport.width)
+    canvas.height = Math.ceil(viewport.height)
+    await page.render({ canvas, canvasContext: context, viewport }).promise
+    pdfPreviews.value = {
+      ...pdfPreviews.value,
+      [path]: canvas.toDataURL('image/jpeg', 0.9),
+    }
+    document.destroy()
+  } catch {
+    unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
+  } finally {
+    loadingTask.destroy()
+  }
+}
 
 const changeMedia = (direction: 'next' | 'previous') => {
   if (props.media.length < 2) return
@@ -62,6 +94,10 @@ const handleMediaClick = (event: MouseEvent) => {
   event.stopPropagation()
 }
 
+onMounted(() => {
+  props.media.filter(isPdf).forEach((path) => void renderPdfPreview(path))
+})
+
 onUnmounted(() => {
   window.clearTimeout(suppressNavigationTimer)
 })
@@ -77,9 +113,23 @@ onUnmounted(() => {
     <div class="media-carousel-track" :style="{ transform: `translateX(-${activeIndex * 100}%)` }">
       <div v-for="(item, index) in media" :key="item" class="media-carousel-slide">
         <img v-if="!isPdf(item)" :src="item" :alt="`${title} image ${index + 1}`" />
-        <object v-else :data="item" type="application/pdf" :aria-label="title">
-          <a :href="item" target="_blank" rel="noreferrer">{{ pdfLinkLabel }}</a>
-        </object>
+        <a
+          v-else-if="pdfPreviews[item]"
+          class="pdf-preview"
+          :href="item"
+          target="_blank"
+          rel="noreferrer"
+          :aria-label="`${pdfLinkLabel}: ${title}`"
+        >
+          <img class="pdf-preview-image" :src="pdfPreviews[item]" :alt="`${title} PDF preview`" />
+        </a>
+        <a
+          v-else
+          class="pdf-preview pdf-preview--fallback"
+          :href="item"
+          target="_blank"
+          rel="noreferrer"
+        >{{ unavailablePdfPreviews.has(item) ? pdfLinkLabel : 'Loading PDF preview…' }}</a>
       </div>
     </div>
 
@@ -138,7 +188,7 @@ onUnmounted(() => {
 }
 
 .media-carousel-slide img,
-.media-carousel-slide object {
+.pdf-preview {
   display: block;
   width: 100%;
   height: 100%;
@@ -149,8 +199,23 @@ onUnmounted(() => {
   object-fit: cover;
 }
 
-.media-carousel-slide object {
+.pdf-preview {
   background: #f7f7f4;
+  text-decoration: none;
+}
+
+.pdf-preview-image {
+  object-fit: contain;
+}
+
+.pdf-preview--fallback {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #1b1b1b;
+  font: 0.75rem 'DM Mono', monospace;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .media-carousel-controls {
