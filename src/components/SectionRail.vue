@@ -126,7 +126,7 @@ withDefaults(
 
 /* Keep a reusable rail beside the shared centered content column without moving it. */
 .section-rail--content-aligned {
-  left: max(16px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 296px));
+  left: max(16px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 328px));
   right: auto;
 }
 
