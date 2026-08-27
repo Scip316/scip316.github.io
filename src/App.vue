@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import CardActionLink from './components/CardActionLink.vue'
 import SectionRail from './components/SectionRail.vue'
 import AboutView from './views/AboutView.vue'
 import CertificateListView from './views/CertificateListView.vue'
@@ -322,11 +323,7 @@ onUnmounted(() => {
                       {{ skill }}
                     </li>
                   </ul>
-                  <span class="work-card-link"
-                    ><span class="work-card-link-label"
-                      >View experience <b aria-hidden="true">↗</b></span
-                    ></span
-                  >
+                  <CardActionLink>View experience</CardActionLink>
                 </div>
               </a>
             </div>
@@ -395,15 +392,11 @@ onUnmounted(() => {
                       {{ technology }}
                     </li>
                   </ul>
-                  <a
+                  <CardActionLink
                     v-if="project.links.length"
-                    class="work-card-link"
                     :href="project.links[0].url"
-                    target="_blank"
-                    rel="noreferrer"
-                    ><span class="work-card-link-label"
-                      >{{ project.links[0].title }} <b aria-hidden="true">↗</b></span
-                    ></a
+                    external
+                    >{{ project.links[0].title }}</CardActionLink
                   >
                   <span v-else class="home-feature-link">Case study in progress</span>
                 </div>

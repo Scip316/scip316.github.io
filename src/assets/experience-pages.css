@@ -1,8 +1,9 @@
 .experience-page {
   min-height: 100vh;
-  max-width: 1280px;
+  width: min(88vw, 1720px);
   margin: 0 auto;
-  padding: 34px clamp(24px, 6vw, 90px) 90px;
+  padding: 34px 0 90px;
+  --experience-small-text: 0.9rem;
 }
 .experience-page-header {
   display: flex;
@@ -180,7 +181,10 @@
 }
 @media (max-width: 760px) {
   .experience-page {
+    width: 100%;
     padding-top: 24px;
+    padding-right: 24px;
+    padding-left: 24px;
   }
   .experience-page-header p {
     display: none;

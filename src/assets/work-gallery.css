@@ -25,6 +25,7 @@
 
 .work-card-body .card-label {
   color: #c74233;
+  font-size: var(--label-size);
 }
 
 .work-card-body h3 {
@@ -65,52 +66,6 @@
     0.6rem 'DM Mono',
     monospace;
   text-transform: uppercase;
-}
-
-.work-card-link {
-  display: block;
-  padding-top: 12px;
-  border-top: 1px solid #d2d0ca;
-  color: #1b1b1b;
-  font:
-    0.65rem 'DM Mono',
-    monospace;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.work-card-link-label {
-  display: inline-block;
-  position: relative;
-  padding-bottom: 7px;
-}
-
-.work-card-link-label::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  content: '';
-  background: #cf4636;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
-}
-
-.work-card:hover .work-card-link-label::after,
-.work-card:focus-visible .work-card-link-label::after,
-.home-project-card:hover .work-card-link-label::after,
-.home-project-card:focus-within .work-card-link-label::after,
-.project-list-card:hover .work-card-link-label::after,
-.project-list-card:focus-within .work-card-link-label::after {
-  transform: scaleX(1);
-}
-
-.work-card-link b {
-  color: #cf4636;
-  font-size: 0.9rem;
 }
 
 @media (max-width: 760px) {

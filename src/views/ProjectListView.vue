@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import projectData from '../data/projects.json'
 import ArchivePageHeader from '../components/ArchivePageHeader.vue'
+import CardActionLink from '../components/CardActionLink.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import { primaryHeaderPhoto } from '../utils/primaryHeaderPhoto'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
@@ -30,7 +31,7 @@ const projects = sortByNewestDate(projectData.projects)
             backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
+            backgroundSize: 'contain',
           }"
         ></div>
         <div class="experience-grid-content">
@@ -41,15 +42,12 @@ const projects = sortByNewestDate(projectData.projects)
             <li v-for="technology in project.technologies" :key="technology">{{ technology }}</li>
           </ul>
           <div class="project-links">
-            <a
+            <CardActionLink
               v-for="link in project.links"
               :key="link.url"
               :href="link.url"
-              target="_blank"
-              rel="noreferrer"
-              class="work-card-link"><span class="work-card-link-label"
-                >{{ link.title }} <b aria-hidden="true">↗</b></span
-              ></a
+              external
+              >{{ link.title }}</CardActionLink
             >
             <span v-if="!project.links.length">Case study in progress</span>
           </div>
@@ -76,6 +74,7 @@ const projects = sortByNewestDate(projectData.projects)
   animation: trace-project-divider 7s ease-in-out infinite;
 }
 .project-list-card {
+  --action-link-color: var(--text);
   background: var(--surface);
 }
 .project-list-image {
@@ -120,6 +119,14 @@ const projects = sortByNewestDate(projectData.projects)
   flex-wrap: wrap;
   gap: 9px;
   margin-top: auto;
+}
+.project-links .card-action-link {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+}
+.project-links .card-action-link:hover,
+.project-links .card-action-link:focus-visible {
+  border-color: var(--accent);
 }
 .project-links span {
   color: var(--muted);

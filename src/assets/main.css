@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
 :root {
+  --font-sans: 'DM Sans', Arial, sans-serif;
+  --font-mono: 'DM Mono', monospace;
   --background: #f7f7f5;
   --surface: #fff;
   --text: #1b1b1b;
   --muted: #666;
   --line: #d8d8d4;
   --accent: #d94736;
+  --accent-strong: #cf4636;
   --header: #303030;
+  --label-size: 0.9rem;
 }
 * {
   box-sizing: border-box;
@@ -19,9 +23,12 @@ body {
   background: var(--background);
   color: var(--text);
   font:
-    16px/1.6 'DM Sans',
-    Arial,
-    sans-serif;
+    16px/1.6 var(--font-sans);
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 .site-header {
   height: 74px;
