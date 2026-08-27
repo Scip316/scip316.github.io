@@ -47,7 +47,9 @@ const projects = sortByNewestDate(projectData.projects)
               :href="link.url"
               target="_blank"
               rel="noreferrer"
-              >{{ link.title }} <span aria-hidden="true">↗</span></a
+              class="work-card-link"><span class="work-card-link-label"
+                >{{ link.title }} <b aria-hidden="true">↗</b></span
+              ></a
             >
             <span v-if="!project.links.length">Case study in progress</span>
           </div>
@@ -118,31 +120,6 @@ const projects = sortByNewestDate(projectData.projects)
   flex-wrap: wrap;
   gap: 9px;
   margin-top: auto;
-  padding-top: 13px;
-  border-top: 1px solid var(--line);
-  font:
-    0.69rem 'DM Mono',
-    monospace;
-  text-transform: uppercase;
-}
-.project-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 11px;
-  border: 1px solid var(--accent);
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
-  color: var(--text);
-  font-weight: 600;
-  text-decoration: none;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-.project-links a:hover {
-  background: var(--accent);
-  color: var(--background);
 }
 .project-links span {
   color: var(--muted);

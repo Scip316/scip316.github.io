@@ -261,6 +261,13 @@
   color: #1b1b1b;
 }
 
+/* Project cards can have longer technology lists than work cards. */
+.home-feature-row .showcase-coverflow-stage,
+.home-feature-row .showcase-coverflow-card,
+.home-feature-row .home-project-card {
+  aspect-ratio: 21 / 10.5;
+}
+
 .home-certificate-card {
   background: #dfdfda;
 }
@@ -333,19 +340,6 @@
   font:
     0.6rem 'DM Mono',
     monospace;
-  text-transform: uppercase;
-}
-
-.home-feature-link {
-  display: block;
-  padding-top: 12px;
-  border-top: 1px solid #d2d0ca;
-  color: #605f5b;
-  font:
-    0.65rem 'DM Mono',
-    monospace;
-  letter-spacing: 0.04em;
-  text-decoration: none;
   text-transform: uppercase;
 }
 

@@ -259,6 +259,7 @@ onUnmounted(() => {
         :active-id="activeHomeSection"
         :visible="showHomeSectionRail"
         :top="homeSectionRailTop"
+        content-aligned
       />
       <section id="work-experience" class="showcase-section showcase-section--work">
         <div class="showcase-section-inner">
@@ -396,11 +397,13 @@ onUnmounted(() => {
                   </ul>
                   <a
                     v-if="project.links.length"
-                    class="home-feature-link"
+                    class="work-card-link"
                     :href="project.links[0].url"
                     target="_blank"
                     rel="noreferrer"
-                    >{{ project.links[0].title }} <b aria-hidden="true">↗</b></a
+                    ><span class="work-card-link-label"
+                      >{{ project.links[0].title }} <b aria-hidden="true">↗</b></span
+                    ></a
                   >
                   <span v-else class="home-feature-link">Case study in progress</span>
                 </div>

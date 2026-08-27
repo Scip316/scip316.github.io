@@ -11,11 +11,13 @@ withDefaults(
     visible?: boolean
     top?: number
     compact?: boolean
+    contentAligned?: boolean
   }>(),
   {
     visible: true,
     top: 118,
     compact: false,
+    contentAligned: false,
   },
 )
 </script>
@@ -23,7 +25,11 @@ withDefaults(
 <template>
   <nav
     class="section-rail"
-    :class="{ 'is-visible': visible, 'section-rail--compact': compact }"
+    :class="{
+      'is-visible': visible,
+      'section-rail--compact': compact,
+      'section-rail--content-aligned': contentAligned,
+    }"
     :style="{ top: `${top}px` }"
     :aria-hidden="!visible"
     aria-label="On this page"
@@ -44,12 +50,14 @@ withDefaults(
 .section-rail {
   position: fixed;
   left: clamp(42px, 6vw, 110px);
-  z-index: 4;
+  z-index: 10;
   display: grid;
   min-width: 280px;
   padding: 24px 28px 24px 27px;
   border: 1px solid var(--line);
   background: var(--background);
+  isolation: isolate;
+  box-shadow: 0 0 0 1px var(--background);
   opacity: 0;
   pointer-events: none;
   transform: translateX(-12px);
@@ -114,6 +122,12 @@ withDefaults(
   left: clamp(24px, 3vw, 60px);
   min-width: 205px;
   padding: 20px 22px 20px 23px;
+}
+
+/* Keep a reusable rail beside the shared centered content column without moving it. */
+.section-rail--content-aligned {
+  left: max(16px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 296px));
+  right: auto;
 }
 
 .section-rail--compact p {

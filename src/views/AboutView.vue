@@ -25,20 +25,26 @@ const timelineNodeOffsets = ref<number[]>(
   timeline.value.map((_, index) => (index / Math.max(timeline.value.length - 1, 1)) * 100),
 )
 const updateTimelinePosition = () => {
-  let activeYear = timeline.value[0]?.year ?? ''
   const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
-  const yearThreshold = headerHeight + 72
+  const readingLine = Math.max(headerHeight + 72, window.innerHeight * 0.35)
+  let activeYear = timeline.value[0]?.year ?? ''
+  let closestDistance = Number.POSITIVE_INFINITY
+
   for (const timelineSection of timeline.value) {
     const section = document.getElementById(`timeline-${timelineSection.year}`)
-    if (section && section.getBoundingClientRect().top <= yearThreshold) {
+    if (!section) continue
+
+    const { top, bottom } = section.getBoundingClientRect()
+    const distance =
+      top <= readingLine && bottom >= readingLine
+        ? 0
+        : Math.min(Math.abs(top - readingLine), Math.abs(bottom - readingLine))
+
+    if (distance < closestDistance) {
+      closestDistance = distance
       activeYear = timelineSection.year
     }
   }
-
-  const lastTimelineYear = timeline.value[timeline.value.length - 1]?.year
-  const hasReachedTimelineEnd =
-    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-  if (hasReachedTimelineEnd && lastTimelineYear) activeYear = lastTimelineYear
 
   activeTimelineYear.value = activeYear
 }
@@ -57,7 +63,12 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
       <p>About / {{ profile_declaration.location }}</p>
     </header>
 
-    <SectionRail :items="aboutRailItems" :active-id="activeAboutSection" compact />
+    <SectionRail
+      :items="aboutRailItems"
+      :active-id="activeAboutSection"
+      :top="156"
+      content-aligned
+    />
 
     <section id="profile" class="about-profile-grid" aria-label="Profile overview">
       <figure class="about-photo-card">
@@ -150,6 +161,13 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
 <style scoped>
 .about-page {
   padding-bottom: clamp(72px, 8vw, 130px);
+}
+
+/* The fixed section rail is outside normal document flow, so reserve its column here. */
+@media (min-width: 1601px) {
+  .about-page {
+    padding-left: clamp(280px, 18vw, 360px);
+  }
 }
 
 .about-profile-grid {

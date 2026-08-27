@@ -71,10 +71,12 @@
   display: block;
   padding-top: 12px;
   border-top: 1px solid #d2d0ca;
+  color: #1b1b1b;
   font:
     0.65rem 'DM Mono',
     monospace;
   letter-spacing: 0.04em;
+  text-decoration: none;
   text-transform: uppercase;
 }
 
@@ -98,7 +100,11 @@
 }
 
 .work-card:hover .work-card-link-label::after,
-.work-card:focus-visible .work-card-link-label::after {
+.work-card:focus-visible .work-card-link-label::after,
+.home-project-card:hover .work-card-link-label::after,
+.home-project-card:focus-within .work-card-link-label::after,
+.project-list-card:hover .work-card-link-label::after,
+.project-list-card:focus-within .work-card-link-label::after {
   transform: scaleX(1);
 }
 
