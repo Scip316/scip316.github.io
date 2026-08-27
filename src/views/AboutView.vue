@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import SectionRail from '../components/SectionRail.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import aboutContent from '../data/about.json'
@@ -7,10 +7,11 @@ import { profile_declaration, socials } from '../data/portfolio'
 import { useActiveSection } from '../composables/useActiveSection'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
-const aboutSectionIds = ['profile', 'about-history'] as const
+const aboutSectionIds = ['profile', 'about-history', 'timeline'] as const
 const aboutRailItems = [
   { id: 'profile', label: 'Profile' },
   { id: 'about-history', label: 'About me' },
+  { id: 'timeline', label: 'Timeline' },
 ]
 const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
 const timeline = computed(() =>
@@ -24,33 +25,65 @@ const timeline = computed(() =>
 const timelineNodeOffsets = ref<number[]>(
   timeline.value.map((_, index) => (index / Math.max(timeline.value.length - 1, 1)) * 100),
 )
-const updateTimelinePosition = () => {
-  const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
-  const readingLine = Math.max(headerHeight + 72, window.innerHeight * 0.35)
-  let activeYear = timeline.value[0]?.year ?? ''
-  let closestDistance = Number.POSITIVE_INFINITY
+let timelineObserver: IntersectionObserver | undefined
 
-  for (const timelineSection of timeline.value) {
-    const section = document.getElementById(`timeline-${timelineSection.year}`)
-    if (!section) continue
+const updateTimelineNodeOffsets = () => {
+  const rail = document.querySelector<HTMLElement>('.about-timeline-nav')
+  if (!rail || rail.getBoundingClientRect().height === 0) return
 
-    const { top, bottom } = section.getBoundingClientRect()
-    const distance =
-      top <= readingLine && bottom >= readingLine
-        ? 0
-        : Math.min(Math.abs(top - readingLine), Math.abs(bottom - readingLine))
+  const railTop = rail.getBoundingClientRect().top
+  const railHeight = rail.getBoundingClientRect().height
+  timelineNodeOffsets.value = timeline.value.map((timelineSection) => {
+    const heading = document.querySelector<HTMLElement>(
+      `[data-timeline-year="${timelineSection.year}"]`,
+    )
+    if (!heading) return 0
 
-    if (distance < closestDistance) {
-      closestDistance = distance
-      activeYear = timelineSection.year
-    }
-  }
-
-  activeTimelineYear.value = activeYear
+    const offset = ((heading.getBoundingClientRect().top - railTop) / railHeight) * 100
+    return Math.max(0, Math.min(100, offset))
+  })
 }
 
-const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, {
-  onUpdate: updateTimelinePosition,
+const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds)
+
+onMounted(() => {
+  const visibleHeadings = new Set<HTMLElement>()
+
+  const updateActiveYear = () => {
+    const upcomingHeading = [...visibleHeadings].sort(
+      (first, second) => second.getBoundingClientRect().top - first.getBoundingClientRect().top,
+    )[0]
+    const year = upcomingHeading?.dataset.timelineYear
+    if (year) activeTimelineYear.value = year
+  }
+
+  timelineObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const heading = entry.target as HTMLElement
+        if (entry.isIntersecting) visibleHeadings.add(heading)
+        else visibleHeadings.delete(heading)
+      }
+      updateActiveYear()
+    },
+    {
+      // A year becomes active as soon as its heading is visible to the reader.
+      rootMargin: '0px 0px -5% 0px',
+      threshold: 0,
+    },
+  )
+
+  document.querySelectorAll<HTMLElement>('[data-timeline-year]').forEach((heading) => {
+    timelineObserver?.observe(heading)
+  })
+
+  window.requestAnimationFrame(updateTimelineNodeOffsets)
+  window.addEventListener('resize', updateTimelineNodeOffsets)
+})
+
+onUnmounted(() => {
+  timelineObserver?.disconnect()
+  window.removeEventListener('resize', updateTimelineNodeOffsets)
 })
 </script>
 
@@ -114,7 +147,7 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
         </div>
       </section>
 
-      <section class="about-journey" aria-label="Journey timeline">
+      <section id="timeline" class="about-journey" aria-label="Journey timeline">
         <p class="page-kicker">Journey / timeline</p>
         <div class="about-timeline">
           <nav class="about-timeline-nav" aria-label="Journey years">
@@ -138,7 +171,7 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
             class="about-timeline-year"
           >
             <header class="about-timeline-year-heading">
-              <h1>{{ timelineSection.year }}</h1>
+              <h1 :data-timeline-year="timelineSection.year">{{ timelineSection.year }}</h1>
             </header>
               <article
                 v-for="entry in timelineSection.entries"
@@ -179,6 +212,7 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
 
 #profile,
 #about-history,
+#timeline,
 .about-timeline-year {
   scroll-margin-top: 105px;
 }
@@ -341,13 +375,12 @@ const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds, 
 }
 
 .about-timeline-nav {
-  position: sticky;
-  top: 180px;
+  position: relative;
   z-index: 1;
-  align-self: start;
+  align-self: stretch;
   width: 100%;
-  height: min(560px, calc(100vh - 160px));
-  min-height: 360px;
+  height: auto;
+  min-height: 0;
 }
 
 .about-timeline-rail-year {
