@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CardActionLink from './CardActionLink.vue'
+
 defineOptions({ inheritAttrs: false })
 
 defineProps<{
@@ -9,7 +11,7 @@ defineProps<{
 
 <template>
   <header class="experience-page-header" v-bind="$attrs">
-    <a href="/" class="back-link">← Back to portfolio</a>
+    <CardActionLink href="/" :show-arrow="false">← Back to portfolio</CardActionLink>
     <p>{{ meta }}</p>
   </header>
   <section class="experience-page-title">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import CardActionLink from '../components/CardActionLink.vue'
 import SectionRail from '../components/SectionRail.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import aboutContent from '../data/about.json'
@@ -92,7 +93,7 @@ onUnmounted(() => {
 
   <main class="experience-page about-page">
     <header class="experience-page-header">
-      <a href="/" class="back-link">← Back to portfolio</a>
+      <CardActionLink href="/" :show-arrow="false">← Back to portfolio</CardActionLink>
       <p>About / {{ profile_declaration.location }}</p>
     </header>
 
@@ -121,13 +122,12 @@ onUnmounted(() => {
       <section class="about-contact-card" aria-label="Contact details">
         <p class="page-kicker">Contacts</p>
         <div class="about-social-links">
-          <a
+          <CardActionLink
             v-for="social in socials"
             :key="social.name"
             :href="social.url"
-            :target="social.name === 'Email' ? undefined : '_blank'"
-            rel="noreferrer"
-            >{{ social.name }} <span aria-hidden="true">↗</span></a
+            :external="social.name !== 'Email'"
+            >{{ social.name }}</CardActionLink
           >
         </div>
       </section>
@@ -287,30 +287,20 @@ onUnmounted(() => {
   margin: auto 0;
 }
 
-.about-social-links a {
-  display: flex;
-  justify-content: space-between;
+.about-social-links :deep(.card-action-link) {
+  width: 100%;
   padding: 12px;
-  border: 1px solid var(--line);
   color: var(--text);
-  font:
-    0.75rem 'DM Mono',
-    monospace;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
 }
 
-.about-social-links a:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-3px);
+.about-social-links :deep(.card-action-link-label) {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.about-social-links span {
+.about-social-links :deep(.card-action-link:hover) {
   color: var(--accent);
 }
 

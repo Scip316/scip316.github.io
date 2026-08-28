@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import CardActionLink from '../components/CardActionLink.vue'
 import MediaCarousel from '../components/MediaCarousel.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import workExperienceData from '../data/work-experience.json'
@@ -35,7 +36,7 @@ const descriptionSections = computed<DescriptionSection[]>(() => {
   <SiteHeader />
   <main v-if="experience" class="experience-page experience-detail-page">
     <header class="experience-page-header">
-      <a href="/experience" class="back-link">← All work experiences</a>
+      <CardActionLink href="/experience" :show-arrow="false">← All work experiences</CardActionLink>
       <p>{{ experience.period }}</p>
     </header>
     <section class="experience-detail-hero">
@@ -89,7 +90,7 @@ const descriptionSections = computed<DescriptionSection[]>(() => {
     </section>
   </main>
   <main v-else class="experience-page">
-    <a href="/experience" class="back-link">← All work experiences</a>
+    <CardActionLink href="/experience" :show-arrow="false">← All work experiences</CardActionLink>
     <h1>Experience not found.</h1>
   </main>
 </template>

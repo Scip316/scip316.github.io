@@ -1,5 +1,4 @@
 .experience-page .page-kicker,
-.experience-page .back-link,
 .experience-page-header p {
   font-size: var(--experience-small-text);
   letter-spacing: 0.07em;
@@ -37,10 +36,8 @@
   flex-direction: column;
 }
 
-.experience-card-link {
+.experience-grid-content > .card-action-link-group {
   margin-top: auto;
-  font-size: var(--label-size);
-  font-weight: 600;
 }
 
 .experience-description {

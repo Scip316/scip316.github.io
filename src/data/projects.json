@@ -30,7 +30,7 @@
       "year": "2026",
       "category": "Garena AI Build Challenge 2026 · Hackathon",
       "featured": true,
-      "summary": "Created for the Garena Hackathon: Digitalised Entertainment. Our product brings the community together to create an AI-generated emote for the event, with participants split into teams that each control a different part of the emote.",
+      "summary": "Created for the Garena Hackathon: Digitalised Entertainment. Team name: 'Cooked'. Our product brings the community together to create an AI-generated emote for the event, with participants split into teams that each control a different part of the emote.",
       "technologies": [
         "React",
         "TypeScript",
@@ -75,7 +75,18 @@
       "category": "Telegram Bot",
       "featured": true,
       "summary": "A Telegram bot that lets users set reminders and sends messages at the scheduled time. It also includes a built-in snooze feature and syncs with Google Calendar.",
-      "technologies": ["Telegram Bot", "Python", "SQLite", "Google Calendar"],
+      "technologies": [
+        "Python",
+        "python-telegram-bot",
+        "SQLite",
+        "Asyncio",
+        "Google Calendar API",
+        "Google OAuth 2.0",
+        "PyYAML",
+        "python-dotenv",
+        "Inline Keyboards",
+        "Background Scheduling"
+      ],
       "headerPhotos": ["/projects/tele_retain.png"],
       "links": []
     }

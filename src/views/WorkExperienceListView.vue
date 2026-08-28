@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ArchivePageHeader from '../components/ArchivePageHeader.vue'
+import CardActionLink from '../components/CardActionLink.vue'
 import MediaCarousel from '../components/MediaCarousel.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import workExperienceData from '../data/work-experience.json'
@@ -32,7 +33,9 @@ const workExperiences = sortByNewestDate(workExperienceData.experiences)
           <h2>{{ item.title }}</h2>
           <p class="experience-workplace">{{ item.workplace }}</p>
           <p>{{ item.summary }}</p>
-          <span class="experience-card-link">View experience →</span>
+          <div class="card-action-link-group">
+            <CardActionLink :show-arrow="false">View experience →</CardActionLink>
+          </div>
         </div></a
       >
     </section>

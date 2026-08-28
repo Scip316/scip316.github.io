@@ -41,7 +41,7 @@ const projects = sortByNewestDate(projectData.projects)
           <ul>
             <li v-for="technology in project.technologies" :key="technology">{{ technology }}</li>
           </ul>
-          <div class="project-links">
+          <div class="card-action-link-group project-links">
             <CardActionLink
               v-for="link in project.links"
               :key="link.url"
@@ -49,7 +49,7 @@ const projects = sortByNewestDate(projectData.projects)
               external
               >{{ link.title }}</CardActionLink
             >
-            <span v-if="!project.links.length">Case study in progress</span>
+            <span v-if="!project.links.length">NA</span>
           </div>
         </div>
       </article>
@@ -115,18 +115,7 @@ const projects = sortByNewestDate(projectData.projects)
   text-transform: uppercase;
 }
 .project-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
   margin-top: auto;
-}
-.project-links .card-action-link {
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-}
-.project-links .card-action-link:hover,
-.project-links .card-action-link:focus-visible {
-  border-color: var(--accent);
 }
 .project-links span {
   color: var(--muted);

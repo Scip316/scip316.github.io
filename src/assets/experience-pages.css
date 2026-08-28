@@ -6,6 +6,7 @@
   --experience-small-text: 0.9rem;
 }
 .experience-page-header {
+  --action-link-color: var(--text);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,18 +21,6 @@
     monospace;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-.back-link {
-  color: var(--text);
-  font:
-    0.88rem 'DM Mono',
-    monospace;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-.back-link:hover {
-  color: var(--accent);
 }
 .experience-page-title {
   margin: 100px 0 66px;
@@ -57,6 +46,7 @@
   gap: 22px;
 }
 .experience-grid-card {
+  --action-link-color: var(--text);
   color: var(--text);
   text-decoration: none;
   background: var(--surface);
@@ -99,16 +89,6 @@
   margin: 0;
   color: var(--muted);
   font-size: 0.9rem;
-}
-.experience-card-link {
-  display: block;
-  margin-top: 24px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  font:
-    0.66rem 'DM Mono',
-    monospace;
-  text-transform: uppercase;
 }
 .experience-detail-hero {
   display: grid;

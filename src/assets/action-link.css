@@ -1,12 +1,17 @@
 .card-action-link {
-  display: block;
-  padding-top: 12px;
-  border-top: 1px solid #d2d0ca;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
   color: var(--action-link-color, #1b1b1b);
   font: var(--label-size) var(--font-mono);
   letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .card-action-link-label {
@@ -39,4 +44,16 @@
 .card-action-link b {
   color: var(--accent-strong);
   font-size: 0.9rem;
+}
+
+.card-action-link-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.card-action-link:hover,
+.card-action-link:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-3px);
 }

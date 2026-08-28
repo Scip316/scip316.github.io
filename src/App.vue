@@ -323,7 +323,9 @@ onUnmounted(() => {
                       {{ skill }}
                     </li>
                   </ul>
-                  <CardActionLink>View experience</CardActionLink>
+                  <div class="card-action-link-group">
+                    <CardActionLink>View experience</CardActionLink>
+                  </div>
                 </div>
               </a>
             </div>
@@ -331,8 +333,8 @@ onUnmounted(() => {
               <span :key="displayedWorkIndex" class="showcase-progress"></span>
             </div>
           </div>
-          <a class="showcase-link" href="/experience"
-            >View all work experiences <span aria-hidden="true">→</span></a
+          <CardActionLink href="/experience" :show-arrow="false"
+            >View all work experiences <span aria-hidden="true">→</span></CardActionLink
           >
         </div>
       </section>
@@ -392,13 +394,19 @@ onUnmounted(() => {
                       {{ technology }}
                     </li>
                   </ul>
-                  <CardActionLink
+                  <div
                     v-if="project.links.length"
-                    :href="project.links[0].url"
-                    external
-                    >{{ project.links[0].title }}</CardActionLink
+                    class="card-action-link-group home-project-links"
                   >
-                  <span v-else class="home-feature-link">Case study in progress</span>
+                    <CardActionLink
+                      v-for="link in project.links"
+                      :key="link.url"
+                      :href="link.url"
+                      external
+                      >{{ link.title }}</CardActionLink
+                    >
+                  </div>
+                  <span v-else class="home-feature-link">NA</span>
                 </div>
               </article>
             </div>
@@ -406,8 +414,8 @@ onUnmounted(() => {
               <span :key="activeProjectIndex" class="showcase-progress"></span>
             </div>
           </div>
-          <a class="showcase-link" href="/projects"
-            >View all projects <span aria-hidden="true">→</span></a
+          <CardActionLink href="/projects" :show-arrow="false"
+            >View all projects <span aria-hidden="true">→</span></CardActionLink
           >
         </div>
       </section>
@@ -539,8 +547,8 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
-          <a class="showcase-link" href="/certificates"
-            >View all credentials <span aria-hidden="true">→</span></a
+          <CardActionLink href="/certificates" :show-arrow="false"
+            >View all credentials <span aria-hidden="true">→</span></CardActionLink
           >
         </div>
       </section>
