@@ -1,8 +1,7 @@
 {
   "profilePhoto": "/work_experiences/IRAS.jpg",
   "details": [
-    { "label": "Full name", "value": "Darrel Dominic Lim De Xiang" },
-    { "label": "Date of Birth", "value": "06 March 2005" },
+    { "label": "Name", "value": "Darrel Lim" },
     { "label": "Current role", "value": "NSF (National Service Full-Time)" },
     { "label": "Based in", "value": "Singapore" }
   ],
