@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist'
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 GlobalWorkerOptions.workerSrc = pdfWorkerUrl
 
@@ -15,6 +15,9 @@ const props = withDefaults(
 )
 
 const activeIndex = ref(0)
+const trackIndex = ref(1)
+const isSnappingTrack = ref(false)
+const isTransitioning = ref(false)
 const touchStartPosition = ref<number | null>(null)
 const pdfPreviews = ref<Record<string, string>>({})
 const unavailablePdfPreviews = ref<Set<string>>(new Set())
@@ -22,6 +25,12 @@ let suppressLinkNavigation = false
 let suppressNavigationTimer: number | undefined
 
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
+const renderedMedia = computed(() => {
+  if (props.media.length < 2) return props.media
+
+  return [props.media[props.media.length - 1], ...props.media, props.media[0]]
+})
+const displayTrackIndex = computed(() => (props.media.length > 1 ? trackIndex.value : 0))
 
 const renderPdfPreview = async (path: string) => {
   const loadingTask = getDocument(path)
@@ -50,14 +59,40 @@ const renderPdfPreview = async (path: string) => {
 }
 
 const changeMedia = (direction: 'next' | 'previous') => {
-  if (props.media.length < 2) return
+  if (props.media.length < 2 || isTransitioning.value) return
 
   const change = direction === 'next' ? 1 : -1
   activeIndex.value = (activeIndex.value + change + props.media.length) % props.media.length
+  trackIndex.value += change
+  isTransitioning.value = true
 }
 
 const selectMedia = (index: number) => {
+  if (index === activeIndex.value) return
+
+  isSnappingTrack.value = true
   activeIndex.value = index
+  trackIndex.value = index + 1
+  window.requestAnimationFrame(() => {
+    isSnappingTrack.value = false
+  })
+}
+
+const handleTrackTransitionEnd = (event: TransitionEvent) => {
+  if (event.propertyName !== 'transform') return
+
+  if (trackIndex.value === 0) {
+    isSnappingTrack.value = true
+    trackIndex.value = props.media.length
+  } else if (trackIndex.value === props.media.length + 1) {
+    isSnappingTrack.value = true
+    trackIndex.value = 1
+  }
+
+  window.requestAnimationFrame(() => {
+    isSnappingTrack.value = false
+    isTransitioning.value = false
+  })
 }
 
 const startSwipe = (event: TouchEvent) => {
@@ -110,8 +145,17 @@ onUnmounted(() => {
     @touchend="endSwipe"
     @click="handleMediaClick"
   >
-    <div class="media-carousel-track" :style="{ transform: `translateX(-${activeIndex * 100}%)` }">
-      <div v-for="(item, index) in media" :key="item" class="media-carousel-slide">
+    <div
+      class="media-carousel-track"
+      :class="{ 'is-snapping-track': isSnappingTrack }"
+      :style="{ transform: `translateX(-${displayTrackIndex * 100}%)` }"
+      @transitionend="handleTrackTransitionEnd"
+    >
+      <div
+        v-for="(item, index) in renderedMedia"
+        :key="`${item}-${index}`"
+        class="media-carousel-slide"
+      >
         <img v-if="!isPdf(item)" :src="item" :alt="`${title} image ${index + 1}`" />
         <a
           v-else-if="pdfPreviews[item]"
@@ -180,6 +224,10 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   transition: transform 0.35s ease;
+}
+
+.media-carousel-track.is-snapping-track {
+  transition: none;
 }
 
 .media-carousel-slide {

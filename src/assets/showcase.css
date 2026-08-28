@@ -146,6 +146,12 @@
   transform: translate(-50%, -50%) scale(0.22);
 }
 
+.showcase-coverflow-card.is-next-showcase.is-preparing-from-left {
+  left: 11%;
+  transition: none;
+  transform: translate(-50%, -50%) scale(0.22);
+}
+
 .showcase-coverflow-card.is-hidden-showcase {
   z-index: 1;
 }

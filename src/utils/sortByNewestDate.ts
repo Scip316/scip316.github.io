@@ -3,6 +3,7 @@ type DatedItem = {
   endDate?: string | null
   lastUpdated?: string | null
   startDate?: string | null
+  year?: string | number | null
 }
 
 const monthNumbers: Record<string, number> = {
@@ -32,12 +33,17 @@ const dateValue = (value: string | null | undefined) => {
     if (month) return Number(`${namedDate[1]}${String(month).padStart(2, '0')}`)
   }
 
+  const year = value.match(/\b\d{4}\b/)
+  if (year) return Number(`${year[0]}00`)
+
   return Number.NEGATIVE_INFINITY
 }
 
 const latestDateValue = (item: DatedItem) => {
   if (item.endDate === null) return Number.POSITIVE_INFINITY
-  return dateValue(item.endDate ?? item.lastUpdated ?? item.date ?? item.startDate)
+  return dateValue(
+    item.endDate ?? item.lastUpdated ?? item.date ?? item.startDate ?? String(item.year ?? ''),
+  )
 }
 
 export const sortByNewestDate = <T>(items: T[]) =>

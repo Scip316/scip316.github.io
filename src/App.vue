@@ -41,6 +41,8 @@ const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
+const certificatePreviousPreparation = ref<number | null>(null)
+const achievementPreviousPreparation = ref<number | null>(null)
 const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
 const homeRailItems = [
   { id: 'intro', label: 'Intro' },
@@ -126,15 +128,41 @@ const nextCertificate = () => {
   activeCertificateIndex.value = (activeCertificateIndex.value + 1) % featuredCertificates.length
 }
 const previousCertificate = () => {
-  activeCertificateIndex.value =
+  const previousIndex =
     (activeCertificateIndex.value - 1 + featuredCertificates.length) % featuredCertificates.length
+
+  if (featuredCertificates.length !== 2) {
+    activeCertificateIndex.value = previousIndex
+    return
+  }
+
+  certificatePreviousPreparation.value = previousIndex
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      activeCertificateIndex.value = previousIndex
+      certificatePreviousPreparation.value = null
+    })
+  })
 }
 const nextAchievement = () => {
   activeAchievementIndex.value = (activeAchievementIndex.value + 1) % featuredAchievements.length
 }
 const previousAchievement = () => {
-  activeAchievementIndex.value =
+  const previousIndex =
     (activeAchievementIndex.value - 1 + featuredAchievements.length) % featuredAchievements.length
+
+  if (featuredAchievements.length !== 2) {
+    activeAchievementIndex.value = previousIndex
+    return
+  }
+
+  achievementPreviousPreparation.value = previousIndex
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      activeAchievementIndex.value = previousIndex
+      achievementPreviousPreparation.value = null
+    })
+  })
 }
 const workRotation = createResumableRotation(nextWork, () => workExperiences.length)
 const projectRotation = createResumableRotation(nextProject, () => featuredProjects.length)
@@ -475,7 +503,10 @@ onUnmounted(() => {
                     v-for="(certificate, index) in featuredCertificates"
                     :key="certificate.name"
                     class="showcase-coverflow-card home-certificate-card"
-                    :class="certificateCardPosition(index)"
+                    :class="[
+                      certificateCardPosition(index),
+                      { 'is-preparing-from-left': index === certificatePreviousPreparation },
+                    ]"
                   >
                     <MediaCarousel
                       v-if="certificate.headerPhotos.length"
@@ -531,7 +562,10 @@ onUnmounted(() => {
                     v-for="(achievement, index) in featuredAchievements"
                     :key="achievement.name"
                     class="showcase-coverflow-card home-certificate-card"
-                    :class="achievementCardPosition(index)"
+                    :class="[
+                      achievementCardPosition(index),
+                      { 'is-preparing-from-left': index === achievementPreviousPreparation },
+                    ]"
                   >
                     <MediaCarousel
                       v-if="achievement.headerPhotos.length"
