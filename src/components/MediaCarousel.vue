@@ -24,13 +24,9 @@ let suppressNavigationTimer: number | undefined
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
 
 const renderPdfPreview = async (path: string) => {
-  let loadingTask: ReturnType<typeof getDocument> | undefined
+  const loadingTask = getDocument(path)
 
   try {
-    const response = await fetch(path)
-    if (!response.ok) throw new Error(`Unable to load PDF (${response.status})`)
-
-    loadingTask = getDocument({ data: new Uint8Array(await response.arrayBuffer()) })
     const document = await loadingTask.promise
     const page = await document.getPage(1)
     const viewport = page.getViewport({ scale: 1.5 })
@@ -49,7 +45,7 @@ const renderPdfPreview = async (path: string) => {
   } catch {
     unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
   } finally {
-    await loadingTask?.destroy()
+    await loadingTask.destroy()
   }
 }
 

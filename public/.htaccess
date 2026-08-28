@@ -1,5 +1,9 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # These are Vue routes that share names with static asset directories.
+  RewriteRule ^(projects|certificates|experience|about)/?$ index.html [L]
+
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
