@@ -33,7 +33,7 @@ const workExperiences = sortByNewestDate(workExperienceData.experiences)
           <h2>{{ item.title }}</h2>
           <p class="experience-workplace">{{ item.workplace }}</p>
           <p>{{ item.summary }}</p>
-          <div class="card-action-link-group">
+          <div class="card-action-link-group card-action-link-group--footer">
             <CardActionLink :show-arrow="false">View experience →</CardActionLink>
           </div>
         </div></a

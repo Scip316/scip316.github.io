@@ -333,7 +333,7 @@ onUnmounted(() => {
               <span :key="displayedWorkIndex" class="showcase-progress"></span>
             </div>
           </div>
-          <CardActionLink href="/experience" :show-arrow="false"
+          <CardActionLink class="home-section-action" href="/experience" :show-arrow="false"
             >View all work experiences <span aria-hidden="true">→</span></CardActionLink
           >
         </div>
@@ -346,7 +346,7 @@ onUnmounted(() => {
               <h2>Projects.</h2>
             </div>
             <div class="showcase-section-actions">
-              <p>Work I’m proud to share</p>
+              <p>Projects that I have done</p>
               <div class="showcase-controls">
                 <button
                   type="button"
@@ -414,7 +414,7 @@ onUnmounted(() => {
               <span :key="activeProjectIndex" class="showcase-progress"></span>
             </div>
           </div>
-          <CardActionLink href="/projects" :show-arrow="false"
+          <CardActionLink class="home-section-action" href="/projects" :show-arrow="false"
             >View all projects <span aria-hidden="true">→</span></CardActionLink
           >
         </div>
@@ -547,7 +547,7 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
-          <CardActionLink href="/certificates" :show-arrow="false"
+          <CardActionLink class="home-section-action" href="/certificates" :show-arrow="false"
             >View all credentials <span aria-hidden="true">→</span></CardActionLink
           >
         </div>

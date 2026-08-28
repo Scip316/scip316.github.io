@@ -15,6 +15,12 @@
   border-top: 1px solid var(--text);
 }
 
+/* These sit on the dark page surface; featured-card actions retain their dark text. */
+.home-section-action {
+  --action-link-color: var(--text);
+  margin-top: 28px;
+}
+
 .showcase-section-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 310px);

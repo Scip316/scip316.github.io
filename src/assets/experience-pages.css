@@ -1,4 +1,5 @@
 .experience-page {
+  --action-link-color: var(--text);
   min-height: 100vh;
   width: min(88vw, 1720px);
   margin: 0 auto;
@@ -6,7 +7,6 @@
   --experience-small-text: 0.9rem;
 }
 .experience-page-header {
-  --action-link-color: var(--text);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,7 +46,6 @@
   gap: 22px;
 }
 .experience-grid-card {
-  --action-link-color: var(--text);
   color: var(--text);
   text-decoration: none;
   background: var(--surface);

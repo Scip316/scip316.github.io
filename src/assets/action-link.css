@@ -52,6 +52,12 @@
   gap: 9px;
 }
 
+/* Shared card footer spacing for archive links. */
+.card-action-link-group--footer {
+  margin-top: auto;
+  padding-top: 22px;
+}
+
 .card-action-link:hover,
 .card-action-link:focus-visible {
   border-color: var(--accent);

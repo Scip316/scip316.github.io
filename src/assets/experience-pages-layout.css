@@ -36,10 +36,6 @@
   flex-direction: column;
 }
 
-.experience-grid-content > .card-action-link-group {
-  margin-top: auto;
-}
-
 .experience-description {
   max-width: none;
 }

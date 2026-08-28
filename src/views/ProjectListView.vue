@@ -41,7 +41,7 @@ const projects = sortByNewestDate(projectData.projects)
           <ul>
             <li v-for="technology in project.technologies" :key="technology">{{ technology }}</li>
           </ul>
-          <div class="card-action-link-group project-links">
+          <div class="card-action-link-group card-action-link-group--footer project-links">
             <CardActionLink
               v-for="link in project.links"
               :key="link.url"
@@ -74,7 +74,6 @@ const projects = sortByNewestDate(projectData.projects)
   animation: trace-project-divider 7s ease-in-out infinite;
 }
 .project-list-card {
-  --action-link-color: var(--text);
   background: var(--surface);
 }
 .project-list-image {
@@ -103,7 +102,7 @@ const projects = sortByNewestDate(projectData.projects)
   gap: 7px;
   flex-wrap: wrap;
   padding: 0;
-  margin: 22px 0;
+  margin: 22px 0 0;
   list-style: none;
 }
 .project-list-card li {
@@ -113,9 +112,6 @@ const projects = sortByNewestDate(projectData.projects)
     0.62rem 'DM Mono',
     monospace;
   text-transform: uppercase;
-}
-.project-links {
-  margin-top: auto;
 }
 .project-links span {
   color: var(--muted);
