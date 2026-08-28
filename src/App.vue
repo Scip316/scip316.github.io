@@ -20,7 +20,10 @@ import workExperienceData from './data/work-experience.json'
 import { sortByNewestDate } from './utils/sortByNewestDate'
 import { useActiveSection } from './composables/useActiveSection'
 
-const currentPath = ref(window.location.pathname)
+const normalizePathname = (pathname: string) =>
+  pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
+
+const currentPath = ref(normalizePathname(window.location.pathname))
 const achievements = sortByNewestDate(achievementData.achievements)
 const certifications = sortByNewestDate(certificateData.certifications)
 const projects = sortByNewestDate(projectData.projects)
@@ -167,7 +170,15 @@ const moveAchievement = (direction: 'next' | 'previous') => {
 }
 
 const updateCurrentPath = () => {
-  currentPath.value = window.location.pathname
+  const normalizedPath = normalizePathname(window.location.pathname)
+  if (normalizedPath !== window.location.pathname) {
+    window.history.replaceState(
+      {},
+      '',
+      `${normalizedPath}${window.location.search}${window.location.hash}`,
+    )
+  }
+  currentPath.value = normalizedPath
 }
 
 const updateHomeRailPosition = () => {
@@ -227,6 +238,7 @@ const handleInternalNavigation = async (event: MouseEvent) => {
 }
 
 onMounted(() => {
+  updateCurrentPath()
   startWorkRotation()
   startProjectRotation()
   startCertificateRotation()

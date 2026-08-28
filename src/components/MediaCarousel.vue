@@ -24,9 +24,13 @@ let suppressNavigationTimer: number | undefined
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
 
 const renderPdfPreview = async (path: string) => {
-  const loadingTask = getDocument(path)
+  let loadingTask: ReturnType<typeof getDocument> | undefined
 
   try {
+    const response = await fetch(path)
+    if (!response.ok) throw new Error(`Unable to load PDF (${response.status})`)
+
+    loadingTask = getDocument({ data: new Uint8Array(await response.arrayBuffer()) })
     const document = await loadingTask.promise
     const page = await document.getPage(1)
     const viewport = page.getViewport({ scale: 1.5 })
@@ -41,11 +45,11 @@ const renderPdfPreview = async (path: string) => {
       ...pdfPreviews.value,
       [path]: canvas.toDataURL('image/jpeg', 0.9),
     }
-    document.destroy()
+    await document.destroy()
   } catch {
     unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
   } finally {
-    loadingTask.destroy()
+    await loadingTask?.destroy()
   }
 }
 
@@ -204,7 +208,7 @@ onUnmounted(() => {
   text-decoration: none;
 }
 
-.pdf-preview-image {
+.media-carousel-slide .pdf-preview-image {
   object-fit: contain;
 }
 
