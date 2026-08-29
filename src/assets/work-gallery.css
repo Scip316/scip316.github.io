@@ -73,10 +73,6 @@
     display: block;
   }
 
-  .work-card-image {
-    min-height: 210px;
-  }
-
   .work-card-body {
     min-height: 260px;
   }

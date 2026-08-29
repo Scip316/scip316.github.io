@@ -453,6 +453,58 @@
   }
 }
 
+/* On phones, App.vue renders only the selected card.  This keeps the card in
+ * normal document flow instead of fitting a desktop coverflow into one column. */
+@media (max-width: 560px) {
+  .showcase-coverflow-stage,
+  .credential-showcase .showcase-coverflow-stage {
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  /* Override the more specific desktop project-card canvas. */
+  .home-feature-row .showcase-coverflow-stage,
+  .home-feature-row .showcase-coverflow-card,
+  .home-feature-row .home-project-card {
+    aspect-ratio: auto;
+  }
+
+  .showcase-coverflow-card,
+  .showcase-coverflow-card.is-active-showcase {
+    position: static;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    box-shadow: none;
+  }
+
+  .work-card,
+  .home-project-card {
+    display: block;
+  }
+
+  .work-card-image,
+  .home-project-visual {
+    height: clamp(220px, 68vw, 300px);
+    min-height: 0;
+  }
+
+  .work-card-body,
+  .home-feature-body {
+    min-height: 0;
+  }
+
+  .home-certificate-card,
+  .home-certificate-card.is-active-showcase {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: clamp(220px, 68vw, 300px) auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-project-visual::after {
     animation: none;

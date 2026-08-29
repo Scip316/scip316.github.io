@@ -51,7 +51,8 @@ const renderPdfPreview = async (path: string) => {
       [path]: canvas.toDataURL('image/jpeg', 0.9),
     }
     await document.destroy()
-  } catch {
+  } catch (error) {
+    console.error(`Unable to render PDF preview: ${path}`, error)
     unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
   } finally {
     await loadingTask.destroy()
@@ -309,4 +310,5 @@ onUnmounted(() => {
 .media-carousel-dots button.is-active-media {
   background: #fff;
 }
+
 </style>

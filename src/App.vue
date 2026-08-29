@@ -41,6 +41,7 @@ const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
+const isMobileShowcaseViewport = ref(false)
 const certificatePreviousPreparation = ref<number | null>(null)
 const achievementPreviousPreparation = ref<number | null>(null)
 const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
@@ -209,6 +210,10 @@ const updateCurrentPath = () => {
   currentPath.value = normalizedPath
 }
 
+const updateMobileShowcaseViewport = () => {
+  isMobileShowcaseViewport.value = window.matchMedia('(max-width: 560px)').matches
+}
+
 const updateHomeRailPosition = () => {
   const introSection = document.getElementById('intro')
   const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
@@ -267,11 +272,13 @@ const handleInternalNavigation = async (event: MouseEvent) => {
 
 onMounted(() => {
   updateCurrentPath()
+  updateMobileShowcaseViewport()
   startWorkRotation()
   startProjectRotation()
   startCertificateRotation()
   startAchievementRotation()
   window.addEventListener('popstate', updateCurrentPath)
+  window.addEventListener('resize', updateMobileShowcaseViewport)
   document.addEventListener('click', handleInternalNavigation)
 })
 onUnmounted(() => {
@@ -280,6 +287,7 @@ onUnmounted(() => {
   stopCertificateRotation()
   stopAchievementRotation()
   window.removeEventListener('popstate', updateCurrentPath)
+  window.removeEventListener('resize', updateMobileShowcaseViewport)
   document.removeEventListener('click', handleInternalNavigation)
 })
 </script>
@@ -333,9 +341,9 @@ onUnmounted(() => {
             @mouseleave="startWorkRotation"
           >
             <div class="showcase-coverflow-stage">
+              <template v-for="(item, index) in workExperiences" :key="item.id">
               <a
-                v-for="(item, index) in workExperiences"
-                :key="item.id"
+                v-if="!isMobileShowcaseViewport || index === activeWorkIndex"
                 class="showcase-coverflow-card work-card"
                 :class="workCardPosition(index)"
                 :href="`/experience/${item.detailPageSlug}`"
@@ -368,6 +376,7 @@ onUnmounted(() => {
                   </div>
                 </div>
               </a>
+              </template>
             </div>
             <div class="showcase-progress-track" aria-hidden="true">
               <span :key="displayedWorkIndex" class="showcase-progress"></span>
@@ -409,9 +418,9 @@ onUnmounted(() => {
             @mouseleave="startProjectRotation"
           >
             <div class="showcase-coverflow-stage">
+              <template v-for="(project, index) in featuredProjects" :key="project.id">
               <article
-                v-for="(project, index) in featuredProjects"
-                :key="project.id"
+                v-if="!isMobileShowcaseViewport || index === activeProjectIndex"
                 class="showcase-coverflow-card home-project-card"
                 :class="projectCardPosition(index)"
               >
@@ -449,6 +458,7 @@ onUnmounted(() => {
                   <span v-else class="home-feature-link">NA</span>
                 </div>
               </article>
+              </template>
             </div>
             <div class="showcase-progress-track" aria-hidden="true">
               <span :key="activeProjectIndex" class="showcase-progress"></span>
@@ -499,9 +509,9 @@ onUnmounted(() => {
                 @mouseleave="startCertificateRotation"
               >
                 <div class="showcase-coverflow-stage">
+                  <template v-for="(certificate, index) in featuredCertificates" :key="certificate.name">
                   <article
-                    v-for="(certificate, index) in featuredCertificates"
-                    :key="certificate.name"
+                    v-if="!isMobileShowcaseViewport || index === activeCertificateIndex"
                     class="showcase-coverflow-card home-certificate-card"
                     :class="[
                       certificateCardPosition(index),
@@ -524,6 +534,7 @@ onUnmounted(() => {
                       <p>{{ certificate.issuer }}</p>
                     </div>
                   </article>
+                  </template>
                 </div>
                 <div class="showcase-progress-track" aria-hidden="true">
                   <span :key="activeCertificateIndex" class="showcase-progress"></span>
@@ -558,9 +569,9 @@ onUnmounted(() => {
                 @mouseleave="startAchievementRotation"
               >
                 <div class="showcase-coverflow-stage">
+                  <template v-for="(achievement, index) in featuredAchievements" :key="achievement.name">
                   <article
-                    v-for="(achievement, index) in featuredAchievements"
-                    :key="achievement.name"
+                    v-if="!isMobileShowcaseViewport || index === activeAchievementIndex"
                     class="showcase-coverflow-card home-certificate-card"
                     :class="[
                       achievementCardPosition(index),
@@ -586,6 +597,7 @@ onUnmounted(() => {
                       </p>
                     </div>
                   </article>
+                  </template>
                 </div>
                 <div class="showcase-progress-track" aria-hidden="true">
                   <span :key="activeAchievementIndex" class="showcase-progress"></span>

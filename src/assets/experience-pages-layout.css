@@ -135,3 +135,12 @@
 .work-media-gallery-dots button.is-active-work-media {
   background: #fff;
 }
+
+/* This file is loaded after experience-pages.css, so it must repeat the
+ * single-column detail layout at phone and tablet widths. */
+@media (max-width: 760px) {
+  .experience-detail-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
