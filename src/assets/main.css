@@ -113,7 +113,7 @@ button:focus-visible {
   padding: 64px 24px;
   background:
     linear-gradient(90deg, #0009, #0004),
-    url('/images/eating-ramen.png') center/cover;
+    url('/images/eating-ramen.webp') center/cover;
   color: #fff;
 }
 .intro-text {

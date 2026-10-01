@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { getPdfPreview } from '../utils/pdfPreview'
 import { useSwipe } from '../composables/useSwipe'
 
 const props = withDefaults(
@@ -26,35 +26,30 @@ const renderedMedia = computed(() => {
 })
 const displayTrackIndex = computed(() => (props.media.length > 1 ? trackIndex.value : 0))
 
+const carouselElement = ref<HTMLElement | null>(null)
+const nearViewport = ref(false)
+const requestedPreviews = new Set<string>()
+let previewObserver: IntersectionObserver | undefined
+let disposed = false
+
 const renderPdfPreview = async (path: string) => {
-  let loadingTask: import('pdfjs-dist').PDFDocumentLoadingTask | undefined
-
+  if (requestedPreviews.has(path)) return
+  requestedPreviews.add(path)
   try {
-    const { GlobalWorkerOptions, getDocument } = await import('pdfjs-dist')
-    GlobalWorkerOptions.workerSrc = pdfWorkerUrl
-    loadingTask = getDocument(path)
-    const document = await loadingTask.promise
-    const page = await document.getPage(1)
-    const viewport = page.getViewport({ scale: 1.5 })
-    const canvas = window.document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    if (!context) throw new Error('Canvas is unavailable')
-
-    canvas.width = Math.ceil(viewport.width)
-    canvas.height = Math.ceil(viewport.height)
-    await page.render({ canvas, canvasContext: context, viewport }).promise
-    pdfPreviews.value = {
-      ...pdfPreviews.value,
-      [path]: canvas.toDataURL('image/jpeg', 0.9),
-    }
-    await document.destroy()
+    const preview = await getPdfPreview(path)
+    if (!disposed) pdfPreviews.value = { ...pdfPreviews.value, [path]: preview }
   } catch (error) {
     console.error(`Unable to render PDF preview: ${path}`, error)
-    unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
-  } finally {
-    await loadingTask?.destroy()
+    if (!disposed) unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
   }
 }
+
+watch(
+  [nearViewport, () => props.media[activeIndex.value]],
+  ([nearby, path]) => {
+    if (nearby && path && isPdf(path)) void renderPdfPreview(path)
+  },
+)
 
 const changeMedia = (direction: 'next' | 'previous') => {
   if (props.media.length < 2 || isTransitioning.value || isSnappingTrack.value) return
@@ -98,12 +93,23 @@ const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, draggi
   useSwipe(changeMedia, (event) => event.type === 'touchstart' || props.media.length > 1)
 
 onMounted(() => {
-  props.media.filter(isPdf).forEach((path) => void renderPdfPreview(path))
+  previewObserver = new IntersectionObserver(
+    ([entry]) => {
+      nearViewport.value = Boolean(entry?.isIntersecting)
+    },
+    { rootMargin: '200px 0px' },
+  )
+  if (carouselElement.value) previewObserver.observe(carouselElement.value)
+})
+onUnmounted(() => {
+  disposed = true
+  previewObserver?.disconnect()
 })
 </script>
 
 <template>
   <div
+    ref="carouselElement"
     class="media-carousel"
     :data-media-count="media.length"
     v-on="mouseEvents"
@@ -127,7 +133,13 @@ onMounted(() => {
         :key="`${item}-${index}`"
         class="media-carousel-slide"
       >
-        <img v-if="!isPdf(item)" :src="item" :alt="`${title} image ${index + 1}`" />
+        <img
+          v-if="!isPdf(item)"
+          :src="item"
+          :alt="`${title} image ${index + 1}`"
+          loading="lazy"
+          decoding="async"
+        />
         <a
           v-else-if="pdfPreviews[item]"
           class="pdf-preview"
@@ -136,7 +148,12 @@ onMounted(() => {
           rel="noreferrer"
           :aria-label="`${pdfLinkLabel}: ${title}`"
         >
-          <img class="pdf-preview-image" :src="pdfPreviews[item]" :alt="`${title} PDF preview`" />
+          <img
+            class="pdf-preview-image"
+            :src="pdfPreviews[item]"
+            :alt="`${title} PDF preview`"
+            decoding="async"
+          />
         </a>
         <a
           v-else
