@@ -45,14 +45,14 @@ button:focus-visible {
   top: 0;
   z-index: 20;
   background: var(--header);
-  color: #fff;
+  color: var(--chrome-text, #fff);
   box-shadow: 0 1px 8px #0002;
 }
 .brand {
   font:
     700 1.45rem/1 'DM Mono',
     monospace;
-  color: #fff;
+  color: var(--chrome-text, #fff);
   text-decoration: none;
 }
 .brand span {
@@ -65,7 +65,7 @@ button:focus-visible {
 }
 .desktop-nav a,
 .mobile-nav a {
-  color: #fff;
+  color: var(--chrome-text, #fff);
   text-decoration: none;
   font:
     0.71rem 'DM Mono',
@@ -179,16 +179,24 @@ button:focus-visible {
 }
 :root[data-theme='light'] {
   color-scheme: light;
-  --background: #f7f7f5;
-  --surface: #fff;
-  --text: #1b1b1b;
-  --muted: #666;
-  --line: #d8d8d4;
-  --header: #303030;
-  --showcase-frame: #e6e6e1;
-  --showcase-border: #b6b6af;
-  --feature-surface: #fff;
-  --feature-line: #d8d8d4;
+  --background: #f7f6f2;
+  --surface: #ffffff;
+  --text: #20211f;
+  --muted: #62645f;
+  --line: #d8d9d2;
+  --accent: #c74233;
+  --accent-strong: #c74233;
+  --header: #ffffff;
+  --chrome-text: #20211f;
+  --chrome-muted: #62645f;
+  --chrome-line: #d8d9d2;
+  --brand-surface: #ffffff;
+  --showcase-frame: #eeede7;
+  --showcase-border: #d8d9d2;
+  --feature-surface: #ffffff;
+  --feature-text: #20211f;
+  --feature-muted: #62645f;
+  --feature-line: #d8d9d2;
 }
 
 .mobile-group-toggle {
@@ -238,7 +246,7 @@ button:focus-visible {
     margin-left: auto;
     border: 0;
     background: transparent;
-    color: #fff;
+    color: var(--chrome-text, #fff);
     font-size: 1.35rem;
     cursor: pointer;
   }
@@ -250,11 +258,11 @@ button:focus-visible {
     display: grid;
     padding: 12px 20px 20px;
     background: var(--header);
-    border-top: 1px solid #ffffff22;
+    border-top: 1px solid var(--chrome-line, #ffffff22);
   }
   .mobile-nav a {
     padding: 10px 0;
-    border-bottom: 1px solid #ffffff18;
+    border-bottom: 1px solid var(--chrome-line, #ffffff18);
   }
   .intro {
     min-height: 470px;

@@ -40,7 +40,7 @@ import { profile_declaration, socials } from '../data/portfolio'
 
 .site-footer h2 {
   margin: 0;
-  color: #fff;
+  color: var(--chrome-text, #fff);
   font-size: 1.4rem;
   letter-spacing: -0.04em;
 }
@@ -57,9 +57,9 @@ import { profile_declaration, socials } from '../data/portfolio'
   height: 39px;
   place-items: center;
   padding: 0;
-  border: 1px solid #ffffff45;
+  border: 1px solid var(--chrome-line, #ffffff45);
   border-radius: 50%;
-  color: #fff;
+  color: var(--chrome-text, #fff);
 }
 
 .site-footer-icons a:hover {
@@ -70,7 +70,7 @@ import { profile_declaration, socials } from '../data/portfolio'
 
 .site-footer p {
   margin: 0;
-  color: #c7c7c2;
+  color: var(--chrome-muted, #c7c7c2);
   font:
     0.9rem 'DM Mono',
     monospace;

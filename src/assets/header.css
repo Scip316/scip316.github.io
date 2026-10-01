@@ -18,7 +18,7 @@
   gap: 8px;
   padding: 5px 0;
   background: transparent;
-  color: #fff;
+  color: var(--chrome-text, #fff);
   font-family: 'DM Mono', monospace;
   font-size: 0.84rem;
   font-weight: 500;
@@ -31,16 +31,16 @@
   width: 27px;
   height: 27px;
   place-items: center;
-  border: 1px solid #fff;
-  background: #151515;
+  border: 1px solid var(--chrome-text, #fff);
+  background: var(--brand-surface, #151515);
   color: var(--accent);
   font-size: 0.97rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
   box-shadow:
-    inset 0 0 0 3px #151515,
-    inset 0 0 0 4px #ffffff30;
+    inset 0 0 0 3px var(--brand-surface, #151515),
+    inset 0 0 0 4px var(--chrome-line, #ffffff30);
 }
 
 .brand-symbol::after {
@@ -85,9 +85,9 @@
   width: 44px;
   height: 44px;
   margin-left: 20px;
-  border: 1px solid #ffffff55;
+  border: 1px solid var(--chrome-line, #ffffff55);
   background: transparent;
-  color: #fff;
+  color: var(--chrome-text, #fff);
   font-size: 1.4rem;
   cursor: pointer;
 }

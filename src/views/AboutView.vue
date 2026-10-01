@@ -330,7 +330,7 @@ onUnmounted(() => {
 
 .about-social-links {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: 9px;
   margin: auto 0;
 }
@@ -346,6 +346,7 @@ onUnmounted(() => {
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .about-social-label {
