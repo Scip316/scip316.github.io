@@ -124,10 +124,12 @@ withDefaults(
   padding: 20px 22px 20px 23px;
 }
 
-/* Keep a reusable rail beside the shared centered content column without moving it. */
+/* Keep at least 32px between the rail and the centered content as the viewport narrows. */
 .section-rail--content-aligned {
   left: max(16px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 328px));
   right: auto;
+  width: min(280px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 48px));
+  min-width: 0;
 }
 
 .section-rail--compact p {

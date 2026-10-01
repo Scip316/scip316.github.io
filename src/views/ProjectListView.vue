@@ -58,9 +58,6 @@ const projects = sortByNewestDate(projectData.projects)
 </template>
 
 <style scoped>
-.project-page-header {
-  position: relative;
-}
 .project-page-header::after {
   position: absolute;
   bottom: -3px;

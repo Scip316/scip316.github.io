@@ -19,8 +19,10 @@
   flex-direction: column;
   min-height: 0;
   padding: clamp(20px, 3vw, 38px);
-  background: #dfdfda;
-  color: #1b1b1b;
+  background: var(--feature-surface);
+  color: var(--feature-text);
+  --action-link-color: var(--feature-text);
+  --action-link-border: var(--feature-line);
 }
 
 .work-card-body .card-label {
@@ -36,7 +38,7 @@
 
 .workplace {
   margin: 4px 0 20px;
-  color: #6c6b67;
+  color: var(--feature-muted);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -44,7 +46,7 @@
 .work-card-body > p:not(.card-label):not(.workplace) {
   max-width: 400px;
   margin: 0;
-  color: #4e4d49;
+  color: var(--feature-muted);
   font-size: 0.92rem;
   line-height: 1.6;
 }
@@ -60,8 +62,8 @@
 
 .work-card-body li {
   padding: 4px 7px;
-  border: 1px solid #d2d0ca;
-  color: #605f5b;
+  border: 1px solid var(--feature-line);
+  color: var(--feature-muted);
   font:
     0.6rem 'DM Mono',
     monospace;
@@ -74,10 +76,15 @@
   }
 
   .work-card-body {
-    min-height: 260px;
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .workplace {
+    margin-bottom: 12px;
   }
 
   .work-card-body ul {
-    margin-top: 22px;
+    margin-top: 16px;
   }
 }

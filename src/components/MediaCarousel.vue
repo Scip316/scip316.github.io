@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist'
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-
-GlobalWorkerOptions.workerSrc = pdfWorkerUrl
+import { computed, onMounted, ref } from 'vue'
+import { useSwipe } from '../composables/useSwipe'
 
 const props = withDefaults(
   defineProps<{
@@ -18,12 +16,8 @@ const activeIndex = ref(0)
 const trackIndex = ref(1)
 const isSnappingTrack = ref(false)
 const isTransitioning = ref(false)
-const touchStartPosition = ref<number | null>(null)
 const pdfPreviews = ref<Record<string, string>>({})
 const unavailablePdfPreviews = ref<Set<string>>(new Set())
-let suppressLinkNavigation = false
-let suppressNavigationTimer: number | undefined
-
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
 const renderedMedia = computed(() => {
   if (props.media.length < 2) return props.media
@@ -33,9 +27,12 @@ const renderedMedia = computed(() => {
 const displayTrackIndex = computed(() => (props.media.length > 1 ? trackIndex.value : 0))
 
 const renderPdfPreview = async (path: string) => {
-  const loadingTask = getDocument(path)
+  let loadingTask: import('pdfjs-dist').PDFDocumentLoadingTask | undefined
 
   try {
+    const { GlobalWorkerOptions, getDocument } = await import('pdfjs-dist')
+    GlobalWorkerOptions.workerSrc = pdfWorkerUrl
+    loadingTask = getDocument(path)
     const document = await loadingTask.promise
     const page = await document.getPage(1)
     const viewport = page.getViewport({ scale: 1.5 })
@@ -55,12 +52,12 @@ const renderPdfPreview = async (path: string) => {
     console.error(`Unable to render PDF preview: ${path}`, error)
     unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
   } finally {
-    await loadingTask.destroy()
+    await loadingTask?.destroy()
   }
 }
 
 const changeMedia = (direction: 'next' | 'previous') => {
-  if (props.media.length < 2 || isTransitioning.value) return
+  if (props.media.length < 2 || isTransitioning.value || isSnappingTrack.value) return
 
   const change = direction === 'next' ? 1 : -1
   activeIndex.value = (activeIndex.value + change + props.media.length) % props.media.length
@@ -72,6 +69,7 @@ const selectMedia = (index: number) => {
   if (index === activeIndex.value) return
 
   isSnappingTrack.value = true
+  isTransitioning.value = false
   activeIndex.value = index
   trackIndex.value = index + 1
   window.requestAnimationFrame(() => {
@@ -80,7 +78,7 @@ const selectMedia = (index: number) => {
 }
 
 const handleTrackTransitionEnd = (event: TransitionEvent) => {
-  if (event.propertyName !== 'transform') return
+  if (event.target !== event.currentTarget || event.propertyName !== 'transform') return
 
   if (trackIndex.value === 0) {
     isSnappingTrack.value = true
@@ -96,60 +94,32 @@ const handleTrackTransitionEnd = (event: TransitionEvent) => {
   })
 }
 
-const startSwipe = (event: TouchEvent) => {
-  touchStartPosition.value = event.touches[0]?.clientX ?? null
-}
-
-const endSwipe = (event: TouchEvent) => {
-  const startPosition = touchStartPosition.value
-  const endPosition = event.changedTouches[0]?.clientX
-  touchStartPosition.value = null
-
-  if (
-    startPosition === null ||
-    endPosition === undefined ||
-    Math.abs(endPosition - startPosition) < 36
-  ) {
-    return
-  }
-
-  suppressLinkNavigation = true
-  window.clearTimeout(suppressNavigationTimer)
-  suppressNavigationTimer = window.setTimeout(() => {
-    suppressLinkNavigation = false
-  }, 600)
-  changeMedia(endPosition < startPosition ? 'next' : 'previous')
-}
-
-const handleMediaClick = (event: MouseEvent) => {
-  if (!suppressLinkNavigation) return
-
-  suppressLinkNavigation = false
-  window.clearTimeout(suppressNavigationTimer)
-  event.preventDefault()
-  event.stopPropagation()
-}
+const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, dragging, dragOffset } =
+  useSwipe(changeMedia, (event) => event.type === 'touchstart' || props.media.length > 1)
 
 onMounted(() => {
   props.media.filter(isPdf).forEach((path) => void renderPdfPreview(path))
-})
-
-onUnmounted(() => {
-  window.clearTimeout(suppressNavigationTimer)
 })
 </script>
 
 <template>
   <div
     class="media-carousel"
+    :data-media-count="media.length"
+    v-on="mouseEvents"
+    :class="{ 'is-dragging': dragging }"
+    :style="{ '--swipe-offset': `${dragOffset}px` }"
     @touchstart.passive="startSwipe"
     @touchend="endSwipe"
-    @click="handleMediaClick"
+    @touchcancel="cancelSwipe"
+    @click.capture="handleSwipeClick"
   >
     <div
       class="media-carousel-track"
       :class="{ 'is-snapping-track': isSnappingTrack }"
-      :style="{ transform: `translateX(-${displayTrackIndex * 100}%)` }"
+      :style="{
+        transform: `translateX(calc(-${displayTrackIndex * 100}% + var(--swipe-offset, 0px)))`,
+      }"
       @transitionend="handleTrackTransitionEnd"
     >
       <div
@@ -174,7 +144,8 @@ onUnmounted(() => {
           :href="item"
           target="_blank"
           rel="noreferrer"
-        >{{ unavailablePdfPreviews.has(item) ? pdfLinkLabel : 'Loading PDF preview…' }}</a>
+          >{{ unavailablePdfPreviews.has(item) ? pdfLinkLabel : 'Loading PDF preview…' }}</a
+        >
       </div>
     </div>
 
@@ -227,8 +198,14 @@ onUnmounted(() => {
   transition: transform 0.35s ease;
 }
 
+.media-carousel.is-dragging .media-carousel-track,
 .media-carousel-track.is-snapping-track {
   transition: none;
+}
+
+.media-carousel.is-dragging {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .media-carousel-slide {
@@ -262,7 +239,9 @@ onUnmounted(() => {
   place-items: center;
   padding: 24px;
   color: #1b1b1b;
-  font: 0.75rem 'DM Mono', monospace;
+  font:
+    0.75rem 'DM Mono',
+    monospace;
   text-align: center;
   text-transform: uppercase;
 }
@@ -310,5 +289,4 @@ onUnmounted(() => {
 .media-carousel-dots button.is-active-media {
   background: #fff;
 }
-
 </style>

@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 
 type ActiveSectionOptions = {
-  threshold?: number
+  threshold?: number | (() => number)
   onUpdate?: () => void
 }
 
@@ -13,10 +13,11 @@ export const useActiveSection = <T extends string>(
 
   const updateActiveSection = () => {
     let activeId: T | null = null
+    const activeThreshold = typeof threshold === 'function' ? threshold() : threshold
 
     for (const sectionId of sectionIds) {
       const section = document.getElementById(sectionId)
-      if (section && section.getBoundingClientRect().top <= threshold) activeId = sectionId
+      if (section && section.getBoundingClientRect().top <= activeThreshold) activeId = sectionId
     }
 
     activeSection.value = activeId

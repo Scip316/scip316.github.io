@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useTheme } from '../composables/useTheme'
+
+const { theme, toggleTheme } = useTheme()
 
 withDefaults(
   defineProps<{
@@ -24,6 +27,15 @@ const closeMenu = () => {
       <a href="/">Home</a><a href="/experience">Work Experience</a><a href="/projects">Projects</a
       ><a href="/certificates">Credentials</a><a href="/about">About Me</a>
     </nav>
+    <button
+      class="theme-button"
+      type="button"
+      :aria-label="`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`"
+      :aria-pressed="theme === 'dark'"
+      @click="toggleTheme"
+    >
+      <span aria-hidden="true">{{ theme === 'dark' ? '☀' : '☾' }}</span>
+    </button>
     <button
       class="menu-button"
       type="button"

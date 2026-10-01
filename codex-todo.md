@@ -1,44 +1,40 @@
-﻿# Codex todo
+# Codex todo
 
-Draft for feedback. All items pending; highest priority first within each group. No website changes yet.
-
-Current setup: Vue 3 + TypeScript + Vite, with JSON content in `src/data/`. `App.vue` handles routes and featured carousels; shared components provide navigation, image/PDF galleries, and credential cards. Preserve desktop behaviour, links, and content.
+Implemented 1 Oct 2026. Highest priority first within each group. Preserve desktop behaviour, routes, content, links, and PDF previews.
 
 General:
 
-1) Carousel too fast
+1) (Done) Carousel too fast
 
-> Increase the delay between cards and keep the progress bar in sync.
-> Currently 4.6 sec in `App.vue` and `showcase.css`. The 100 sec was example wording, not the requested duration; choose a suitable reading delay before implementation.
+> Increased featured-card delay from 4.6 to 12 sec; timer and progress bar share one duration.
 
-2) Allow swiping
+2) (Done) Allow swiping
 
-> Add swiping between featured cards while preserving vertical scrolling and links.
-> `MediaCarousel.vue` already supports image/PDF swiping; reuse its approach and avoid moving both carousels with one gesture.
+> Featured cards support horizontal touch swipes and left-button dragging in both directions; vertical gestures remain scrolling.
+> Multi-image galleries keep their own swipe and looping behaviour. Swiping does not open links.
 
-3) Light / dark mode switch
+3) (Done) Light / dark mode switch
 
-> Add a button in the main header, accessible on desktop and mobile; disable the OS colour-scheme override.
-> Recommended: shared layout CSS with separate light/dark colour-variable blocks, selected by JavaScript via a theme attribute. Easier to maintain than two full stylesheets with duplicated layout rules.
-> Check hard-coded card colours in both modes.
+> Header button works on desktop/mobile, remembers the choice, and ignores the OS theme. Default is dark.
+> Shared layout CSS with separate colour-variable blocks; document previews retain their light backgrounds.
 
-4) Standardise credentials and activities card panels
+4) (Done) Standardise credentials and activities card panels
 
-> Focus on the homepage carousel boards shown in image 1: consistent borders, panel sizing, and equivalent text sizes, with balanced image/text areas despite different content lengths.
-> Check `showcase.css`; this is not a request to restyle the whole credentials archive or a new popup.
+> Homepage boards have matching borders, image/text areas, and equivalent text sizes, following image 1.
 
-5) Current role looks clickable
+5) (Done) Current role looks clickable
 
-> Image 2 refers to the red, rounded Current role pill. Replace its button-like treatment with informational text styling.
-> Preserve the role in `portfolio.ts` (currently NSF).
+> Replaced the red rounded pill in image 2 with an informational border: fine top/bottom rules, a red left edge, and a transparent background. Role content unchanged.
 
-6) Final code cleanup
+6) (Done) Final code cleanup
 
-> After fixes, clean up affected code and genuine duplication; preserve routes, PDF previews, and desktop behaviour.
+> Extracted shared carousel timing/pause and swipe logic, reused existing components, and removed redundant wrappers.
+> Kept changes within the todo's affected code; no new packages or content/schema changes.
+> Follow-up: load the PDF renderer separately from the main application; preview behaviour and direct document links remain.
 
 7) (Idea only) Dossier and popup
 
-> Bounce ideas if useful; no implementation planned. Existing dedicated URLs may already serve this purpose.
+> Deferred; existing dedicated URLs remain. No popup implementation planned.
 
 Desktop:
 
@@ -46,37 +42,46 @@ NA
 
 Mobile:
 
-1) Carousel changes move the page / appear abruptly
+1) (Done) Carousel changes move the page / appear abruptly
 
-> Reproduce the page movement and abrupt changes on mobile, then fix the cause; navigation versus layout shift is not yet established.
-> Keep card information readable with a clear transition / active-card indicator.
+> Mobile work/project cards fit their own content; arrows and touch/mouse swipes navigate manually, preventing autoplay from shifting the page. Credential boards retain stable shared heights and their short fade.
+> Bounded image heights and allowed longer work/project content to fit at desktop/tablet widths too.
 
-2) Pause carousel while touching
+2) (Done) Pause carousel while touching
 
-> Pause featured-card rotation and its progress bar during touch; resume safely on release/cancel.
-> Preserve the existing desktop hover pause.
+> Rotation/progress pause during touch and resume on release/cancel; desktop hover and keyboard focus pauses remain independent.
+> Hidden groups/pages and reduced-motion preferences pause autoplay too.
 
-3) About Me contacts too big
+3) (Done) About Me contacts too big
 
-> Reduce Contacts card height and spacing on mobile; keep links easy to tap.
-> `AboutView.vue` currently gives it the same 320px minimum height as the profile cards.
+> Removed the Contacts card's mobile 320px minimum height and tightened spacing; links remain easy to tap.
 
-4) Journey timeline navigation follows the user
+4) (Done) Journey timeline navigation follows the user
 
-> Keep the year selector visible while scrolling within the timeline, with the active year highlighted.
-> Reuse year links/tracking in `AboutView.vue` and account for the sticky header. `SectionRail.vue` is hidden below 1601px.
+> Sticky horizontal year selector below the header/return link; selected years stay visible above the content.
+> Reused section tracking for mobile and preserved the existing desktop year-highlighting behaviour.
 
-5) Toggle credentials / activities
+5) (Done) Toggle credentials / activities
 
-> Add a mobile selector to switch between groups instead of scrolling through both.
-> Reuse item 4's navigation pattern where suitable and keep `CredentialColumn.vue` for content. Confirm homepage, archive, or both.
+> Shared sticky selector on both homepage and archive; desktop still shows both groups.
+> Switching while reading returns to the selected group's start. Existing credential cards remain in use.
 
-6) (Optional) Back to portfolio follows the user
+6) (Done, optional item) Back to portfolio follows the user
 
-> Keep the return link accessible while scrolling without covering content or the header.
-> Reuse `ArchivePageHeader.vue` where applicable; preserve the detail page's return to all work experiences.
+> Return navigation uses the same sticky row below the header on mobile and desktop; experience details still return to all work experiences.
 
 Validation:
 
-> Check mobile touch/swipe, scroll stability, content, and navigation; check desktop hover, controls, links, and both themes after relevant changes.
-> Run existing type-check/build after code changes. Reported mobile bugs are not yet browser-verified.
+> Chrome mobile emulation: touch/swipe/cancel, gallery looping, vertical scrolling, stable autoplay height, theme persistence, sticky controls, menu, links, and browser Back passed.
+> Checked all five main pages for horizontal overflow at 320, 390, 560, 760, 820, 1280, and 1920px; checked homepage content clipping after layout fixes.
+> Type check and production build passed. PDF rendering now loads as a separate chunk; main JavaScript reduced from ~518 to ~120 kB. Production Chrome checks passed for all 13 PDF thumbnails/direct links, and PDF-free project pages do not request the renderer. User reports no remaining bugs in Chrome; Chrome is the current review target.
+
+Feedback:
+
+> Reply inline in [codex-questions.md](codex-questions.md) for remaining interpretation questions and phone feedback. Optional preferences retain their current behaviour.
+
+Follow-up feedback:
+
+> Removed WhatsApp and Telegram contact links from About Me and the footer; LinkedIn/email remain.
+> Mouse-drag directions, gallery isolation, touch regression, role-border styling, contact removal, and sticky desktop return navigation passed production Chrome checks. Type check/build passed.
+> Resolved the reported blank space below mobile project/work details with compact individual card heights and manual mobile navigation. Desktop autoplay remains enabled.

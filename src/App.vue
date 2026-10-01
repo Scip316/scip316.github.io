@@ -19,6 +19,8 @@ import { sortAlphabetically } from './utils/sortAlphabetically'
 import workExperienceData from './data/work-experience.json'
 import { sortByNewestDate } from './utils/sortByNewestDate'
 import { useActiveSection } from './composables/useActiveSection'
+import { showcaseInterval, useShowcaseCarousel } from './composables/useShowcaseCarousel'
+import MobileGroupToggle from './components/MobileGroupToggle.vue'
 
 const normalizePathname = (pathname: string) =>
   pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
@@ -41,7 +43,8 @@ const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
-const isMobileShowcaseViewport = ref(false)
+const activeCredentialGroup = ref('credentials')
+const isMobileViewport = ref(window.matchMedia('(max-width: 760px)').matches)
 const certificatePreviousPreparation = ref<number | null>(null)
 const achievementPreviousPreparation = ref<number | null>(null)
 const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
@@ -57,45 +60,6 @@ const showHomeSectionRail = computed(
   () => homeRailHasClearedHero.value && activeHomeSection.value !== null,
 )
 const displayedWorkIndex = computed(() => activeWorkIndex.value)
-const carouselInterval = 4600
-const createResumableRotation = (advance: () => void, itemCount: () => number) => {
-  let timer: number | undefined
-  let deadline = 0
-  let remaining = carouselInterval
-
-  const schedule = (delay: number) => {
-    if (itemCount() < 2) return
-
-    deadline = performance.now() + delay
-    timer = window.setTimeout(() => {
-      timer = undefined
-      remaining = carouselInterval
-      advance()
-      schedule(carouselInterval)
-    }, delay)
-  }
-
-  const start = () => {
-    if (timer !== undefined) return
-    schedule(remaining)
-  }
-
-  const stop = () => {
-    if (timer === undefined) return
-    remaining = Math.max(0, deadline - performance.now())
-    window.clearTimeout(timer)
-    timer = undefined
-  }
-
-  const restart = () => {
-    stop()
-    remaining = carouselInterval
-    start()
-  }
-
-  return { start, stop, restart }
-}
-
 const nextWork = () => {
   activeWorkIndex.value = (activeWorkIndex.value + 1) % workExperiences.length
 }
@@ -125,77 +89,88 @@ const previousProject = () => {
   activeProjectIndex.value =
     (activeProjectIndex.value - 1 + featuredProjects.length) % featuredProjects.length
 }
+let certificateAnimationFrame: number | undefined
+let achievementAnimationFrame: number | undefined
 const nextCertificate = () => {
+  if (certificateAnimationFrame !== undefined)
+    window.cancelAnimationFrame(certificateAnimationFrame)
+  certificatePreviousPreparation.value = null
   activeCertificateIndex.value = (activeCertificateIndex.value + 1) % featuredCertificates.length
 }
 const previousCertificate = () => {
+  if (certificateAnimationFrame !== undefined)
+    window.cancelAnimationFrame(certificateAnimationFrame)
+  certificatePreviousPreparation.value = null
   const previousIndex =
     (activeCertificateIndex.value - 1 + featuredCertificates.length) % featuredCertificates.length
 
-  if (featuredCertificates.length !== 2) {
+  if (featuredCertificates.length !== 2 || isMobileViewport.value) {
     activeCertificateIndex.value = previousIndex
     return
   }
 
   certificatePreviousPreparation.value = previousIndex
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
+  certificateAnimationFrame = window.requestAnimationFrame(() => {
+    certificateAnimationFrame = window.requestAnimationFrame(() => {
       activeCertificateIndex.value = previousIndex
       certificatePreviousPreparation.value = null
+      certificateAnimationFrame = undefined
     })
   })
 }
 const nextAchievement = () => {
+  if (achievementAnimationFrame !== undefined)
+    window.cancelAnimationFrame(achievementAnimationFrame)
+  achievementPreviousPreparation.value = null
   activeAchievementIndex.value = (activeAchievementIndex.value + 1) % featuredAchievements.length
 }
 const previousAchievement = () => {
+  if (achievementAnimationFrame !== undefined)
+    window.cancelAnimationFrame(achievementAnimationFrame)
+  achievementPreviousPreparation.value = null
   const previousIndex =
     (activeAchievementIndex.value - 1 + featuredAchievements.length) % featuredAchievements.length
 
-  if (featuredAchievements.length !== 2) {
+  if (featuredAchievements.length !== 2 || isMobileViewport.value) {
     activeAchievementIndex.value = previousIndex
     return
   }
 
   achievementPreviousPreparation.value = previousIndex
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
+  achievementAnimationFrame = window.requestAnimationFrame(() => {
+    achievementAnimationFrame = window.requestAnimationFrame(() => {
       activeAchievementIndex.value = previousIndex
       achievementPreviousPreparation.value = null
+      achievementAnimationFrame = undefined
     })
   })
 }
-const workRotation = createResumableRotation(nextWork, () => workExperiences.length)
-const projectRotation = createResumableRotation(nextProject, () => featuredProjects.length)
-const certificateRotation = createResumableRotation(nextCertificate, () => featuredCertificates.length)
-const achievementRotation = createResumableRotation(nextAchievement, () => featuredAchievements.length)
-const startWorkRotation = workRotation.start
-const stopWorkRotation = workRotation.stop
-const startProjectRotation = projectRotation.start
-const stopProjectRotation = projectRotation.stop
-const startCertificateRotation = certificateRotation.start
-const stopCertificateRotation = certificateRotation.stop
-const startAchievementRotation = achievementRotation.start
-const stopAchievementRotation = achievementRotation.stop
-const moveWork = (direction: 'next' | 'previous') => {
-  if (direction === 'next') nextWork()
-  else previousWork()
-  workRotation.restart()
-}
-const moveProject = (direction: 'next' | 'previous') => {
-  if (direction === 'next') nextProject()
-  else previousProject()
-  projectRotation.restart()
-}
-const moveCertificate = (direction: 'next' | 'previous') => {
-  if (direction === 'next') nextCertificate()
-  else previousCertificate()
-  certificateRotation.restart()
-}
-const moveAchievement = (direction: 'next' | 'previous') => {
-  if (direction === 'next') nextAchievement()
-  else previousAchievement()
-  achievementRotation.restart()
+const workCarousel = useShowcaseCarousel(
+  (direction) => (direction === 'next' ? nextWork() : previousWork()),
+  () => workExperiences.length,
+  () => currentPath.value === '/' && !isMobileViewport.value,
+)
+const projectCarousel = useShowcaseCarousel(
+  (direction) => (direction === 'next' ? nextProject() : previousProject()),
+  () => featuredProjects.length,
+  () => currentPath.value === '/' && !isMobileViewport.value,
+)
+const certificateCarousel = useShowcaseCarousel(
+  (direction) => (direction === 'next' ? nextCertificate() : previousCertificate()),
+  () => featuredCertificates.length,
+  () =>
+    currentPath.value === '/' &&
+    (!isMobileViewport.value || activeCredentialGroup.value === 'credentials'),
+)
+const achievementCarousel = useShowcaseCarousel(
+  (direction) => (direction === 'next' ? nextAchievement() : previousAchievement()),
+  () => featuredAchievements.length,
+  () =>
+    currentPath.value === '/' &&
+    (!isMobileViewport.value || activeCredentialGroup.value === 'activities'),
+)
+const updateMobileViewport = () => {
+  isMobileViewport.value = window.matchMedia('(max-width: 760px)').matches
 }
 
 const updateCurrentPath = () => {
@@ -208,10 +183,6 @@ const updateCurrentPath = () => {
     )
   }
   currentPath.value = normalizedPath
-}
-
-const updateMobileShowcaseViewport = () => {
-  isMobileShowcaseViewport.value = window.matchMedia('(max-width: 560px)').matches
 }
 
 const updateHomeRailPosition = () => {
@@ -272,28 +243,24 @@ const handleInternalNavigation = async (event: MouseEvent) => {
 
 onMounted(() => {
   updateCurrentPath()
-  updateMobileShowcaseViewport()
-  startWorkRotation()
-  startProjectRotation()
-  startCertificateRotation()
-  startAchievementRotation()
+  updateMobileViewport()
   window.addEventListener('popstate', updateCurrentPath)
-  window.addEventListener('resize', updateMobileShowcaseViewport)
+  window.addEventListener('resize', updateMobileViewport)
   document.addEventListener('click', handleInternalNavigation)
 })
 onUnmounted(() => {
-  stopWorkRotation()
-  stopProjectRotation()
-  stopCertificateRotation()
-  stopAchievementRotation()
+  if (certificateAnimationFrame !== undefined)
+    window.cancelAnimationFrame(certificateAnimationFrame)
+  if (achievementAnimationFrame !== undefined)
+    window.cancelAnimationFrame(achievementAnimationFrame)
   window.removeEventListener('popstate', updateCurrentPath)
-  window.removeEventListener('resize', updateMobileShowcaseViewport)
+  window.removeEventListener('resize', updateMobileViewport)
   document.removeEventListener('click', handleInternalNavigation)
 })
 </script>
 
 <template>
-  <div v-if="currentPath === '/'">
+  <div v-if="currentPath === '/'" :style="{ '--showcase-slide-duration': `${showcaseInterval}ms` }">
     <SiteHeader home />
     <main>
       <section id="intro" class="intro">
@@ -323,13 +290,17 @@ onUnmounted(() => {
                 <button
                   type="button"
                   aria-label="Previous experience"
-                  @click="moveWork('previous')"
+                  @click="workCarousel.move('previous')"
                 >
                   ←</button
                 ><span
                   >{{ String(displayedWorkIndex + 1).padStart(2, '0') }} /
                   {{ String(workExperiences.length).padStart(2, '0') }}</span
-                ><button type="button" aria-label="Next experience" @click="moveWork('next')">
+                ><button
+                  type="button"
+                  aria-label="Next experience"
+                  @click="workCarousel.move('next')"
+                >
                   →
                 </button>
               </div>
@@ -337,15 +308,29 @@ onUnmounted(() => {
           </div>
           <div
             class="showcase-frame showcase-coverflow work-card-row"
-            @mouseenter="stopWorkRotation"
-            @mouseleave="startWorkRotation"
+            @mouseenter="workCarousel.mouseEnter"
+            @mouseleave="workCarousel.mouseLeave"
+            @focusin="workCarousel.focusIn"
+            @focusout="workCarousel.focusOut"
+            @touchstart.passive="workCarousel.touchStart"
+            @touchend="workCarousel.touchEnd"
+            @touchcancel="workCarousel.touchCancel"
+            @click.capture="workCarousel.handleSwipeClick"
+            v-on="workCarousel.mouseEvents"
+            :style="{ '--swipe-offset': `${workCarousel.dragOffset.value}px` }"
+            :class="{
+              'is-paused': workCarousel.paused.value,
+              'is-dragging': workCarousel.dragging.value,
+            }"
           >
             <div class="showcase-coverflow-stage">
-              <template v-for="(item, index) in workExperiences" :key="item.id">
               <a
-                v-if="!isMobileShowcaseViewport || index === activeWorkIndex"
+                v-for="(item, index) in workExperiences"
+                :key="item.id"
                 class="showcase-coverflow-card work-card"
                 :class="workCardPosition(index)"
+                :inert="index !== activeWorkIndex"
+                :aria-hidden="index !== activeWorkIndex"
                 :href="`/experience/${item.detailPageSlug}`"
               >
                 <MediaCarousel
@@ -376,10 +361,9 @@ onUnmounted(() => {
                   </div>
                 </div>
               </a>
-              </template>
             </div>
             <div class="showcase-progress-track" aria-hidden="true">
-              <span :key="displayedWorkIndex" class="showcase-progress"></span>
+              <span :key="workCarousel.progressVersion.value" class="showcase-progress"></span>
             </div>
           </div>
           <CardActionLink class="home-section-action" href="/experience" :show-arrow="false"
@@ -400,13 +384,17 @@ onUnmounted(() => {
                 <button
                   type="button"
                   aria-label="Previous project"
-                  @click="moveProject('previous')"
+                  @click="projectCarousel.move('previous')"
                 >
                   ←</button
                 ><span
                   >{{ String(activeProjectIndex + 1).padStart(2, '0') }} /
                   {{ String(featuredProjects.length).padStart(2, '0') }}</span
-                ><button type="button" aria-label="Next project" @click="moveProject('next')">
+                ><button
+                  type="button"
+                  aria-label="Next project"
+                  @click="projectCarousel.move('next')"
+                >
                   →
                 </button>
               </div>
@@ -414,15 +402,29 @@ onUnmounted(() => {
           </div>
           <div
             class="showcase-frame showcase-coverflow home-feature-row"
-            @mouseenter="stopProjectRotation"
-            @mouseleave="startProjectRotation"
+            @mouseenter="projectCarousel.mouseEnter"
+            @mouseleave="projectCarousel.mouseLeave"
+            @focusin="projectCarousel.focusIn"
+            @focusout="projectCarousel.focusOut"
+            @touchstart.passive="projectCarousel.touchStart"
+            @touchend="projectCarousel.touchEnd"
+            @touchcancel="projectCarousel.touchCancel"
+            @click.capture="projectCarousel.handleSwipeClick"
+            v-on="projectCarousel.mouseEvents"
+            :style="{ '--swipe-offset': `${projectCarousel.dragOffset.value}px` }"
+            :class="{
+              'is-paused': projectCarousel.paused.value,
+              'is-dragging': projectCarousel.dragging.value,
+            }"
           >
             <div class="showcase-coverflow-stage">
-              <template v-for="(project, index) in featuredProjects" :key="project.id">
               <article
-                v-if="!isMobileShowcaseViewport || index === activeProjectIndex"
+                v-for="(project, index) in featuredProjects"
+                :key="project.id"
                 class="showcase-coverflow-card home-project-card"
                 :class="projectCardPosition(index)"
+                :inert="index !== activeProjectIndex"
+                :aria-hidden="index !== activeProjectIndex"
               >
                 <div
                   class="home-project-visual"
@@ -458,10 +460,9 @@ onUnmounted(() => {
                   <span v-else class="home-feature-link">NA</span>
                 </div>
               </article>
-              </template>
             </div>
             <div class="showcase-progress-track" aria-hidden="true">
-              <span :key="activeProjectIndex" class="showcase-progress"></span>
+              <span :key="projectCarousel.progressVersion.value" class="showcase-progress"></span>
             </div>
           </div>
           <CardActionLink class="home-section-action" href="/projects" :show-arrow="false"
@@ -480,15 +481,19 @@ onUnmounted(() => {
               <p>Milestones that I encounter and conqured</p>
             </div>
           </div>
+          <MobileGroupToggle v-model="activeCredentialGroup" />
           <div class="credential-showcase-grid">
-            <div class="credential-showcase-panel">
+            <div
+              class="credential-showcase-panel"
+              :class="{ 'mobile-group-hidden': activeCredentialGroup !== 'credentials' }"
+            >
               <div class="credential-showcase-heading">
                 <p>Certificates & training</p>
                 <div class="showcase-controls">
                   <button
                     type="button"
                     aria-label="Previous certification"
-                    @click="moveCertificate('previous')"
+                    @click="certificateCarousel.move('previous')"
                   >
                     ←</button
                   ><span
@@ -497,7 +502,7 @@ onUnmounted(() => {
                   ><button
                     type="button"
                     aria-label="Next certification"
-                    @click="moveCertificate('next')"
+                    @click="certificateCarousel.move('next')"
                   >
                     →
                   </button>
@@ -505,18 +510,32 @@ onUnmounted(() => {
               </div>
               <div
                 class="showcase-frame showcase-coverflow credential-showcase"
-                @mouseenter="stopCertificateRotation"
-                @mouseleave="startCertificateRotation"
+                @mouseenter="certificateCarousel.mouseEnter"
+                @mouseleave="certificateCarousel.mouseLeave"
+                @focusin="certificateCarousel.focusIn"
+                @focusout="certificateCarousel.focusOut"
+                @touchstart.passive="certificateCarousel.touchStart"
+                @touchend="certificateCarousel.touchEnd"
+                @touchcancel="certificateCarousel.touchCancel"
+                @click.capture="certificateCarousel.handleSwipeClick"
+                v-on="certificateCarousel.mouseEvents"
+                :style="{ '--swipe-offset': `${certificateCarousel.dragOffset.value}px` }"
+                :class="{
+                  'is-paused': certificateCarousel.paused.value,
+                  'is-dragging': certificateCarousel.dragging.value,
+                }"
               >
                 <div class="showcase-coverflow-stage">
-                  <template v-for="(certificate, index) in featuredCertificates" :key="certificate.name">
                   <article
-                    v-if="!isMobileShowcaseViewport || index === activeCertificateIndex"
+                    v-for="(certificate, index) in featuredCertificates"
+                    :key="certificate.name"
                     class="showcase-coverflow-card home-certificate-card"
                     :class="[
                       certificateCardPosition(index),
                       { 'is-preparing-from-left': index === certificatePreviousPreparation },
                     ]"
+                    :inert="index !== activeCertificateIndex"
+                    :aria-hidden="index !== activeCertificateIndex"
                   >
                     <MediaCarousel
                       v-if="certificate.headerPhotos.length"
@@ -534,21 +553,26 @@ onUnmounted(() => {
                       <p>{{ certificate.issuer }}</p>
                     </div>
                   </article>
-                  </template>
                 </div>
                 <div class="showcase-progress-track" aria-hidden="true">
-                  <span :key="activeCertificateIndex" class="showcase-progress"></span>
+                  <span
+                    :key="certificateCarousel.progressVersion.value"
+                    class="showcase-progress"
+                  ></span>
                 </div>
               </div>
             </div>
-            <div class="credential-showcase-panel">
+            <div
+              class="credential-showcase-panel"
+              :class="{ 'mobile-group-hidden': activeCredentialGroup !== 'activities' }"
+            >
               <div class="credential-showcase-heading">
                 <p>Honours & activities</p>
                 <div class="showcase-controls">
                   <button
                     type="button"
                     aria-label="Previous achievement"
-                    @click="moveAchievement('previous')"
+                    @click="achievementCarousel.move('previous')"
                   >
                     ←</button
                   ><span
@@ -557,7 +581,7 @@ onUnmounted(() => {
                   ><button
                     type="button"
                     aria-label="Next achievement"
-                    @click="moveAchievement('next')"
+                    @click="achievementCarousel.move('next')"
                   >
                     →
                   </button>
@@ -565,18 +589,32 @@ onUnmounted(() => {
               </div>
               <div
                 class="showcase-frame showcase-coverflow credential-showcase"
-                @mouseenter="stopAchievementRotation"
-                @mouseleave="startAchievementRotation"
+                @mouseenter="achievementCarousel.mouseEnter"
+                @mouseleave="achievementCarousel.mouseLeave"
+                @focusin="achievementCarousel.focusIn"
+                @focusout="achievementCarousel.focusOut"
+                @touchstart.passive="achievementCarousel.touchStart"
+                @touchend="achievementCarousel.touchEnd"
+                @touchcancel="achievementCarousel.touchCancel"
+                @click.capture="achievementCarousel.handleSwipeClick"
+                v-on="achievementCarousel.mouseEvents"
+                :style="{ '--swipe-offset': `${achievementCarousel.dragOffset.value}px` }"
+                :class="{
+                  'is-paused': achievementCarousel.paused.value,
+                  'is-dragging': achievementCarousel.dragging.value,
+                }"
               >
                 <div class="showcase-coverflow-stage">
-                  <template v-for="(achievement, index) in featuredAchievements" :key="achievement.name">
                   <article
-                    v-if="!isMobileShowcaseViewport || index === activeAchievementIndex"
+                    v-for="(achievement, index) in featuredAchievements"
+                    :key="achievement.name"
                     class="showcase-coverflow-card home-certificate-card"
                     :class="[
                       achievementCardPosition(index),
                       { 'is-preparing-from-left': index === achievementPreviousPreparation },
                     ]"
+                    :inert="index !== activeAchievementIndex"
+                    :aria-hidden="index !== activeAchievementIndex"
                   >
                     <MediaCarousel
                       v-if="achievement.headerPhotos.length"
@@ -597,10 +635,12 @@ onUnmounted(() => {
                       </p>
                     </div>
                   </article>
-                  </template>
                 </div>
                 <div class="showcase-progress-track" aria-hidden="true">
-                  <span :key="activeAchievementIndex" class="showcase-progress"></span>
+                  <span
+                    :key="achievementCarousel.progressVersion.value"
+                    class="showcase-progress"
+                  ></span>
                 </div>
               </div>
             </div>
