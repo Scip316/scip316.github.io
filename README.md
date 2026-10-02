@@ -27,17 +27,18 @@ Open the local URL printed by Vite. Media generation runs automatically before t
 ## Build and validation
 
 ```sh
-npm run build
+npm run build:prerender
 npm run preview
 ```
 
-The build regenerates media, runs the Vue/TypeScript check, and produces the static site in `dist/`. Preview serves that production build locally.
+The recommended build regenerates media and inline previews, runs the Vue/TypeScript
+check, and generates page HTML in `dist/`. Visitors receive text and layout before
+Vue attaches the interactive controls. Preview serves that production build locally.
 
-To build the combined preview/pre-rendering experiment, use `npm run build:prerender`
-instead of `npm run build`. It renders the homepage, archive/About pages, and known
-experience details from the same Vue components. Upload all contents of `dist/`,
-including the generated HTML pages and `.htaccess`, to Plesk. No Node server is
-needed on the host. `npm run build` retains the client-rendered build for comparison.
+Pre-rendering covers the homepage, archive/About pages, and known experience
+details using the existing Vue components. `npm run build` remains available to
+produce the client-rendered version for comparison; it replaces the pre-rendered
+output in `dist/`.
 
 For individual checks:
 
@@ -45,6 +46,41 @@ For individual checks:
 npm run type-check
 npm run media
 ```
+
+## Deploy to Plesk
+
+1. Run `npm run build:prerender` and check the site with `npm run preview`.
+2. Upload the **contents** of `dist/` into the domain's `httpdocs/` directory,
+   including the generated HTML pages, `assets/`, `generated-media/`, original
+   media directories, and `.htaccess`. Do not upload `dist/` as a nested folder.
+3. Upload new assets before replacing HTML pages. Keep previous hashed assets
+   briefly so visitors with older pages can finish loading during the update.
+4. Check the homepage, direct page URLs, navigation, and images on the live site.
+
+No Docker or Node server is needed on the host. The supplied `.htaccess` serves
+pre-rendered routes, revalidates HTML, and allows long-lived caching for hashed
+assets. It requires Apache processing; serving files directly through nginx can
+bypass these rules. No CDN is currently configured.
+
+## Performance validation
+
+The combined pre-rendering and inline-preview build improved local cold-load
+tests using 500 ms simulated latency and approximately 100 KB/s download speed.
+External font requests were blocked consistently in both builds.
+
+| Measurement | Client-rendered build | Combined build |
+| --- | --- | --- |
+| Desktop content appears | About 1.7 s | About 1.3 s |
+| Desktop homepage photo finishes | About 5.9 s | 4.8–5.0 s |
+| Mobile content appears | About 2.3 s | 1.3–1.5 s |
+
+The combined build adds approximately 7 KB of compressed JavaScript. Tiny inline
+previews need no additional image requests; full-size images still download.
+Live timings depend on hosting and network conditions and require a separate check.
+
+Validation covered all eight generated pages on desktop/mobile with no hydration
+warnings, content with application JavaScript blocked, saved themes, navigation,
+12-second autoplay, carousel arrows/dragging/swiping, PDF links, and timeline controls.
 
 ## Loading diagnostics
 
@@ -60,7 +96,7 @@ Use Network with an empty browser cache to compare fresh and cached visits.
 
 - Edit portfolio content in `src/data/`: `work-experience.json`, `projects.json`, `certificates.json`, `achievements.json`, `about.json`, and `portfolio.ts`.
 - Store original images and PDFs in `public/`, using root-relative references such as `/projects/Lunch_Box.jpg`.
-- `scripts/generate-media.mjs` generates responsive WebP versions of referenced PNG/JPEG images and first-page PDF thumbnails. Original files and PDF links are preserved; PDF.js and canvas run during generation, not in visitors' browsers.
+- `scripts/generate-media.mjs` generates responsive WebP versions of referenced PNG/JPEG images, first-page PDF thumbnails, and tiny inline WebP previews. Original files and PDF links are preserved; PDF.js and canvas run during generation, not in visitors' browsers.
 - Generation runs before `npm run dev` and `npm run build`. After changing content/media while the development server is already running, run `npm run media` or restart it.
 - Generated files live in `public/generated-media/`, with their mapping in `src/data/media-assets.json`. Do not edit them manually. Source-content hashes refresh generated URLs when media changes.
 - Commit original media, generated files, and their mapping together. Keep `node_modules/`, `dist/`, and local caches out of Git.
