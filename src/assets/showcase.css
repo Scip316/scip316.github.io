@@ -22,6 +22,19 @@
   margin-top: 28px;
 }
 
+:root[data-theme='light'] .home-section-action {
+  background: var(--surface);
+}
+
+:root[data-theme='light'] .home-section-action:is(:hover, :focus-visible) {
+  background: #f5eee8;
+  border-color: var(--accent);
+}
+
+:root[data-theme='light'] .home-section-action [aria-hidden='true'] {
+  color: var(--accent);
+}
+
 .showcase-section-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 310px);
