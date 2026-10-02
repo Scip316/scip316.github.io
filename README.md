@@ -6,9 +6,9 @@ Personal portfolio built with Vue 3, TypeScript, and Vite. Content is maintained
 
 - Homepage showcases work experience, projects, credentials, and activities, with separate archive/detail pages and an About page with a journey timeline.
 - Header light/dark switch; dark is the default, and the selected theme is saved locally.
-- Carousel arrows, touch swipes, and mouse dragging. Autoplay uses a 12-second interval and pauses during interaction or when the page is hidden; reduced-motion preferences disable it.
-- Mobile work/project cards fit their content and use manual navigation. Credentials and activities use a shared mobile group selector.
-- Sticky return navigation and responsive section rails. Rails shrink at laptop widths and hide at viewport widths of 1200px or below.
+- Carousel arrows, touch swipes, and mouse dragging. Autoplay uses a 12-second interval and pauses during interaction or when the page is hidden. Featured carousel transitions and autoplay remain enabled regardless of the OS animation setting.
+- Mobile work/project cards fit their content and support 12-second autoplay, arrows, and swipes. Credentials and activities use a shared mobile group selector.
+- Sticky return navigation and responsive section rails. Desktop journey years stay grouped in sticky buttons, alongside the vertical year rail on wide screens. The mobile journey heading stays above its sticky year selector. Section rails shrink at laptop widths and hide at viewport widths of 1200px or below.
 - Responsive WebP images, lazy-loaded project/gallery images, static PDF thumbnails, and secondary pages loaded on demand.
 
 ## Development

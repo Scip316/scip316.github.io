@@ -164,12 +164,12 @@ const previousAchievement = () => {
 const workCarousel = useShowcaseCarousel(
   (direction) => (direction === 'next' ? nextWork() : previousWork()),
   () => workExperiences.length,
-  () => currentPath.value === '/' && !isMobileViewport.value,
+  () => currentPath.value === '/',
 )
 const projectCarousel = useShowcaseCarousel(
   (direction) => (direction === 'next' ? nextProject() : previousProject()),
   () => featuredProjects.length,
-  () => currentPath.value === '/' && !isMobileViewport.value,
+  () => currentPath.value === '/',
 )
 const certificateCarousel = useShowcaseCarousel(
   (direction) => (direction === 'next' ? nextCertificate() : previousCertificate()),

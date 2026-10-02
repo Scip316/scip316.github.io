@@ -535,9 +535,6 @@
   .home-project-visual::after {
     animation: none;
   }
-  .showcase-coverflow-card {
-    transition: none;
-  }
 }
 
 /* Equal document and text areas for both credential boards. */
@@ -612,7 +609,7 @@
   cursor: grabbing;
 }
 
-/* Manual navigation lets mobile work/project cards fit their own content. */
+/* Mobile work/project cards fit their own content. */
 @media (max-width: 760px) {
   .work-card-row .showcase-coverflow-card,
   .home-feature-row .showcase-coverflow-card {

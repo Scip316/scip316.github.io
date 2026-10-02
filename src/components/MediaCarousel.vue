@@ -126,7 +126,7 @@ const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, draggi
           :href="item"
           target="_blank"
           rel="noreferrer"
-          >{{ unavailablePdfPreviews.has(item) ? pdfLinkLabel : 'Loading PDF preview…' }}</a
+          >{{ pdfLinkLabel }}</a
         >
       </div>
     </div>

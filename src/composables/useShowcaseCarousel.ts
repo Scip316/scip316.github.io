@@ -15,7 +15,6 @@ export const useShowcaseCarousel = (
   let timer: number | undefined
   let deadline = 0
   let remaining = showcaseInterval
-  let motionPreference: MediaQueryList | undefined
 
   const stop = () => {
     if (timer === undefined) return
@@ -88,7 +87,6 @@ export const useShowcaseCarousel = (
     }
   }
   const updateVisibility = () => setPause('hidden', document.hidden)
-  const updateMotion = () => setPause('motion', Boolean(motionPreference?.matches))
 
   watch(
     enabled,
@@ -107,17 +105,13 @@ export const useShowcaseCarousel = (
 
   onMounted(() => {
     mounted = true
-    motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
-    motionPreference.addEventListener('change', updateMotion)
     document.addEventListener('visibilitychange', updateVisibility)
-    updateMotion()
     updateVisibility()
     sync()
   })
   onUnmounted(() => {
     mounted = false
     stop()
-    motionPreference?.removeEventListener('change', updateMotion)
     document.removeEventListener('visibilitychange', updateVisibility)
   })
   return {

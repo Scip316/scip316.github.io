@@ -30,7 +30,7 @@ const timelineNodeOffsets = ref<number[]>(
 
 const updateTimelineNodeOffsets = () => {
   isMobileTimeline.value = window.matchMedia('(max-width: 760px)').matches
-  const rail = document.querySelector<HTMLElement>('.about-timeline-nav')
+  const rail = document.querySelector<HTMLElement>('.about-timeline-rail')
   if (!rail || rail.getBoundingClientRect().height === 0) return
 
   const railTop = rail.getBoundingClientRect().top
@@ -55,7 +55,13 @@ let timelineObserver: IntersectionObserver | undefined
 
 const timelineSectionIds = timeline.value.map((section) => `timeline-${section.year}`)
 const { activeSection: activeTimelineSection } = useActiveSection(timelineSectionIds, {
-  threshold: () => (window.matchMedia('(max-width: 760px)').matches ? 195 : 105),
+  threshold: () => {
+    if (!window.matchMedia('(max-width: 760px)').matches) return 105
+    // A short final year cannot reach the sticky selector at the page bottom.
+    const atPageEnd =
+      window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 1
+    return atPageEnd ? window.innerHeight : 227
+  },
 })
 const activeTimelineYear = computed(() =>
   isMobileTimeline.value
@@ -206,7 +212,7 @@ onUnmounted(() => {
             aria-label="Journey years"
           >
             <a
-              v-for="(timelineSection, index) in timeline"
+              v-for="timelineSection in timeline"
               :key="timelineSection.year"
               class="about-timeline-rail-year"
               :href="`#timeline-${timelineSection.year}`"
@@ -214,6 +220,17 @@ onUnmounted(() => {
               :class="{
                 'is-active': activeTimelineYear === timelineSection.year,
               }"
+              >{{ timelineSection.year }}</a
+            >
+          </nav>
+          <nav class="about-timeline-rail" aria-label="Journey year rail">
+            <a
+              v-for="(timelineSection, index) in timeline"
+              :key="timelineSection.year"
+              class="about-timeline-rail-year"
+              :href="`#timeline-${timelineSection.year}`"
+              :aria-current="activeTimelineYear === timelineSection.year ? 'location' : undefined"
+              :class="{ 'is-active': activeTimelineYear === timelineSection.year }"
               :style="{ top: `${timelineNodeOffsets[index] ?? 0}%` }"
               >{{ timelineSection.year }}</a
             >
@@ -440,7 +457,8 @@ onUnmounted(() => {
   gap: clamp(24px, 3vw, 48px);
 }
 
-.about-timeline-nav {
+.about-timeline-rail {
+  display: none;
   position: relative;
   z-index: 1;
   align-self: stretch;
@@ -469,7 +487,7 @@ onUnmounted(() => {
     transform 0.2s ease;
 }
 
-.about-timeline-nav::before {
+.about-timeline-rail::before {
   content: '';
   position: absolute;
   top: 0;
@@ -602,51 +620,74 @@ onUnmounted(() => {
   }
 }
 
-@media (max-width: 1400px) {
+/* Keep the grouped year selector available at every desktop width. */
+@media (min-width: 761px) {
   .about-timeline {
     grid-template-columns: 1fr;
   }
 
   .about-timeline-nav {
-    position: static;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    position: sticky;
+    top: 132px;
+    z-index: 3;
+    align-self: start;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
     width: auto;
     height: auto;
     min-height: 0;
     margin-bottom: 24px;
+    padding: 8px 0;
+    background: var(--surface);
   }
 
   .about-timeline-nav::before {
     display: none;
   }
 
-  .about-timeline-rail-year {
+  .about-timeline-nav .about-timeline-rail-year {
     position: static;
     display: block;
+    flex: 0 0 calc((100% - 40px) / 6);
     width: auto;
     min-width: 0;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid var(--line);
     background: var(--surface);
     color: var(--text);
     font:
-      0.75rem 'DM Mono',
+      0.7rem 'DM Mono',
       monospace;
     letter-spacing: 0.04em;
     text-align: center;
     transform: none;
   }
 
-  .about-timeline-rail-year::before,
-  .about-timeline-rail-year::after {
+  .about-timeline-nav .about-timeline-rail-year::before,
+  .about-timeline-nav .about-timeline-rail-year::after {
     display: none;
   }
 
-  .about-timeline-rail-year.is-active {
+  .about-timeline-nav .about-timeline-rail-year.is-active {
     border-color: var(--accent);
     color: var(--accent);
+  }
+  .about-timeline-year {
+    scroll-margin-top: 236px;
+  }
+}
+
+@media (min-width: 1401px) {
+  .about-timeline {
+    grid-template-columns: minmax(145px, 0.13fr) minmax(0, 1fr);
+  }
+  .about-timeline-nav {
+    grid-column: 1 / -1;
+  }
+  .about-timeline-rail {
+    display: block;
   }
 }
 
@@ -655,7 +696,7 @@ onUnmounted(() => {
   .about-timeline,
   .about-introduction,
   .about-timeline-entry {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .about-contact-card {
@@ -686,9 +727,18 @@ onUnmounted(() => {
     padding: 14px;
     font-size: 0.78rem;
   }
-  .about-timeline-nav {
+  .about-journey > .page-kicker {
     position: sticky;
     top: var(--mobile-selector-top);
+    z-index: 4;
+    height: 32px;
+    margin-bottom: 0;
+    padding: 8px 0;
+    background: var(--surface);
+  }
+  .about-timeline-nav {
+    position: sticky;
+    top: calc(var(--mobile-selector-top) + 32px);
     z-index: 3;
     display: flex;
     align-self: start;
@@ -701,13 +751,29 @@ onUnmounted(() => {
     background: var(--surface);
   }
   .about-timeline-rail-year {
+    position: static;
+    display: block;
     flex: 0 0 auto;
     min-width: 70px;
     min-height: 44px;
     padding: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    text-align: center;
+    transform: none;
+  }
+  .about-timeline-nav::before,
+  .about-timeline-rail-year::before,
+  .about-timeline-rail-year::after {
+    display: none;
+  }
+  .about-timeline-rail-year.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
   }
   .about-timeline-year {
-    scroll-margin-top: 194px;
+    scroll-margin-top: 226px;
   }
 }
 @media (min-width: 1201px) and (max-width: 1600px) {

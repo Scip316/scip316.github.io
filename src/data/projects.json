@@ -30,7 +30,7 @@
       "year": "2026",
       "category": "Garena AI Build Challenge 2026 · Hackathon",
       "featured": true,
-      "summary": "Created for the Garena Hackathon: Digitalised Entertainment. Team name: 'Cooked'. Our product brings the community together to create an AI-generated emote for the event, with participants split into teams that each control a different part of the emote.",
+      "summary": "Created for the Garena Hackathon: Digitalised Entertainment. Team name: 'Cooked'. Our product brings the community together to create an AI-generated emote for the event, with participants split into teams that each control a different part of the emote. This project made it on the featured teams list",
       "technologies": [
         "React",
         "TypeScript",
@@ -63,7 +63,7 @@
           "url": "https://github.com/Scip316/Garena-AI-Build-2026"
         },
         {
-          "title": "Top 39 Feature Teams",
+          "title": "Featured Teams",
           "url": "https://aibuildchallenge.garena.sg/featured-teams.html#:~:text=Ruba%20Sulaiman-,Cooked,-A%20live%20esports"
         }
       ]
