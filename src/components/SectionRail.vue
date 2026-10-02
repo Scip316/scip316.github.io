@@ -154,7 +154,31 @@ withDefaults(
   width: 36px;
 }
 
-@media (max-width: 1600px) {
+/* Reserve a slimmer rail for laptops; tablet/mobile navigation uses the header. */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .section-rail {
+    left: 16px;
+    width: var(--section-rail-laptop-width);
+    min-width: 0;
+    padding: 18px 18px 18px 17px;
+  }
+  .section-rail p {
+    font-size: 0.75rem;
+  }
+  .section-rail a {
+    padding: 10px 0;
+    font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+    letter-spacing: 0.03em;
+  }
+  .section-rail a span {
+    width: 30px;
+  }
+  .section-rail a::before {
+    left: -18px;
+  }
+}
+
+@media (max-width: 1200px) {
   .section-rail {
     display: none;
   }

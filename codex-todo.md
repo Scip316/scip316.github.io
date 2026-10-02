@@ -85,3 +85,21 @@ Follow-up feedback:
 > Removed WhatsApp and Telegram contact links from About Me and the footer; LinkedIn/email remain.
 > Mouse-drag directions, gallery isolation, touch regression, role-border styling, contact removal, and sticky desktop return navigation passed production Chrome checks. Type check/build passed.
 > Resolved the reported blank space below mobile project/work details with compact individual card heights and manual mobile navigation. Desktop autoplay remains enabled.
+
+Performance follow-up:
+
+1) (Done) Smaller images and static document previews
+
+> Tested a photo/certificate sample before generating 17 sources. Responsive WebP images and all 10 PDF thumbnails load correctly; original files/links remain. Generation runs before dev/build.
+
+2) (Done) Load secondary pages on demand
+
+> Direct URLs, internal links, Back, timeline hash links, mobile cards, and load-failure/reload recovery passed. Main JavaScript reduced from 121.5 to 111.4 kB; initial mobile transfer measured ~325 kB versus the previous ~1.06 MB.
+
+3) (Reverted) Batch scroll calculations
+
+> A final-year timeline highlighting check failed. Reverted this optimisation and retained established scroll tracking; the edge case needs separate investigation.
+
+4) (Done) Give contact links more room
+
+> Narrow panels use stacked rows with more padding and a 16px label/arrow gap. Checked 320?1920px for overflow.

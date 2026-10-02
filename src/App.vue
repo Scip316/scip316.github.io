@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import type { AsyncComponentLoader } from 'vue'
+import PageLoadStatus from './components/PageLoadStatus.vue'
 import CardActionLink from './components/CardActionLink.vue'
 import SectionRail from './components/SectionRail.vue'
-import AboutView from './views/AboutView.vue'
-import CertificateListView from './views/CertificateListView.vue'
 import MediaCarousel from './components/MediaCarousel.vue'
-import ProjectListView from './views/ProjectListView.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import SiteHeader from './components/SiteHeader.vue'
-import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
-import WorkExperienceListView from './views/WorkExperienceListView.vue'
 import achievementData from './data/achievements.json'
 import certificateData from './data/certificates.json'
 import { profile_declaration } from './data/portfolio'
 import projectData from './data/projects.json'
+import { mediaSrc, mediaSrcset } from './utils/mediaAsset'
 import { primaryHeaderPhoto } from './utils/primaryHeaderPhoto'
 import { sortAlphabetically } from './utils/sortAlphabetically'
 import workExperienceData from './data/work-experience.json'
@@ -21,6 +19,24 @@ import { sortByNewestDate } from './utils/sortByNewestDate'
 import { useActiveSection } from './composables/useActiveSection'
 import { showcaseInterval, useShowcaseCarousel } from './composables/useShowcaseCarousel'
 import MobileGroupToggle from './components/MobileGroupToggle.vue'
+
+const loadPage = (loader: AsyncComponentLoader) =>
+  defineAsyncComponent({
+    loader,
+    loadingComponent: PageLoadStatus,
+    errorComponent: PageLoadStatus,
+    delay: 120,
+  })
+const AboutView = loadPage(() => import('./views/AboutView.vue'))
+const CertificateListView = loadPage(() => import('./views/CertificateListView.vue'))
+const ProjectListView = loadPage(() => import('./views/ProjectListView.vue'))
+const WorkExperienceDetailView = loadPage(() => import('./views/WorkExperienceDetailView.vue'))
+const WorkExperienceListView = loadPage(() => import('./views/WorkExperienceListView.vue'))
+const scrollToCurrentHash = () => {
+  if (window.location.hash) {
+    document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView()
+  }
+}
 
 const normalizePathname = (pathname: string) =>
   pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
@@ -426,16 +442,17 @@ onUnmounted(() => {
                 :inert="index !== activeProjectIndex"
                 :aria-hidden="index !== activeProjectIndex"
               >
-                <div
-                  class="home-project-visual"
-                  :style="{
-                    backgroundColor: '#202020',
-                    backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                  }"
-                ></div>
+                <div class="home-project-visual" style="background: #202020">
+                  <img
+                    class="project-preview-image"
+                    :src="mediaSrc(primaryHeaderPhoto(project.headerPhotos))"
+                    :srcset="mediaSrcset(primaryHeaderPhoto(project.headerPhotos))"
+                    sizes="(max-width: 760px) calc(100vw - 60px), 600px"
+                    :alt="`${project.title} preview`"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 <div class="home-feature-body">
                   <p class="card-label">{{ project.category }} · {{ project.year }}</p>
                   <h3>{{ project.title }}</h3>
@@ -652,10 +669,16 @@ onUnmounted(() => {
       </section>
     </main>
   </div>
-  <WorkExperienceListView v-else-if="currentPath === '/experience'" />
-  <ProjectListView v-else-if="currentPath === '/projects'" />
-  <CertificateListView v-else-if="currentPath === '/certificates'" />
-  <AboutView v-else-if="currentPath === '/about'" />
-  <WorkExperienceDetailView v-else :slug="detailSlug" />
+  <WorkExperienceListView
+    @vue:mounted="scrollToCurrentHash"
+    v-else-if="currentPath === '/experience'"
+  />
+  <ProjectListView @vue:mounted="scrollToCurrentHash" v-else-if="currentPath === '/projects'" />
+  <CertificateListView
+    @vue:mounted="scrollToCurrentHash"
+    v-else-if="currentPath === '/certificates'"
+  />
+  <AboutView @vue:mounted="scrollToCurrentHash" v-else-if="currentPath === '/about'" />
+  <WorkExperienceDetailView @vue:mounted="scrollToCurrentHash" v-else :slug="detailSlug" />
   <SiteFooter />
 </template>

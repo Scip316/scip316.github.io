@@ -2,6 +2,7 @@
 :root {
   --font-sans: 'DM Sans', Arial, sans-serif;
   --font-mono: 'DM Mono', monospace;
+  --section-rail-laptop-width: clamp(180px, 14vw, 224px);
   color-scheme: dark;
   --background: #141414;
   --surface: #202020;

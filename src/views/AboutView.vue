@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import CardActionLink from '../components/CardActionLink.vue'
+import { mediaSrc, mediaSrcset } from '../utils/mediaAsset'
 import SocialIcon from '../components/SocialIcon.vue'
 import SectionRail from '../components/SectionRail.vue'
 import SiteHeader from '../components/SiteHeader.vue'
@@ -145,7 +146,13 @@ onUnmounted(() => {
 
     <section id="profile" class="about-profile-grid" aria-label="Profile overview">
       <figure class="about-photo-card">
-        <img :src="aboutContent.profilePhoto" :alt="`${profile_declaration.name} at IRAS`" />
+        <img
+          :src="mediaSrc(aboutContent.profilePhoto)"
+          :srcset="mediaSrcset(aboutContent.profilePhoto)"
+          sizes="(max-width: 760px) calc(100vw - 80px), 500px"
+          decoding="async"
+          :alt="`${profile_declaration.name} at IRAS`"
+        />
       </figure>
 
       <section class="about-facts-card" aria-label="Profile details">
@@ -296,6 +303,18 @@ onUnmounted(() => {
   padding: clamp(24px, 3vw, 42px);
 }
 
+.about-contact-card {
+  height: auto;
+  min-height: 0;
+  align-self: start;
+  padding: 24px;
+  gap: 16px;
+}
+
+.about-contact-card > .page-kicker {
+  margin: 0;
+}
+
 .about-facts-card dl {
   display: grid;
   gap: 0;
@@ -330,14 +349,16 @@ onUnmounted(() => {
 
 .about-social-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
-  gap: 9px;
-  margin: auto 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
 }
 
 .about-social-links :deep(.card-action-link) {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   color: var(--text);
 }
 
@@ -346,7 +367,7 @@ onUnmounted(() => {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 16px;
 }
 
 .about-social-label {
@@ -578,7 +599,6 @@ onUnmounted(() => {
 
   .about-contact-card {
     grid-column: span 2;
-    min-height: 270px;
   }
 }
 
@@ -663,7 +683,7 @@ onUnmounted(() => {
   }
   .about-social-links :deep(.card-action-link) {
     min-height: 44px;
-    padding: 10px;
+    padding: 14px;
     font-size: 0.78rem;
   }
   .about-timeline-nav {
@@ -688,6 +708,17 @@ onUnmounted(() => {
   }
   .about-timeline-year {
     scroll-margin-top: 194px;
+  }
+}
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .about-page {
+    padding-left: calc(var(--section-rail-laptop-width) + 48px - 6vw);
+  }
+  .about-profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .about-contact-card {
+    grid-column: span 2;
   }
 }
 </style>

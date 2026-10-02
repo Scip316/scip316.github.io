@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { getPdfPreview } from '../utils/pdfPreview'
+import { computed, ref } from 'vue'
+import { mediaSrc, mediaSrcset } from '../utils/mediaAsset'
 import { useSwipe } from '../composables/useSwipe'
 
 const props = withDefaults(
@@ -16,7 +16,6 @@ const activeIndex = ref(0)
 const trackIndex = ref(1)
 const isSnappingTrack = ref(false)
 const isTransitioning = ref(false)
-const pdfPreviews = ref<Record<string, string>>({})
 const unavailablePdfPreviews = ref<Set<string>>(new Set())
 const isPdf = (path: string) => path.toLowerCase().endsWith('.pdf')
 const renderedMedia = computed(() => {
@@ -25,31 +24,6 @@ const renderedMedia = computed(() => {
   return [props.media[props.media.length - 1], ...props.media, props.media[0]]
 })
 const displayTrackIndex = computed(() => (props.media.length > 1 ? trackIndex.value : 0))
-
-const carouselElement = ref<HTMLElement | null>(null)
-const nearViewport = ref(false)
-const requestedPreviews = new Set<string>()
-let previewObserver: IntersectionObserver | undefined
-let disposed = false
-
-const renderPdfPreview = async (path: string) => {
-  if (requestedPreviews.has(path)) return
-  requestedPreviews.add(path)
-  try {
-    const preview = await getPdfPreview(path)
-    if (!disposed) pdfPreviews.value = { ...pdfPreviews.value, [path]: preview }
-  } catch (error) {
-    console.error(`Unable to render PDF preview: ${path}`, error)
-    if (!disposed) unavailablePdfPreviews.value = new Set([...unavailablePdfPreviews.value, path])
-  }
-}
-
-watch(
-  [nearViewport, () => props.media[activeIndex.value]],
-  ([nearby, path]) => {
-    if (nearby && path && isPdf(path)) void renderPdfPreview(path)
-  },
-)
 
 const changeMedia = (direction: 'next' | 'previous') => {
   if (props.media.length < 2 || isTransitioning.value || isSnappingTrack.value) return
@@ -91,25 +65,10 @@ const handleTrackTransitionEnd = (event: TransitionEvent) => {
 
 const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, dragging, dragOffset } =
   useSwipe(changeMedia, (event) => event.type === 'touchstart' || props.media.length > 1)
-
-onMounted(() => {
-  previewObserver = new IntersectionObserver(
-    ([entry]) => {
-      nearViewport.value = Boolean(entry?.isIntersecting)
-    },
-    { rootMargin: '200px 0px' },
-  )
-  if (carouselElement.value) previewObserver.observe(carouselElement.value)
-})
-onUnmounted(() => {
-  disposed = true
-  previewObserver?.disconnect()
-})
 </script>
 
 <template>
   <div
-    ref="carouselElement"
     class="media-carousel"
     :data-media-count="media.length"
     v-on="mouseEvents"
@@ -135,13 +94,15 @@ onUnmounted(() => {
       >
         <img
           v-if="!isPdf(item)"
-          :src="item"
+          :src="mediaSrc(item)"
+          :srcset="mediaSrcset(item)"
+          sizes="(max-width: 760px) calc(100vw - 60px), 600px"
           :alt="`${title} image ${index + 1}`"
           loading="lazy"
           decoding="async"
         />
         <a
-          v-else-if="pdfPreviews[item]"
+          v-else-if="!unavailablePdfPreviews.has(item)"
           class="pdf-preview"
           :href="item"
           target="_blank"
@@ -150,7 +111,11 @@ onUnmounted(() => {
         >
           <img
             class="pdf-preview-image"
-            :src="pdfPreviews[item]"
+            :src="mediaSrc(item)"
+            :srcset="mediaSrcset(item)"
+            sizes="(max-width: 760px) calc(100vw - 60px), 600px"
+            loading="lazy"
+            @error="unavailablePdfPreviews.add(item)"
             :alt="`${title} PDF preview`"
             decoding="async"
           />

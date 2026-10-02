@@ -22,6 +22,9 @@ The production files are generated in `dist/`.
 - Update portfolio content in `src/data/`.
 - Store public images, PDFs, and other media in `public/`.
 - Reference public media with root-relative paths, for example: `/projects/Lunch_Box.jpg`.
+- `npm run dev` and `npm run build` automatically generate responsive WebP images and first-page PDF thumbnails. Originals and PDF download links are preserved.
+- After changing media while the development server is already running, run `npm run media` (or restart it). Content hashes refresh generated URLs when source files change.
+- Generated files live in `public/generated-media/`, with their mapping in `src/data/media-assets.json`; do not edit these manually. PDF.js and canvas are used during generation, not in the visitor's browser.
 
 ## Docker
 
