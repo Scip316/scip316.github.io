@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import MobileGroupToggle from '../components/MobileGroupToggle.vue'
 import ArchivePageHeader from '../components/ArchivePageHeader.vue'
 import CredentialColumn from '../components/CredentialColumn.vue'
 import SiteHeader from '../components/SiteHeader.vue'
@@ -6,6 +8,7 @@ import achievementData from '../data/achievements.json'
 import certificateData from '../data/certificates.json'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
+const activeGroup = ref('credentials')
 const achievements = sortByNewestDate(achievementData.achievements)
 const certificates = sortByNewestDate(certificateData.certifications)
 </script>
@@ -18,9 +21,11 @@ const certificates = sortByNewestDate(certificateData.certifications)
       kicker="Credentials archive"
       >Credentials<br />& Activities.</ArchivePageHeader
     >
+    <MobileGroupToggle v-model="activeGroup" />
     <section class="credential-columns" aria-label="Credentials and achievements">
       <CredentialColumn
         id="certifications-title"
+        :class="{ 'mobile-group-hidden': activeGroup !== 'credentials' }"
         kicker="Certificates & training"
         title="Credentials."
         introduction="Industry credentials and training that enhance my skills and workflow."
@@ -28,6 +33,7 @@ const certificates = sortByNewestDate(certificateData.certifications)
       />
       <CredentialColumn
         id="achievements-title"
+        :class="{ 'mobile-group-hidden': activeGroup !== 'activities' }"
         kicker="Honours & activities"
         title="Activities."
         introduction="Academic honours and competition involvement that i partake in."

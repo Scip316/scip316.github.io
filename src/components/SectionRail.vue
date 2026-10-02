@@ -124,10 +124,12 @@ withDefaults(
   padding: 20px 22px 20px 23px;
 }
 
-/* Keep a reusable rail beside the shared centered content column without moving it. */
+/* Keep at least 32px between the rail and the centered content as the viewport narrows. */
 .section-rail--content-aligned {
   left: max(16px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 328px));
   right: auto;
+  width: min(280px, calc(50vw - (clamp(1000px, 58vw, 1360px) / 2) - 48px));
+  min-width: 0;
 }
 
 .section-rail--compact p {
@@ -152,7 +154,31 @@ withDefaults(
   width: 36px;
 }
 
-@media (max-width: 1600px) {
+/* Reserve a slimmer rail for laptops; tablet/mobile navigation uses the header. */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .section-rail {
+    left: 16px;
+    width: var(--section-rail-laptop-width);
+    min-width: 0;
+    padding: 18px 18px 18px 17px;
+  }
+  .section-rail p {
+    font-size: 0.75rem;
+  }
+  .section-rail a {
+    padding: 10px 0;
+    font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+    letter-spacing: 0.03em;
+  }
+  .section-rail a span {
+    width: 30px;
+  }
+  .section-rail a::before {
+    left: -18px;
+  }
+}
+
+@media (max-width: 1200px) {
   .section-rail {
     display: none;
   }

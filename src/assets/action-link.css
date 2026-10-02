@@ -2,8 +2,8 @@
   display: inline-flex;
   align-items: center;
   padding: 8px 10px;
-  border: 1px solid var(--line);
-  color: var(--action-link-color, #1b1b1b);
+  border: 1px solid var(--action-link-border, var(--line));
+  color: var(--action-link-color, var(--text));
   font: var(--label-size) var(--font-mono);
   letter-spacing: 0.04em;
   text-decoration: none;

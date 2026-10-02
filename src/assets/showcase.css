@@ -1,4 +1,5 @@
 .showcase-section {
+  scroll-margin-top: 90px;
   padding: 22px clamp(20px, 5vw, 72px) 78px;
   background: var(--background);
   color: var(--text);
@@ -19,6 +20,19 @@
 .home-section-action {
   --action-link-color: var(--text);
   margin-top: 28px;
+}
+
+:root[data-theme='light'] .home-section-action {
+  background: var(--surface);
+}
+
+:root[data-theme='light'] .home-section-action:is(:hover, :focus-visible) {
+  background: #f5eee8;
+  border-color: var(--accent);
+}
+
+:root[data-theme='light'] .home-section-action [aria-hidden='true'] {
+  color: var(--accent);
 }
 
 .showcase-section-heading {
@@ -83,14 +97,16 @@
 .showcase-frame {
   overflow: hidden;
   padding: 16px;
-  border-top: 2px solid #fff;
-  background: #272727;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--showcase-border);
+  background: var(--showcase-frame);
   box-shadow: inset 0 0 0 1px #00000025;
 }
 
 .showcase-coverflow {
-  --showcase-slide-duration: 4.6s;
   position: relative;
+  touch-action: pan-y;
+  isolation: isolate;
 }
 
 .showcase-coverflow-stage {
@@ -113,6 +129,7 @@
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.14);
   transform-origin: center;
+  overflow-wrap: anywhere;
   transition:
     left 1.6s cubic-bezier(0.22, 0.61, 0.36, 1),
     transform 1.6s cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -171,7 +188,7 @@
   animation: showcase-progress var(--showcase-slide-duration) linear forwards;
 }
 
-.showcase-coverflow:hover .showcase-progress {
+.showcase-coverflow.is-paused .showcase-progress {
   animation-play-state: paused;
 }
 
@@ -221,8 +238,8 @@
 }
 
 .credential-showcase .home-certificate-body {
-  align-self: start;
-  padding: clamp(24px, 3vw, 40px);
+  align-self: stretch;
+  padding: clamp(20px, 2.5vw, 32px);
 }
 
 .home-project-card,
@@ -231,8 +248,10 @@
   grid-template-columns: 1.15fr 1fr;
   min-height: 0;
   aspect-ratio: 21 / 9;
-  background: #dfdfda;
-  color: #1b1b1b;
+  background: var(--feature-surface);
+  color: var(--feature-text);
+  --action-link-color: var(--feature-text);
+  --action-link-border: var(--feature-line);
 }
 
 /* Project cards can have longer technology lists than work cards. */
@@ -243,7 +262,7 @@
 }
 
 .home-certificate-card {
-  background: #dfdfda;
+  background: var(--feature-surface);
 }
 
 .home-project-visual {
@@ -293,7 +312,7 @@
 .home-certificate-body > p:not(.card-label) {
   max-width: 400px;
   margin: 20px 0 0;
-  color: #4e4d49;
+  color: var(--feature-muted);
   font-size: 0.92rem;
   line-height: 1.6;
 }
@@ -309,8 +328,8 @@
 
 .home-feature-body li {
   padding: 4px 7px;
-  border: 1px solid #d2d0ca;
-  color: #605f5b;
+  border: 1px solid var(--feature-line);
+  color: var(--feature-muted);
   font:
     0.6rem 'DM Mono',
     monospace;
@@ -453,60 +472,175 @@
   }
 }
 
-/* On phones, App.vue renders only the selected card.  This keeps the card in
- * normal document flow instead of fitting a desktop coverflow into one column. */
-@media (max-width: 560px) {
+/* All cards share a grid cell on mobile. Hidden cards reserve the tallest
+ * content height, so rotation cannot move the following sections. */
+@media (max-width: 760px) {
   .showcase-coverflow-stage,
-  .credential-showcase .showcase-coverflow-stage {
+  .credential-showcase .showcase-coverflow-stage,
+  .home-feature-row .showcase-coverflow-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     min-height: 0;
     aspect-ratio: auto;
   }
 
-  /* Override the more specific desktop project-card canvas. */
-  .home-feature-row .showcase-coverflow-stage,
-  .home-feature-row .showcase-coverflow-card,
-  .home-feature-row .home-project-card {
-    aspect-ratio: auto;
-  }
-
-  .showcase-coverflow-card,
-  .showcase-coverflow-card.is-active-showcase {
-    position: static;
+  .showcase-coverflow .showcase-coverflow-card {
+    grid-area: 1 / 1;
+    position: relative;
+    top: auto;
+    left: auto;
     width: 100%;
     min-height: 0;
     aspect-ratio: auto;
-    opacity: 1;
+    visibility: hidden;
+    opacity: 0;
     transform: none;
-    transition: none;
+    filter: none;
     box-shadow: none;
+    transition: opacity 0.3s ease;
   }
 
-  .work-card,
-  .home-project-card {
-    display: block;
+  .showcase-coverflow .showcase-coverflow-card.is-active-showcase {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .showcase-coverflow .work-card,
+  .showcase-coverflow .home-project-card {
+    display: flex;
+    flex-direction: column;
   }
 
   .work-card-image,
   .home-project-visual {
+    flex: 0 0 auto;
     height: clamp(220px, 68vw, 300px);
     min-height: 0;
   }
 
   .work-card-body,
   .home-feature-body {
+    flex: 1;
     min-height: 0;
   }
 
-  .home-certificate-card,
-  .home-certificate-card.is-active-showcase {
+  .credential-showcase .home-certificate-card {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: clamp(220px, 68vw, 300px) auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: clamp(220px, 68vw, 300px) 1fr;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .home-project-visual::after {
     animation: none;
+  }
+  .showcase-coverflow-card {
+    transition: none;
+  }
+}
+
+/* Equal document and text areas for both credential boards. */
+@media (min-width: 761px) {
+  .credential-showcase .showcase-coverflow-stage {
+    min-height: clamp(520px, 36vw, 560px);
+    aspect-ratio: auto;
+  }
+  .credential-showcase .home-certificate-card {
+    height: 100%;
+    aspect-ratio: auto;
+    grid-template-rows: 45% 55%;
+  }
+}
+.credential-showcase .home-certificate-body h3 {
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  overflow-wrap: anywhere;
+}
+.credential-showcase .home-certificate-body > p:not(.card-label) {
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+@media (max-width: 760px) {
+  .showcase-coverflow .work-card .work-card-image {
+    flex: 0 0 clamp(220px, 68vw, 300px);
+    height: clamp(220px, 68vw, 300px);
+    max-height: clamp(220px, 68vw, 300px);
+  }
+}
+
+/* Content determines work/project heights on desktop too. Keep the existing
+ * coverflow positions, while allowing longer summaries and skill lists to fit. */
+@media (min-width: 761px) {
+  .work-card-row .showcase-coverflow-stage,
+  .home-feature-row .showcase-coverflow-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: clamp(440px, 30vw, 580px);
+    aspect-ratio: auto;
+  }
+  .work-card-row .showcase-coverflow-card,
+  .home-feature-row .showcase-coverflow-card {
+    position: relative;
+    grid-area: 1 / 1;
+    top: 0;
+    left: 0;
+    aspect-ratio: auto;
+    transform: scale(0.14);
+  }
+  .work-card-row .showcase-coverflow-card.is-active-showcase,
+  .home-feature-row .showcase-coverflow-card.is-active-showcase {
+    transform: scale(1);
+  }
+  .work-card-row .showcase-coverflow-card.is-previous-showcase,
+  .home-feature-row .showcase-coverflow-card.is-previous-showcase {
+    left: -39%;
+    transform: scale(0.22);
+  }
+  .work-card-row .showcase-coverflow-card.is-next-showcase,
+  .home-feature-row .showcase-coverflow-card.is-next-showcase {
+    left: 39%;
+    transform: scale(0.22);
+  }
+}
+
+.showcase-coverflow.is-dragging {
+  user-select: none;
+  cursor: grabbing;
+}
+.showcase-coverflow.is-dragging .showcase-coverflow-card.is-active-showcase {
+  translate: var(--swipe-offset, 0px) 0;
+  cursor: grabbing;
+}
+
+/* Manual navigation lets mobile work/project cards fit their own content. */
+@media (max-width: 760px) {
+  .work-card-row .showcase-coverflow-card,
+  .home-feature-row .showcase-coverflow-card {
+    display: none;
+  }
+
+  .work-card-row .showcase-coverflow-card.is-active-showcase,
+  .home-feature-row .showcase-coverflow-card.is-active-showcase {
+    display: flex;
+    align-self: start;
+  }
+}
+
+/* An image reserves the existing visual area without changing card height. */
+.project-preview-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Leave the rail its own column at laptop widths. */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .showcase-section {
+    padding-left: calc(var(--section-rail-laptop-width) + 48px);
+  }
+  .showcase-section-inner {
+    margin-left: 0;
   }
 }

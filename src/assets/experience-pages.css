@@ -7,10 +7,15 @@
   --experience-small-text: 0.9rem;
 }
 .experience-page-header {
+  position: sticky;
+  top: 74px;
+  z-index: 4;
+  height: 58px;
+  padding: 8px 0;
+  background: var(--background);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 30px;
   border-bottom: 1px solid var(--line);
 }
 .experience-page-header p {
@@ -160,10 +165,14 @@
 }
 @media (max-width: 760px) {
   .experience-page {
+    --mobile-selector-top: 132px;
     width: 100%;
     padding-top: 24px;
     padding-right: 24px;
     padding-left: 24px;
+  }
+  .experience-page-header .card-action-link {
+    font-size: 0.78rem;
   }
   .experience-page-header p {
     display: none;

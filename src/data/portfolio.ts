@@ -1,7 +1,7 @@
 export const profile_declaration = {
   name: 'Darrel Lim',
   role: 'Current role: NSF (National Service Full-Time)',
-  lastUpdated: 'Aug 2026',
+  lastUpdated: 'Oct 2026',
   location: 'Singapore',
   email: 'darrelwork316@hotmail.com',
   intro:
@@ -9,5 +9,5 @@ export const profile_declaration = {
 }
 export const socials = [
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/darrel-dominic-lim' },
-  { name: 'Email', url: 'mailto:darrelwork316@hotmail.com' },
+  { name: 'Email', url: 'mailto:darreldominiclim316@gmail.com' },
 ]

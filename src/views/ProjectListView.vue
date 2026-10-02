@@ -3,6 +3,7 @@ import projectData from '../data/projects.json'
 import ArchivePageHeader from '../components/ArchivePageHeader.vue'
 import CardActionLink from '../components/CardActionLink.vue'
 import SiteHeader from '../components/SiteHeader.vue'
+import { mediaSrc, mediaSrcset } from '../utils/mediaAsset'
 import { primaryHeaderPhoto } from '../utils/primaryHeaderPhoto'
 import { sortByNewestDate } from '../utils/sortByNewestDate'
 
@@ -24,16 +25,17 @@ const projects = sortByNewestDate(projectData.projects)
         :key="project.id"
         class="experience-grid-card project-list-card"
       >
-        <div
-          class="experience-grid-image project-list-image"
-          :style="{
-            backgroundColor: '#202020',
-            backgroundImage: `url(${primaryHeaderPhoto(project.headerPhotos)})`,
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'contain',
-          }"
-        ></div>
+        <div class="experience-grid-image project-list-image" style="background: #202020">
+          <img
+            class="project-preview-image"
+            :src="mediaSrc(primaryHeaderPhoto(project.headerPhotos))"
+            :srcset="mediaSrcset(primaryHeaderPhoto(project.headerPhotos))"
+            sizes="(max-width: 760px) calc(100vw - 60px), 600px"
+            :alt="`${project.title} preview`"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
         <div class="experience-grid-content">
           <p class="page-kicker">{{ project.category }} · {{ project.year }}</p>
           <h2>{{ project.title }}</h2>
@@ -58,9 +60,6 @@ const projects = sortByNewestDate(projectData.projects)
 </template>
 
 <style scoped>
-.project-page-header {
-  position: relative;
-}
 .project-page-header::after {
   position: absolute;
   bottom: -3px;

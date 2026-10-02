@@ -1,0 +1,104 @@
+{
+  "/achievements/2022_2_DRH.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/2022-2-drh-b61b88b3d80f07f1-640.webp",
+    "large": "/generated-media/2022-2-drh-b61b88b3d80f07f1-1000.webp"
+  },
+  "/achievements/2023_1_DRH.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/2023-1-drh-8469de2bb2e0a063-640.webp",
+    "large": "/generated-media/2023-1-drh-8469de2bb2e0a063-1000.webp"
+  },
+  "/achievements/2023_2_DRH.pdf": {
+    "smallWidth": 452,
+    "largeWidth": 707,
+    "small": "/generated-media/2023-2-drh-95a9acf113e1792e-640.webp",
+    "large": "/generated-media/2023-2-drh-95a9acf113e1792e-1000.webp"
+  },
+  "/achievements/2024_1_DRH.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/2024-1-drh-fad4b3e1eeb45054-640.webp",
+    "large": "/generated-media/2024-1-drh-fad4b3e1eeb45054-1000.webp"
+  },
+  "/achievements/Hackathon 2022 Safe in the Woods.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/hackathon-2022-safe-in-the-woods-af61a9118e22f13e-640.webp",
+    "large": "/generated-media/hackathon-2022-safe-in-the-woods-af61a9118e22f13e-1000.webp"
+  },
+  "/achievements/lag-and-crash-3.0-certificate.pdf": {
+    "smallWidth": 640,
+    "largeWidth": 1000,
+    "small": "/generated-media/lag-and-crash-3-0-certificate-c433d33c0812288f-640.webp",
+    "large": "/generated-media/lag-and-crash-3-0-certificate-c433d33c0812288f-1000.webp"
+  },
+  "/achievements/lag-and-crash-3.0-photo.png": {
+    "smallWidth": 531,
+    "largeWidth": 531,
+    "small": "/generated-media/lag-and-crash-3-0-photo-4d6bc739682f8730-640.webp",
+    "large": "/generated-media/lag-and-crash-3-0-photo-4d6bc739682f8730-1280.webp"
+  },
+  "/certificates/Combine Leadership Training.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/combine-leadership-training-b33b6be44ddea5d0-640.webp",
+    "large": "/generated-media/combine-leadership-training-b33b6be44ddea5d0-1000.webp"
+  },
+  "/certificates/aws-certified-cloud-practitioner-certificate.pdf": {
+    "smallWidth": 640,
+    "largeWidth": 1000,
+    "small": "/generated-media/aws-certified-cloud-practitioner-certificate-b2c2f89224be2eae-640.webp",
+    "large": "/generated-media/aws-certified-cloud-practitioner-certificate-b2c2f89224be2eae-1000.webp"
+  },
+  "/certificates/google-project-management-certificate.pdf": {
+    "smallWidth": 640,
+    "largeWidth": 1000,
+    "small": "/generated-media/google-project-management-certificate-a9ec6c0372c8d8ab-640.webp",
+    "large": "/generated-media/google-project-management-certificate-a9ec6c0372c8d8ab-1000.webp"
+  },
+  "/certificates/psychological-first-aid-course.pdf": {
+    "smallWidth": 453,
+    "largeWidth": 708,
+    "small": "/generated-media/psychological-first-aid-course-02ca6184f01fcb6b-640.webp",
+    "large": "/generated-media/psychological-first-aid-course-02ca6184f01fcb6b-1000.webp"
+  },
+  "/projects/Garena_AI.png": {
+    "smallWidth": 640,
+    "largeWidth": 767,
+    "small": "/generated-media/garena-ai-b2e449c2dd913f07-640.webp",
+    "large": "/generated-media/garena-ai-b2e449c2dd913f07-1280.webp"
+  },
+  "/projects/Lunch_Box.jpg": {
+    "smallWidth": 229,
+    "largeWidth": 229,
+    "small": "/generated-media/lunch-box-98070fbdf0d3af63-640.webp",
+    "large": "/generated-media/lunch-box-98070fbdf0d3af63-1280.webp"
+  },
+  "/projects/tele_retain.png": {
+    "smallWidth": 604,
+    "largeWidth": 604,
+    "small": "/generated-media/tele-retain-c7022ad4b95ef799-640.webp",
+    "large": "/generated-media/tele-retain-c7022ad4b95ef799-1280.webp"
+  },
+  "/work_experiences/DBS.png": {
+    "smallWidth": 597,
+    "largeWidth": 597,
+    "small": "/generated-media/dbs-c57a20e858093541-640.webp",
+    "large": "/generated-media/dbs-c57a20e858093541-1280.webp"
+  },
+  "/work_experiences/IRAS.jpg": {
+    "smallWidth": 634,
+    "largeWidth": 688,
+    "small": "/generated-media/iras-89254a4d002cd3bd-640.webp",
+    "large": "/generated-media/iras-89254a4d002cd3bd-1280.webp"
+  },
+  "/work_experiences/NS.jpg": {
+    "smallWidth": 624,
+    "largeWidth": 877,
+    "small": "/generated-media/ns-70cfb624f8347b42-640.webp",
+    "large": "/generated-media/ns-70cfb624f8347b42-1280.webp"
+  }
+}

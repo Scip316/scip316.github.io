@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import CardActionLink from '../components/CardActionLink.vue'
+import { mediaSrc, mediaSrcset } from '../utils/mediaAsset'
+import SocialIcon from '../components/SocialIcon.vue'
 import SectionRail from '../components/SectionRail.vue'
 import SiteHeader from '../components/SiteHeader.vue'
 import aboutContent from '../data/about.json'
@@ -14,7 +16,6 @@ const aboutRailItems = [
   { id: 'about-history', label: 'About me' },
   { id: 'timeline', label: 'Timeline' },
 ]
-const activeTimelineYear = ref(aboutContent.timeline[0]?.year ?? '')
 const timeline = computed(() =>
   sortByNewestDate(
     aboutContent.timeline.map((section) => {
@@ -26,9 +27,9 @@ const timeline = computed(() =>
 const timelineNodeOffsets = ref<number[]>(
   timeline.value.map((_, index) => (index / Math.max(timeline.value.length - 1, 1)) * 100),
 )
-let timelineObserver: IntersectionObserver | undefined
 
 const updateTimelineNodeOffsets = () => {
+  isMobileTimeline.value = window.matchMedia('(max-width: 760px)').matches
   const rail = document.querySelector<HTMLElement>('.about-timeline-nav')
   if (!rail || rail.getBoundingClientRect().height === 0) return
 
@@ -47,6 +48,46 @@ const updateTimelineNodeOffsets = () => {
 
 const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds)
 
+const timelineNav = ref<HTMLElement | null>(null)
+const isMobileTimeline = ref(window.matchMedia('(max-width: 760px)').matches)
+const desktopActiveTimelineYear = ref(timeline.value[0]?.year ?? '')
+let timelineObserver: IntersectionObserver | undefined
+
+const timelineSectionIds = timeline.value.map((section) => `timeline-${section.year}`)
+const { activeSection: activeTimelineSection } = useActiveSection(timelineSectionIds, {
+  threshold: () => (window.matchMedia('(max-width: 760px)').matches ? 195 : 105),
+})
+const activeTimelineYear = computed(() =>
+  isMobileTimeline.value
+    ? (activeTimelineSection.value?.replace('timeline-', '') ?? timeline.value[0]?.year)
+    : desktopActiveTimelineYear.value,
+)
+
+// Keep the active year in view without changing the page's vertical scroll.
+watch(
+  [activeTimelineYear, isMobileTimeline],
+  () => {
+    if (!isMobileTimeline.value) return
+    const nav = timelineNav.value
+    const link = nav?.querySelector<HTMLElement>('[aria-current="location"]')
+    if (!nav || !link) return
+    const navBounds = nav.getBoundingClientRect()
+    const linkBounds = link.getBoundingClientRect()
+    if (linkBounds.left >= navBounds.left && linkBounds.right <= navBounds.right) return
+    nav.scrollTo({
+      left:
+        nav.scrollLeft +
+        linkBounds.left -
+        navBounds.left -
+        (nav.clientWidth - linkBounds.width) / 2,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'instant'
+        : 'smooth',
+    })
+  },
+  { flush: 'post' },
+)
+
 onMounted(() => {
   const visibleHeadings = new Set<HTMLElement>()
 
@@ -55,7 +96,7 @@ onMounted(() => {
       (first, second) => second.getBoundingClientRect().top - first.getBoundingClientRect().top,
     )[0]
     const year = upcomingHeading?.dataset.timelineYear
-    if (year) activeTimelineYear.value = year
+    if (year) desktopActiveTimelineYear.value = year
   }
 
   timelineObserver = new IntersectionObserver(
@@ -81,7 +122,6 @@ onMounted(() => {
   window.requestAnimationFrame(updateTimelineNodeOffsets)
   window.addEventListener('resize', updateTimelineNodeOffsets)
 })
-
 onUnmounted(() => {
   timelineObserver?.disconnect()
   window.removeEventListener('resize', updateTimelineNodeOffsets)
@@ -106,7 +146,13 @@ onUnmounted(() => {
 
     <section id="profile" class="about-profile-grid" aria-label="Profile overview">
       <figure class="about-photo-card">
-        <img :src="aboutContent.profilePhoto" :alt="`${profile_declaration.name} at IRAS`" />
+        <img
+          :src="mediaSrc(aboutContent.profilePhoto)"
+          :srcset="mediaSrcset(aboutContent.profilePhoto)"
+          sizes="(max-width: 760px) calc(100vw - 80px), 500px"
+          decoding="async"
+          :alt="`${profile_declaration.name} at IRAS`"
+        />
       </figure>
 
       <section class="about-facts-card" aria-label="Profile details">
@@ -127,8 +173,12 @@ onUnmounted(() => {
             :key="social.name"
             :href="social.url"
             :external="social.name !== 'Email'"
-            >{{ social.name }}</CardActionLink
           >
+            <span class="about-social-label">
+              <SocialIcon :name="social.name" />
+              {{ social.name }}
+            </span>
+          </CardActionLink>
         </div>
       </section>
     </section>
@@ -150,12 +200,17 @@ onUnmounted(() => {
       <section id="timeline" class="about-journey" aria-label="Journey timeline">
         <p class="page-kicker">Journey / timeline</p>
         <div class="about-timeline">
-          <nav class="about-timeline-nav" aria-label="Journey years">
+          <nav
+            ref="timelineNav"
+            class="about-timeline-nav mobile-sticky-selector"
+            aria-label="Journey years"
+          >
             <a
               v-for="(timelineSection, index) in timeline"
               :key="timelineSection.year"
               class="about-timeline-rail-year"
               :href="`#timeline-${timelineSection.year}`"
+              :aria-current="activeTimelineYear === timelineSection.year ? 'location' : undefined"
               :class="{
                 'is-active': activeTimelineYear === timelineSection.year,
               }"
@@ -167,12 +222,12 @@ onUnmounted(() => {
             <section
               v-for="timelineSection in timeline"
               :id="`timeline-${timelineSection.year}`"
-            :key="timelineSection.year"
-            class="about-timeline-year"
-          >
-            <header class="about-timeline-year-heading">
-              <h1 :data-timeline-year="timelineSection.year">{{ timelineSection.year }}</h1>
-            </header>
+              :key="timelineSection.year"
+              class="about-timeline-year"
+            >
+              <header class="about-timeline-year-heading">
+                <h1 :data-timeline-year="timelineSection.year">{{ timelineSection.year }}</h1>
+              </header>
               <article
                 v-for="entry in timelineSection.entries"
                 :key="entry.title"
@@ -214,7 +269,7 @@ onUnmounted(() => {
 #about-history,
 #timeline,
 .about-timeline-year {
-  scroll-margin-top: 105px;
+  scroll-margin-top: 148px;
 }
 
 .about-photo-card,
@@ -246,6 +301,18 @@ onUnmounted(() => {
   flex-direction: column;
   height: clamp(400px, 28vw, 480px);
   padding: clamp(24px, 3vw, 42px);
+}
+
+.about-contact-card {
+  height: auto;
+  min-height: 0;
+  align-self: start;
+  padding: 24px;
+  gap: 16px;
+}
+
+.about-contact-card > .page-kicker {
+  margin: 0;
 }
 
 .about-facts-card dl {
@@ -282,14 +349,16 @@ onUnmounted(() => {
 
 .about-social-links {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  margin: auto 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
 }
 
 .about-social-links :deep(.card-action-link) {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   color: var(--text);
 }
 
@@ -298,6 +367,13 @@ onUnmounted(() => {
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+}
+
+.about-social-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .about-social-links :deep(.card-action-link:hover) {
@@ -478,7 +554,9 @@ onUnmounted(() => {
 
 .about-timeline-year h1 {
   color: var(--accent);
-  font: 500 clamp(2rem, 3vw, 3.2rem) 'DM Mono', monospace;
+  font:
+    500 clamp(2rem, 3vw, 3.2rem) 'DM Mono',
+    monospace;
   letter-spacing: -0.08em;
   line-height: 1;
 }
@@ -521,7 +599,6 @@ onUnmounted(() => {
 
   .about-contact-card {
     grid-column: span 2;
-    min-height: 270px;
   }
 }
 
@@ -554,7 +631,9 @@ onUnmounted(() => {
     border: 1px solid var(--line);
     background: var(--surface);
     color: var(--text);
-    font: 0.75rem 'DM Mono', monospace;
+    font:
+      0.75rem 'DM Mono',
+      monospace;
     letter-spacing: 0.04em;
     text-align: center;
     transform: none;
@@ -594,43 +673,52 @@ onUnmounted(() => {
     min-height: 320px;
   }
 
-  .about-timeline-nav {
-    position: static;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    width: auto;
+  .about-contact-card {
     height: auto;
-    margin-bottom: 24px;
+    min-height: 0;
+    padding: 20px;
   }
-
-  .about-timeline-nav::before {
-    display: none;
+  .about-social-links {
+    margin: 0;
   }
-
-  .about-timeline-rail-year {
-    position: static;
-    display: block;
-    width: auto;
-    padding: 10px;
-    border: 1px solid var(--line);
+  .about-social-links :deep(.card-action-link) {
+    min-height: 44px;
+    padding: 14px;
+    font-size: 0.78rem;
+  }
+  .about-timeline-nav {
+    position: sticky;
+    top: var(--mobile-selector-top);
+    z-index: 3;
+    display: flex;
+    align-self: start;
+    gap: 8px;
+    max-width: 100%;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
     background: var(--surface);
-    color: var(--text);
-    font:
-      0.75rem 'DM Mono',
-      monospace;
-    letter-spacing: 0.04em;
-    transform: none;
   }
-
-  .about-timeline-rail-year::before,
-  .about-timeline-rail-year::after {
-    display: none;
+  .about-timeline-rail-year {
+    flex: 0 0 auto;
+    min-width: 70px;
+    min-height: 44px;
+    padding: 12px;
   }
-
-  .about-timeline-rail-year.is-active {
-    border-color: var(--accent);
-    color: var(--accent);
+  .about-timeline-year {
+    scroll-margin-top: 194px;
+  }
+}
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .about-page {
+    padding-left: calc(var(--section-rail-laptop-width) + 48px - 6vw);
+  }
+  .about-profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .about-contact-card {
+    grid-column: span 2;
   }
 }
 </style>
