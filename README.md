@@ -10,6 +10,8 @@ Personal portfolio built with Vue 3, TypeScript, and Vite. Content is maintained
 - Mobile work/project cards fit their content and support 12-second autoplay, arrows, and swipes. Credentials and activities use a shared mobile group selector.
 - Sticky return navigation and responsive section rails. Desktop journey years stay grouped in sticky buttons, alongside the vertical year rail on wide screens. The mobile journey heading stays above its sticky year selector. Section rails shrink at laptop widths and hide at viewport widths of 1200px or below.
 - Responsive WebP images, lazy-loaded project/gallery images, and static PDF thumbnails. The homepage background also uses a generated, content-hashed WebP. Page code and styles load upfront so navigation does not wait for extra bundles. Other pages' images and PDFs are not prefetched.
+- Homepage carousel images start when their section is nearby. Desktop side-card images remain available; on mobile, neighbouring work/project images are prepared after the active image and initial page load finish.
+- Generated media includes tiny inline previews. The optional pre-rendered build sends page content before Vue loads, then attaches the existing interactive controls.
 
 ## Development
 
@@ -30,6 +32,12 @@ npm run preview
 ```
 
 The build regenerates media, runs the Vue/TypeScript check, and produces the static site in `dist/`. Preview serves that production build locally.
+
+To build the combined preview/pre-rendering experiment, use `npm run build:prerender`
+instead of `npm run build`. It renders the homepage, archive/About pages, and known
+experience details from the same Vue components. Upload all contents of `dist/`,
+including the generated HTML pages and `.htaccess`, to Plesk. No Node server is
+needed on the host. `npm run build` retains the client-rendered build for comparison.
 
 For individual checks:
 

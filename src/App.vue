@@ -14,7 +14,7 @@ import achievementData from './data/achievements.json'
 import certificateData from './data/certificates.json'
 import { profile_declaration } from './data/portfolio'
 import projectData from './data/projects.json'
-import { mediaSrc, mediaSrcset } from './utils/mediaAsset'
+import { mediaSrc, mediaSrcset, mediaPreview, mediaPreviewStyle } from './utils/mediaAsset'
 import { primaryHeaderPhoto } from './utils/primaryHeaderPhoto'
 import { sortAlphabetically } from './utils/sortAlphabetically'
 import workExperienceData from './data/work-experience.json'
@@ -23,6 +23,7 @@ import { useActiveSection } from './composables/useActiveSection'
 import { showcaseInterval, useShowcaseCarousel } from './composables/useShowcaseCarousel'
 import MobileGroupToggle from './components/MobileGroupToggle.vue'
 import { logNavigation } from './utils/loadDiagnostics'
+import { useNearbyMedia } from './composables/useNearbyMedia'
 
 const scrollToCurrentHash = () => {
   if (window.location.hash) {
@@ -33,7 +34,8 @@ const scrollToCurrentHash = () => {
 const normalizePathname = (pathname: string) =>
   pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
 
-const currentPath = ref(normalizePathname(window.location.pathname))
+const props = defineProps<{ initialPath?: string }>()
+const currentPath = ref(normalizePathname(props.initialPath ?? window.location.pathname))
 const achievements = sortByNewestDate(achievementData.achievements)
 const certifications = sortByNewestDate(certificateData.certifications)
 const projects = sortByNewestDate(projectData.projects)
@@ -49,10 +51,31 @@ const featuredCertificates = certifications.filter((certificate) => certificate.
 const featuredAchievements = achievements.filter((achievement) => achievement.featured)
 const activeWorkIndex = ref(0)
 const activeProjectIndex = ref(0)
+const workMedia = useNearbyMedia()
+const projectMedia = useNearbyMedia()
+const credentialMedia = useNearbyMedia()
+const workMediaElement = workMedia.element
+const projectMediaElement = projectMedia.element
+const credentialMediaElement = credentialMedia.element
+const workNeighboursReady = ref(false)
+const projectNeighboursReady = ref(false)
+const initialPageReady = ref(typeof document !== 'undefined' && document.readyState === 'complete')
+const markInitialPageReady = () => {
+  initialPageReady.value = true
+}
+const shouldLoadProjectImage = (index: number) =>
+  projectMedia.ready.value &&
+  (!isMobileViewport.value ||
+    index === activeProjectIndex.value ||
+    (projectNeighboursReady.value && initialPageReady.value))
 const activeCertificateIndex = ref(0)
 const activeAchievementIndex = ref(0)
 const activeCredentialGroup = ref('credentials')
-const isMobileViewport = ref(window.matchMedia('(max-width: 760px)').matches)
+const isMobileViewport = ref(
+  typeof window !== 'undefined' &&
+    !document.getElementById('app')?.hasAttribute('data-prerendered') &&
+    window.matchMedia('(max-width: 760px)').matches,
+)
 const certificatePreviousPreparation = ref<number | null>(null)
 const achievementPreviousPreparation = ref<number | null>(null)
 const homeSectionIds = ['intro', 'work-experience', 'projects', 'credentials'] as const
@@ -253,6 +276,7 @@ const handleInternalNavigation = async (event: MouseEvent) => {
 }
 
 onMounted(() => {
+  window.addEventListener('load', markInitialPageReady, { once: true })
   updateCurrentPath()
   updateMobileViewport()
   window.addEventListener('popstate', updateCurrentPath)
@@ -260,6 +284,7 @@ onMounted(() => {
   document.addEventListener('click', handleInternalNavigation)
 })
 onUnmounted(() => {
+  window.removeEventListener('load', markInitialPageReady)
   if (certificateAnimationFrame !== undefined)
     window.cancelAnimationFrame(certificateAnimationFrame)
   if (achievementAnimationFrame !== undefined)
@@ -277,7 +302,10 @@ onUnmounted(() => {
       <section
         id="intro"
         class="intro"
-        :style="{ '--intro-photo': `url('${mediaSrc('/images/eating-ramen.png')}')` }"
+        :style="{
+          '--intro-photo': `url('${mediaSrc('/images/eating-ramen.png')}')`,
+          '--intro-preview': `url('${mediaPreview('/images/eating-ramen.png')}')`,
+        }"
       >
         <div class="intro-text">
           <h1>Greetings, I am Darrel.</h1>
@@ -323,6 +351,7 @@ onUnmounted(() => {
           </div>
           <div
             class="showcase-frame showcase-coverflow work-card-row"
+            ref="workMediaElement"
             @mouseenter="workCarousel.mouseEnter"
             @mouseleave="workCarousel.mouseLeave"
             @focusin="workCarousel.focusIn"
@@ -353,6 +382,17 @@ onUnmounted(() => {
                   class="work-card-image"
                   :media="item.headerPhotos"
                   :title="item.title"
+                  :load-media="
+                    workMedia.ready.value &&
+                    (!isMobileViewport ||
+                      index === activeWorkIndex ||
+                      (workNeighboursReady && initialPageReady))
+                  "
+                  :loading="
+                    isMobileViewport && workNeighboursReady && initialPageReady ? 'eager' : 'lazy'
+                  "
+                  :fetch-priority="index === activeWorkIndex ? 'auto' : 'low'"
+                  @loaded="workNeighboursReady = true"
                 />
                 <div
                   v-else
@@ -417,6 +457,7 @@ onUnmounted(() => {
           </div>
           <div
             class="showcase-frame showcase-coverflow home-feature-row"
+            ref="projectMediaElement"
             @mouseenter="projectCarousel.mouseEnter"
             @mouseleave="projectCarousel.mouseLeave"
             @focusin="projectCarousel.focusIn"
@@ -444,11 +485,27 @@ onUnmounted(() => {
                 <div class="home-project-visual" style="background: #202020">
                   <img
                     class="project-preview-image"
-                    :src="mediaSrc(primaryHeaderPhoto(project.headerPhotos))"
-                    :srcset="mediaSrcset(primaryHeaderPhoto(project.headerPhotos))"
+                    :style="mediaPreviewStyle(primaryHeaderPhoto(project.headerPhotos))"
+                    :src="
+                      shouldLoadProjectImage(index)
+                        ? mediaSrc(primaryHeaderPhoto(project.headerPhotos))
+                        : undefined
+                    "
+                    :srcset="
+                      shouldLoadProjectImage(index)
+                        ? mediaSrcset(primaryHeaderPhoto(project.headerPhotos))
+                        : undefined
+                    "
+                    :data-load-deferred="!shouldLoadProjectImage(index) || undefined"
+                    :fetchpriority="index === activeProjectIndex ? 'auto' : 'low'"
+                    @load="projectNeighboursReady = true"
                     sizes="(max-width: 760px) calc(100vw - 60px), 600px"
                     :alt="`${project.title} preview`"
-                    loading="lazy"
+                    :loading="
+                      isMobileViewport && projectNeighboursReady && initialPageReady
+                        ? 'eager'
+                        : 'lazy'
+                    "
                     decoding="async"
                   />
                 </div>
@@ -498,7 +555,7 @@ onUnmounted(() => {
             </div>
           </div>
           <MobileGroupToggle v-model="activeCredentialGroup" />
-          <div class="credential-showcase-grid">
+          <div class="credential-showcase-grid" ref="credentialMediaElement">
             <div
               class="credential-showcase-panel"
               :class="{ 'mobile-group-hidden': activeCredentialGroup !== 'credentials' }"
@@ -558,6 +615,8 @@ onUnmounted(() => {
                       class="home-certificate-media"
                       :media="certificate.headerPhotos"
                       :title="certificate.name"
+                      :load-media="credentialMedia.ready.value"
+                      :fetch-priority="index === activeCertificateIndex ? 'auto' : 'low'"
                     />
                     <div v-else class="home-certificate-index">
                       <span>{{ certificate.type }}</span
@@ -637,6 +696,8 @@ onUnmounted(() => {
                       class="home-certificate-media"
                       :media="achievement.headerPhotos"
                       :title="achievement.name"
+                      :load-media="credentialMedia.ready.value"
+                      :fetch-priority="index === activeAchievementIndex ? 'auto' : 'low'"
                     />
                     <div v-else class="home-certificate-index">
                       <span>{{ achievement.type }}</span

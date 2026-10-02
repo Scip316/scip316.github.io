@@ -46,7 +46,7 @@ export const startLoadDiagnostics = () => {
       const rect = image.getBoundingClientRect()
       return {
         url: new URL(image.currentSrc || image.src, location.href).pathname,
-        state: image.complete ? (image.naturalWidth ? 'loaded' : 'failed/empty') : 'pending',
+        state: image.dataset.loadDeferred ? 'deferred' : image.complete ? (image.naturalWidth ? 'loaded' : 'failed/empty') : 'pending',
         loading: image.loading || 'eager',
         inViewport: rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth,
         width: image.naturalWidth,

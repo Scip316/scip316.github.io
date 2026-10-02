@@ -81,11 +81,18 @@ for (const source of selected) {
   const [smallImage, largeImage] = await Promise.all(
     names.map((name) => loadImage(resolve(outputDir, name))),
   )
+  const previewScale = 24 / Math.max(smallImage.width, smallImage.height)
+  const preview = createCanvas(
+    Math.max(1, Math.round(smallImage.width * previewScale)),
+    Math.max(1, Math.round(smallImage.height * previewScale)),
+  )
+  preview.getContext('2d').drawImage(smallImage, 0, 0, preview.width, preview.height)
   manifest[source] = {
     smallWidth: smallImage.width,
     largeWidth: largeImage.width,
     small: `/generated-media/${names[0]}`,
     large: `/generated-media/${names[1]}`,
+    preview: `data:image/webp;base64,${(await preview.encode('webp', 35)).toString('base64')}`,
   }
   const sizes = await Promise.all(
     names.map(async (name) => (await readFile(resolve(outputDir, name))).length),

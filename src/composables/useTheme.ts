@@ -1,9 +1,12 @@
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 type Theme = 'light' | 'dark'
-const theme = ref<Theme>(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
+const theme = ref<Theme>('dark')
 
 export const useTheme = () => {
+  onMounted(() => {
+    theme.value = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
+  })
   const toggleTheme = () => {
     theme.value = theme.value === 'dark' ? 'light' : 'dark'
     document.documentElement.dataset.theme = theme.value

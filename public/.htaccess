@@ -1,8 +1,8 @@
 <IfModule mod_headers.c>
-  # Revalidate the entry page so it always references the current build.
-  <Files "index.html">
+  # Revalidate HTML pages so they always reference the current build.
+  <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, max-age=0, must-revalidate"
-  </Files>
+  </FilesMatch>
 
   # Unversioned images may change at the same URL.
   <FilesMatch "\.(?:webp|png|jpe?g|gif|svg|ico)$">
@@ -17,6 +17,10 @@
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Serve generated page content before the shared Vue fallback.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(about|projects|certificates|experience(?:/[^/]+)?)/?$ $1.html [L]
 
   # These are Vue routes that share names with static asset directories.
   RewriteRule ^(projects|certificates|experience|about)/?$ index.html [L]

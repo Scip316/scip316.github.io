@@ -49,7 +49,11 @@ const updateTimelineNodeOffsets = () => {
 const { activeSection: activeAboutSection } = useActiveSection(aboutSectionIds)
 
 const timelineNav = ref<HTMLElement | null>(null)
-const isMobileTimeline = ref(window.matchMedia('(max-width: 760px)').matches)
+const isMobileTimeline = ref(
+  typeof window !== 'undefined' &&
+    !document.getElementById('app')?.hasAttribute('data-prerendered') &&
+    window.matchMedia('(max-width: 760px)').matches,
+)
 const desktopActiveTimelineYear = ref(timeline.value[0]?.year ?? '')
 let timelineObserver: IntersectionObserver | undefined
 

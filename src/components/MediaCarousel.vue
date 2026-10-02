@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { mediaSrc, mediaSrcset } from '../utils/mediaAsset'
+import { mediaSrc, mediaSrcset, mediaPreviewStyle } from '../utils/mediaAsset'
 import { useSwipe } from '../composables/useSwipe'
 
 const props = withDefaults(
@@ -8,9 +8,13 @@ const props = withDefaults(
     media: string[]
     title: string
     pdfLinkLabel?: string
+    loadMedia?: boolean
+    fetchPriority?: 'auto' | 'low'
+    loading?: 'lazy' | 'eager'
   }>(),
-  { pdfLinkLabel: 'Open PDF document' },
+  { pdfLinkLabel: 'Open PDF document', loadMedia: true, fetchPriority: 'auto', loading: 'lazy' },
 )
+const emit = defineEmits<{ loaded: [] }>()
 
 const activeIndex = ref(0)
 const trackIndex = ref(1)
@@ -94,11 +98,15 @@ const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, draggi
       >
         <img
           v-if="!isPdf(item)"
-          :src="mediaSrc(item)"
-          :srcset="mediaSrcset(item)"
+          :style="mediaPreviewStyle(item)"
+          :src="loadMedia ? mediaSrc(item) : undefined"
+          :srcset="loadMedia ? mediaSrcset(item) : undefined"
+          :data-load-deferred="!loadMedia || undefined"
+          :fetchpriority="fetchPriority"
+          @load="emit('loaded')"
           sizes="(max-width: 760px) calc(100vw - 60px), 600px"
           :alt="`${title} image ${index + 1}`"
-          loading="lazy"
+          :loading="loading"
           decoding="async"
         />
         <a
@@ -111,10 +119,14 @@ const { startSwipe, endSwipe, cancelSwipe, handleSwipeClick, mouseEvents, draggi
         >
           <img
             class="pdf-preview-image"
-            :src="mediaSrc(item)"
-            :srcset="mediaSrcset(item)"
+            :style="mediaPreviewStyle(item)"
+            :src="loadMedia ? mediaSrc(item) : undefined"
+            :srcset="loadMedia ? mediaSrcset(item) : undefined"
+            :data-load-deferred="!loadMedia || undefined"
+            :fetchpriority="fetchPriority"
+            @load="emit('loaded')"
             sizes="(max-width: 760px) calc(100vw - 60px), 600px"
-            loading="lazy"
+            :loading="loading"
             @error="unavailablePdfPreviews.add(item)"
             :alt="`${title} PDF preview`"
             decoding="async"

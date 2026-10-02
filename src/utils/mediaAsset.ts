@@ -1,7 +1,25 @@
 import mediaAssets from '../data/media-assets.json'
 
-type MediaAsset = { small: string; large: string; smallWidth: number; largeWidth: number }
+type MediaAsset = {
+  small: string
+  large: string
+  smallWidth: number
+  largeWidth: number
+  preview?: string
+}
 const assets: Record<string, MediaAsset> = mediaAssets
+export const mediaPreview = (source: string) => assets[source]?.preview
+export const mediaPreviewStyle = (source: string) => {
+  const preview = mediaPreview(source)
+  return preview
+    ? {
+        backgroundImage: `url('${preview}')`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }
+    : undefined
+}
 
 export const mediaSrc = (source: string) => {
   const asset = assets[source]
