@@ -3,6 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <script>
+      if (new URLSearchParams(location.search).get('diagnostics') === '1') {
+        const state = (window.__portfolioDiagnostics = { mounted: false, errors: [] })
+        const record = (kind, message) => {
+          const item = { kind, atMs: Math.round(performance.now()), message }
+          if (state.errors.length === 100) state.errors.shift()
+          state.errors.push(item)
+          console.error('[portfolio diagnostics]', item)
+        }
+        window.addEventListener('error', (event) => {
+          const target = event.target
+          if (target instanceof HTMLImageElement || target instanceof HTMLScriptElement || target instanceof HTMLLinkElement) {
+            const url = new URL(target.currentSrc || target.src || target.href, location.href)
+            record('resource failure', url.origin + url.pathname)
+          } else record('runtime error', event.message)
+        }, true)
+        window.addEventListener('unhandledrejection', (event) => {
+          record('unhandled promise rejection', String(event.reason))
+        })
+        setTimeout(() => {
+          if (!state.mounted) console.warn('[portfolio diagnostics] App has not mounted after 10 seconds. Check the JavaScript/CSS requests in Network.', state.errors)
+        }, 10000)
+        console.info('[portfolio diagnostics] Early startup monitoring enabled.')
+      }
+    </script>
+    <script>
       // Apply the saved choice before CSS loads to avoid a theme flash.
       try {
         const theme = localStorage.getItem('portfolio-theme')

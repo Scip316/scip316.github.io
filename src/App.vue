@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref } from 'vue'
-import type { AsyncComponentLoader } from 'vue'
-import PageLoadStatus from './components/PageLoadStatus.vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import AboutView from './views/AboutView.vue'
+import CertificateListView from './views/CertificateListView.vue'
+import ProjectListView from './views/ProjectListView.vue'
+import WorkExperienceDetailView from './views/WorkExperienceDetailView.vue'
+import WorkExperienceListView from './views/WorkExperienceListView.vue'
 import CardActionLink from './components/CardActionLink.vue'
 import SectionRail from './components/SectionRail.vue'
 import MediaCarousel from './components/MediaCarousel.vue'
@@ -19,19 +22,8 @@ import { sortByNewestDate } from './utils/sortByNewestDate'
 import { useActiveSection } from './composables/useActiveSection'
 import { showcaseInterval, useShowcaseCarousel } from './composables/useShowcaseCarousel'
 import MobileGroupToggle from './components/MobileGroupToggle.vue'
+import { logNavigation } from './utils/loadDiagnostics'
 
-const loadPage = (loader: AsyncComponentLoader) =>
-  defineAsyncComponent({
-    loader,
-    loadingComponent: PageLoadStatus,
-    errorComponent: PageLoadStatus,
-    delay: 120,
-  })
-const AboutView = loadPage(() => import('./views/AboutView.vue'))
-const CertificateListView = loadPage(() => import('./views/CertificateListView.vue'))
-const ProjectListView = loadPage(() => import('./views/ProjectListView.vue'))
-const WorkExperienceDetailView = loadPage(() => import('./views/WorkExperienceDetailView.vue'))
-const WorkExperienceListView = loadPage(() => import('./views/WorkExperienceListView.vue'))
 const scrollToCurrentHash = () => {
   if (window.location.hash) {
     document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView()
@@ -190,7 +182,9 @@ const updateMobileViewport = () => {
 }
 
 const updateCurrentPath = () => {
+  const started = window.__portfolioDiagnostics ? performance.now() : 0
   const normalizedPath = normalizePathname(window.location.pathname)
+  const changed = currentPath.value !== normalizedPath
   if (normalizedPath !== window.location.pathname) {
     window.history.replaceState(
       {},
@@ -199,6 +193,7 @@ const updateCurrentPath = () => {
     )
   }
   currentPath.value = normalizedPath
+  if (changed && window.__portfolioDiagnostics) void nextTick(() => logNavigation(started))
 }
 
 const updateHomeRailPosition = () => {
@@ -279,7 +274,11 @@ onUnmounted(() => {
   <div v-if="currentPath === '/'" :style="{ '--showcase-slide-duration': `${showcaseInterval}ms` }">
     <SiteHeader home />
     <main>
-      <section id="intro" class="intro">
+      <section
+        id="intro"
+        class="intro"
+        :style="{ '--intro-photo': `url('${mediaSrc('/images/eating-ramen.png')}')` }"
+      >
         <div class="intro-text">
           <h1>Greetings, I am Darrel.</h1>
           <p class="current-role">{{ profile_declaration.role }}</p>

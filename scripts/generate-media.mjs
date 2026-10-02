@@ -13,6 +13,8 @@ const outputDir = resolve(
 )
 await mkdir(outputDir, { recursive: true })
 const sources = new Set()
+const heroSource = '/images/eating-ramen.png'
+sources.add(heroSource)
 const collect = (value) => {
   if (typeof value === 'string' && /^\/.+\.(png|jpe?g|pdf)$/i.test(value)) sources.add(value)
   else if (Array.isArray(value)) value.forEach(collect)
@@ -39,9 +41,10 @@ for (const source of selected) {
   if (relative(publicDir, file).startsWith('..')) throw new Error(`Invalid media path: ${source}`)
   const data = await readFile(file)
   const pdf = extname(file).toLowerCase() === '.pdf'
+  const quality = source === heroSource ? 75 : 85
   const hash = createHash('sha256')
     .update(data)
-    .update('webp-v1-q85-640-1280-pdf1000')
+    .update(`webp-v1-q${quality}-640-1280-pdf1000`)
     .digest('hex')
     .slice(0, 16)
   const stem = basename(file, extname(file))
@@ -69,7 +72,7 @@ for (const source of selected) {
           Math.round(image.height * scale),
         )
         canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height)
-        await writeFile(resolve(outputDir, names[index]), await canvas.encode('webp', 85))
+        await writeFile(resolve(outputDir, names[index]), await canvas.encode('webp', quality))
       }
     } finally {
       await task?.destroy()

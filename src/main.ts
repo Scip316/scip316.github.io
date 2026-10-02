@@ -9,5 +9,12 @@ import './assets/experience-pages-layout.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import { markAppMounted, recordVueError, startLoadDiagnostics } from './utils/loadDiagnostics'
 
-createApp(App).mount('#app')
+startLoadDiagnostics()
+const app = createApp(App)
+if (window.__portfolioDiagnostics) {
+  app.config.errorHandler = (error, _instance, info) => recordVueError(error, info)
+}
+app.mount('#app')
+markAppMounted()

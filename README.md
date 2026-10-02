@@ -9,7 +9,7 @@ Personal portfolio built with Vue 3, TypeScript, and Vite. Content is maintained
 - Carousel arrows, touch swipes, and mouse dragging. Autoplay uses a 12-second interval and pauses during interaction or when the page is hidden. Featured carousel transitions and autoplay remain enabled regardless of the OS animation setting.
 - Mobile work/project cards fit their content and support 12-second autoplay, arrows, and swipes. Credentials and activities use a shared mobile group selector.
 - Sticky return navigation and responsive section rails. Desktop journey years stay grouped in sticky buttons, alongside the vertical year rail on wide screens. The mobile journey heading stays above its sticky year selector. Section rails shrink at laptop widths and hide at viewport widths of 1200px or below.
-- Responsive WebP images, lazy-loaded project/gallery images, static PDF thumbnails, and secondary pages loaded on demand.
+- Responsive WebP images, lazy-loaded project/gallery images, and static PDF thumbnails. The homepage background also uses a generated, content-hashed WebP. Page code and styles load upfront so navigation does not wait for extra bundles. Other pages' images and PDFs are not prefetched.
 
 ## Development
 
@@ -37,6 +37,16 @@ For individual checks:
 npm run type-check
 npm run media
 ```
+
+## Loading diagnostics
+
+To investigate loading, open the site with `?diagnostics=1` and the browser Console.
+Diagnostics log startup, resource/runtime failures, slow assets, page-render timings,
+paint and supported long-task timings. Run `window.__portfolioDiagnostics.report()`
+for a fresh report, or `copy(JSON.stringify(window.__portfolioDiagnostics.report(), null, 2))`
+in Chrome DevTools to copy it. Pending lazy images are not necessarily failures;
+cross-origin timing may be restricted. Logging is disabled without the query flag.
+Use Network with an empty browser cache to compare fresh and cached visits.
 
 ## Content and media
 
