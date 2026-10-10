@@ -440,6 +440,14 @@
     grid-template-columns: 1fr;
   }
 
+  .credential-showcase-heading .showcase-controls {
+    flex-shrink: 0;
+  }
+
+  .credential-showcase-heading .showcase-controls > span {
+    white-space: nowrap;
+  }
+
   .credential-showcase .showcase-coverflow-stage {
     min-height: 520px;
   }
@@ -556,6 +564,29 @@
 .credential-showcase .home-certificate-body > p:not(.card-label) {
   font-size: 0.92rem;
   line-height: 1.55;
+}
+@media (max-width: 760px) {
+  .home-feature-body h3,
+  .credential-showcase .home-certificate-body h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .home-feature-body .card-label,
+  .home-certificate-body .card-label {
+    font-size: var(--label-size);
+  }
+
+  .credential-showcase .home-certificate-body > p:not(.card-label) {
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .credential-showcase .home-certificate-body > p.home-certificate-issuer {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 }
 @media (max-width: 760px) {
   .showcase-coverflow .work-card .work-card-image {

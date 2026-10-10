@@ -80,8 +80,15 @@
     padding: 18px;
   }
 
+  .work-card-body h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
   .workplace {
     margin-bottom: 12px;
+    font-weight: 500;
   }
 
   .work-card-body ul {

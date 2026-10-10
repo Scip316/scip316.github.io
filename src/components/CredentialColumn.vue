@@ -143,6 +143,23 @@ defineProps<{
     height: auto;
     min-height: 190px;
   }
+
+  .credential-card-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .credential-card-content .credential-card-issuer {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .credential-card-content .credential-card-description {
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
 }
 @media (max-width: 1600px) and (min-width: 761px) {
   .credential-list {
