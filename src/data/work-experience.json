@@ -1,0 +1,186 @@
+{
+  "experiences": [
+    {
+      "id": "DevOps Engineer",
+      "title": "DevOps Engineer",
+      "workplace": "NCS/IRAS",
+      "startDate": "2024 Mar",
+      "endDate": "2025 Feb",
+      "period": "2024 Mar - 2025 Feb",
+      "headerPhotos": ["/work_experiences/IRAS.jpg"],
+      "skills": [
+        "YAML",
+        "Azure DevOps",
+        "Azure Key Vault",
+        "Azure Kubernetes Service (AKS)",
+        "Helm",
+        "Kubernetes",
+        "kubectl",
+        "Pods",
+        "Build Agents (Windows & Linux)",
+        "Image Hardening",
+        "Terraform",
+        "Kusto Query",
+        "PowerShell",
+        "Bash",
+        "SonarQube",
+        "Mend"
+      ],
+      "summary": "Worked as a DevSecOps (DSO) Engineer on IRAS's IRIN3 project. Assisted with developing and maintaining application pipelines, troubleshooting pods in AKS, and supporting the application team through the helpdesk.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "During my fruitful time as a DevSecOps (DSO) Engineer, I assisted in maintaining and updating pipelines while also supporting queries from the Application team. During this time, I helped with three crucial CI/CD pipelines, where I worked closely with my DSO team and the Application team as they underwent a major data migration in Azure Data Factory."
+          ]
+        },
+        {
+          "title": "Pipeline delivery and migration",
+          "content": [
+            "I supported the updating and testing of the pipelines to ensure that their code was successfully deployed to the various environments: **DEV, SIT, UAT, ORT, and PROD**. In addition, I also helped to promote one of the pipelines from **GCC1 (Government on Commercial Cloud 1) to GCC2 (Government on Commercial Cloud 2)**.",
+            "Besides supporting the major pipeline projects, I helped to fine-tune the pipelines' performance by utilising **Kusto Query** to analyse build agent health details from the AKS logs, as well as **Azure Command-Line Interface (CLI)** and **kubectl** to monitor pods in real time and troubleshoot errors. I even went as far as creating my own script to automatically collect pod health logs.",
+            "In addition, I conducted research on third-party tools such as **Lighthouse** to determine their applicability to the project."
+          ]
+        },
+        {
+          "title": "Pipeline and build-agent troubleshooting",
+          "content": [
+            "Riding on the work I did with the pod health logs, I also helped my team monitor the overall health of our build agents and AKS clusters. Sometimes, the Application team would send a query through the helpdesk asking why their pipeline had failed.",
+            "To understand the issue, I would first identify which stage of the pipeline had failed and check the console logs for more information. Normally, if the failure occurred during the **NPM test**, it meant that their application did not pass the build test.",
+            "If the failure occurred at **SonarQube, Fortify, or Mend**, it meant that their code did not meet IRAS standards or had identified code smells. If this was the case, I would screenshot the reason for the failure and send it back to the developers.",
+            "Otherwise, we would dive deeper into the issue by obtaining the build agent name, examining the console logs from **Azure Kubernetes Service (AKS)**, and checking whether the pod still existed. If it did, I would use **kubectl** to access the pod and gather more detailed information for troubleshooting. Sometimes, I would also consult my team when fine-tuning the build agent configuration in the **Helm file**."
+          ]
+        },
+        {
+          "title": "Network infrastructure",
+          "content": [
+            "Outside of the pipeline and AKS work, I assisted my supervisor in documenting our network infrastructure, particularly the connections between the different DSO infrastructure components."
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "Overall, I really enjoyed working there. It was probably the best internship experience I could have asked for. To this day, I still miss the company of my co-workers and our discussions about how to tackle different tasks and challenges.",
+            "Being a DSO Engineer exposed me to many different **Azure services** and gave me a much better understanding of how they are used in a real working environment. More importantly, the experience deepened my interest in **cloud technology and automation**."
+          ]
+        }
+      ],
+      "endorsements": [
+        {
+          "name": "Test1",
+          "quote": "Optional endorsement or testimonial quote.",
+          "role": "Endorser role and organisation"
+        },
+        {
+          "name": "Test2",
+          "quote": "Optional endorsement or testimonial quote.",
+          "role": "Endorser role and organisation"
+        }
+      ],
+      "detailPageSlug": "DevOps_Engineer",
+      "featured": true
+    },
+    {
+      "id": "Junior Application Developer",
+      "title": "Junior Application Developer",
+      "workplace": "DBS Asia Hub",
+      "startDate": "2025-04",
+      "endDate": "2025-07",
+      "period": "Apr 2025 — Jul 2025",
+      "headerPhotos": ["/work_experiences/DBS.png"],
+      "skills": ["Angular", "JavaScript", "HTML", "CSS", "Spring Boot", "MySQL"],
+      "summary": "Assisted in developing several widgets for a new web application feature. Worked with Spring Boot to handle payloads and connect to the database. Coordinated with my team to ensure that our tasks stayed on track and were completed on time.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "My time as a Junior Application Developer at DBS was short but meaningful. I worked with other peers to develop a new component for a web application, kept track of tasks, and liaised with my overseas team on queries that arose."
+          ]
+        },
+        {
+          "title": "Widget Development",
+          "content": [
+            "I worked with two other peers to integrate a scanner function into a web application built with Angular and Spring Boot. I was responsible for connecting the FI scanner to the frontend controls and Spring Boot backend, configuring its parameters, and ensuring payloads were sent correctly. My peers handled the frontend, backend, and SQL database development. We worked closely to complete our tasks on time and ensure the application functioned correctly."
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "Although my time at DBS was short, I learnt a great deal about web application development through my first full-stack project. I’m very grateful for the mentorship and support I received from my team and fellow interns. Without their guidance, the project would likely have faced many more blockers. I’m thankful for the experience, knowledge, and practical skills I gained during this role."
+          ]
+        }
+      ],
+      "detailPageSlug": "Junior_Application_Developer",
+      "featured": true
+    },
+    {
+      "id": "National Service Full-Time (NSF)",
+      "title": "Admin Support Data Scientist",
+      "workplace": "MINDEF | MINDEF Annex",
+      "startDate": "2025-08",
+      "endDate": null,
+      "period": "Aug 2025 — Present",
+      "headerPhotos": ["/work_experiences/G1_ARMY.jpg"],
+      "skills": [
+        "Excel",
+        "VBA",
+        "Power BI",
+        "Power Apps",
+        "M365 Planner",
+        "React",
+        "Node.js",
+        "pandas",
+        "Matplotlib",
+        "Seaborn",
+        "Data Cleaning",
+        "Data Analysis",
+        "Data Visualization",
+        "Data Modelling",
+        "XGBoost",
+        "K-Means Clustering"
+      ],
+      "summary": "Posted to G1-Army as an Admin Support Assistant (ASA), where I track data and support ad hoc requests. I work with a wide range of datasets for analysis and visualisation, collaborate with other NSFs on group projects, and guide them in using datasets to support their tasks.",
+      "longDescription": [
+        {
+          "title": "Overview",
+          "content": [
+            "Two years of National Service — some people dread it, while others see it as a waste of time. For me, if I am spending two years of my life here, I want them to be meaningful. As a PES E1, my vocation options were limited, and I was ultimately assigned as an Admin Support Assistant (ASA). Whether it was luck or fate, I ended up in G1-Army’s People and Analytics section, where my technical skills were put to the test every day.\n\nDuring my time here, I have created multiple scripts using Excel VBA and Python, built visualisations and dashboards in Power BI, and worked on data collection, analysis, exploration, and modelling for the Army."
+          ]
+        },
+        {
+          "title": "Attrition tracking",
+          "content": [
+            "One of my key jobs is to help the SAF track attrition across the board. I assisted in refining the methodology and criteria for attrition, and updated our existing dataset based on the revised criteria. Since attrition tracking is done every month, I developed a Python script that takes in a bunch of inputs and helps populate the attrition timeline across the months. I also worked with other departments to narrow down the granularity of the different attrition types."
+          ]
+        },
+        {
+          "title": "Role Recommendation Algorithm",
+          "content": [
+            "Together with another NSF, Aarron Loke, I worked on a major project that recommends roles a person may be suitable for based on multiple criteria and considerations. The algorithm uses both hard and soft rules, with different weightages assigned to the soft criteria based on their importance. We also worked closely with several HR departments, who were keen to support and contribute to the development of the model."
+          ]
+        },
+        {
+          "title": "Ad Hoc Work",
+          "content": [
+            "Some of my routine work includes processing large volumes of data and updating our current datasets with new information. I also receive ad hoc requests to look into a specific target audience, where I identify the required data, collect and clean it, and submit the results. Sometimes, I am also asked to provide insights or identify correlations between different fields. These requests usually require additional time for data collection, analysis, and visualisation."
+          ]
+        },
+        {
+          "title": "Conclusion",
+          "content": [
+            "As of this moment, my time in G1-Army has strengthened my ability to work with data, communicate my findings clearly, and support a wide range of operational requests. I am grateful for the guidance and support from my fellow NSFs and the wider team, who have helped me grow along the way and made my National Service a meaningful one."
+          ]
+        }
+      ],
+      "endorsements": [
+        {
+          "quote": "TBC.",
+          "name": "TBC",
+          "role": "TBC"
+        }
+      ],
+      "detailPageSlug": "experience-03",
+      "featured": true
+    }
+  ]
+}

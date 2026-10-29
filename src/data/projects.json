@@ -1,0 +1,94 @@
+{
+  "projects": [
+    {
+      "id": "lunch-box",
+      "title": "Lunch Box",
+      "year": "2024",
+      "category": "RP Graded Assignment",
+      "featured": true,
+      "summary": "A team-based graded Java console application for managing lunch-box orders. It supports role-based accounts for customers, vendors, and administrators; menu and item management; ordering and payments; school and vendor records; and inventory data stored in a MySQL/MariaDB database.",
+      "technologies": [
+        "Java",
+        "MySQL / MariaDB",
+        "JDBC",
+        "JUnit",
+        "Apache Ant",
+        "JavaFX",
+        "Team project"
+      ],
+      "headerPhotos": ["/projects/Lunch_Box.jpg"],
+      "links": [
+        {
+          "title": "GitHub",
+          "url": "https://github.com/Scip316/C206_Lunch_Box_GA"
+        }
+      ]
+    },
+    {
+      "id": "AI-Gen Image Community Event",
+      "title": "AI-Gen Image Community Event",
+      "year": "2026",
+      "category": "Garena AI Build Challenge 2026 · Hackathon",
+      "featured": true,
+      "summary": "Created for the Garena Hackathon: Digitalised Entertainment. Team name: 'Cooked'. Our product brings the community together to create an AI-generated emote for the event, with participants split into teams that each control a different part of the emote. This project made it on the featured teams list",
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Redux Toolkit",
+        "TanStack Query",
+        "Python",
+        "FastAPI",
+        "SQLAlchemy",
+        "Alembic",
+        "SQLite",
+        "WebSockets",
+        "REST APIs",
+        "Ollama",
+        "ComfyUI",
+        "Qwen Image Edit",
+        "Sentence Transformers",
+        "scikit-learn",
+        "NumPy",
+        "Pillow",
+        "Docker",
+        "Docker Compose",
+        "Nginx",
+        "Team project"
+      ],
+      "headerPhotos": ["/projects/Garena_AI.png"],
+      "links": [
+        {
+          "title": "GitHub",
+          "url": "https://github.com/Scip316/Garena-AI-Build-2026"
+        },
+        {
+          "title": "Featured Teams",
+          "url": "https://aibuildchallenge.garena.sg/featured-teams.html#:~:text=Ruba%20Sulaiman-,Cooked,-A%20live%20esports"
+        }
+      ]
+    },
+    {
+      "id": "Telegram Reminder Bot",
+      "title": "Telegram Reminder Bot (WIP)",
+      "year": "2026",
+      "category": "Telegram Bot",
+      "featured": true,
+      "summary": "A Telegram bot that lets users set reminders and sends messages at the scheduled time. It also includes a built-in snooze feature and syncs with Google Calendar.",
+      "technologies": [
+        "Python",
+        "python-telegram-bot",
+        "SQLite",
+        "Asyncio",
+        "Google Calendar API",
+        "Google OAuth 2.0",
+        "PyYAML",
+        "python-dotenv",
+        "Inline Keyboards",
+        "Background Scheduling"
+      ],
+      "headerPhotos": ["/projects/tele_retain.png"],
+      "links": []
+    }
+  ]
+}

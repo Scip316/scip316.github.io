@@ -1,0 +1,151 @@
+{
+  "profilePhoto": "/work_experiences/IRAS.jpg",
+  "details": [
+    { "label": "Name", "value": "Darrel Lim" },
+    { "label": "Current role", "value": "NSF (National Service Full-Time)" },
+    { "label": "Based in", "value": "Singapore" }
+  ],
+  "introduction": {
+    "title": "A little about me",
+    "body": [
+      "Hi there, I’m Darrel. My main career interests lie in cloud technology and automation. However, I am also open to learning IT skills from other sectors. I’m curious about the healthcare and psychology sectors and open to exploring opportunities in those fields. Outside of work, I spend my free time with friends and family, playing games, and trying new activities. My goal is to become a project manager in the future or mentor the next generation, as I enjoy helping and teaching others.",
+
+      "After completing my National Service, I will pursue a Bachelor of Science in Information Systems at Singapore Management University, building on my Diploma in Information Technology from Republic Polytechnic."
+    ]
+  },
+  "timeline": [
+    {
+      "year": "2025",
+      "entries": [
+        {
+          "title": "Graduated from Republic Polytechnic",
+          "date": "2025 Jul",
+          "body": [
+            "Completed my Diploma in Information Technology with Merit, where I built a foundation in software development, Cisco networking, and cloud technology."
+          ]
+        },
+        {
+          "title": "DBS Asia Hub — Junior Application Developer",
+          "date": "2025 Apr",
+          "body": [
+            "Worked with two other interns to integrate a scanner feature into a web application built with Angular and Spring Boot.",
+            "I was responsible for configuring the scanner, connecting it to the frontend controls, and ensuring payloads reached the backend correctly."
+          ]
+        },
+        {
+          "title": "Singapore Armed Forces — Admin Support Assistant",
+          "date": "2025 Aug",
+          "body": [
+            "Began National Service as an NSF ASA in G1-Army, supporting data-related tasks, attrition tracking, team projects and ad-hoc requests."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2024",
+      "entries": [
+        {
+          "title": "NCS / IRAS — DevOps Engineer",
+          "date": "2024 Mar",
+          "body": [
+            "Joined the IRIN3 project as a DevSecOps Engineer, supporting CI/CD pipelines, Azure services, AKS operations, and application-team queries.",
+            "The role strengthened my interest in cloud technology, automation, and how engineering teams deliver software in real working environments."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2022",
+      "entries": [
+        {
+          "title": "Enrolled into Republic Polytechnic",
+          "date": "2022 Apr",
+          "body": [
+            "Enrolled in Republic Polytechnic, pursuing a Diploma in Information Technology."
+          ]
+        },
+        {
+          "title": "Graduated from St. Patrick's Secondary School",
+          "date": "2022 Jan",
+          "body": [
+            "Graduated from St. Patrick’s Secondary School after completing my O Level examinations."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2021",
+      "entries": [
+        {
+          "title": "Infocomm Club CCA Vice-Chairman",
+          "date": "2021 May",
+          "body": [
+            "Stepped up as an EXCO member, taking on the role of Vice Chairman. Assisted in setting up and managing the school’s AV control room, including projectors and microphones, monitoring sound levels and audio channels, and managing stage lighting. Also supported the backstage crew with event setups and helped nurture and guide my juniors."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2019",
+      "entries": [
+        {
+          "title": "Promoted to Express Stream",
+          "date": "2019 Jan",
+          "body": ["Promoted from the Normal Academic Stream to the Express Stream."]
+        },
+        {
+          "title": "Joined the Student Council Peer Leader Track",
+          "date": "2019 Jan",
+          "body": [
+            "Specialised in the Student Council's Peer Leader track, where I supported my peers."
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2018",
+      "entries": [
+        {
+          "title": "Enrolled at St. Patrick's Secondary School",
+          "date": "2018 Jan",
+          "body": ["Enrolled at St. Patrick's Secondary School in the Normal Academic Stream."]
+        },
+        {
+          "title": "Became a Student Leader",
+          "date": "2018 Sep",
+          "body": ["Volunteered to be a student leader and passed the interview process."]
+        }
+      ]
+    },
+    {
+      "year": "2017",
+      "entries": [
+        {
+          "title": "Graduated from SJIJ (St. Joseph's Institution Junior)",
+          "date": "2017 Dec",
+          "body": ["Completed PSLE."]
+        }
+      ]
+    },
+    {
+      "year": "2016",
+      "entries": [
+        {
+          "title": "Joined Floorball CCA",
+          "date": "2015 Jan",
+          "body": ["Left the Infocomm Club and joined the Floorball CCA."]
+        }
+      ]
+    },
+    {
+      "year": "2013",
+      "entries": [
+        {
+          "title": "Joined the Infocomm Club CCA",
+          "date": "2015 Jan",
+          "body": ["Joined the Infocomm Club."]
+        }
+      ]
+    }
+  ]
+}

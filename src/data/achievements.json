@@ -1,0 +1,42 @@
+{
+  "achievements": [
+    {
+      "name": "Director's Roll of Honour — [Y1S2, Y2S1, Y2S2, Y3S1]",
+      "issuer": "Republic Polytechnic",
+      "date": "2023-04 - 2024-09",
+      "displayDate": "Apr 2023 - Sep 2024",
+      "type": "Academic honour",
+      "description": "Awarded across four semesters for reaching top 10% in my diploma cohort.",
+      "headerPhotos": [
+        "/achievements/2022_2_DRH.pdf",
+        "/achievements/2023_1_DRH.pdf",
+        "/achievements/2023_2_DRH.pdf",
+        "/achievements/2024_1_DRH.pdf"
+      ],
+      "featured": true
+    },
+    {
+      "name": "Lag & Crash 3.0",
+      "issuer": "Polytechnic Cybersecurity Interest Groups",
+      "date": "2023-04",
+      "displayDate": "Apr 2023",
+      "type": "Competition Participation",
+      "description": "Participated in the Lag & Crash 3.0 CTF competition and achieved a top-25 team ranking.",
+      "headerPhotos": [
+        "/achievements/lag-and-crash-3.0-photo.png",
+        "/achievements/lag-and-crash-3.0-certificate.pdf"
+      ],
+      "featured": true
+    },
+    {
+      "name": "Hackathon 2022 Safe in the Woods",
+      "issuer": "Sembawang GRC",
+      "date": "2022-09",
+      "displayDate": "Sep 2022",
+      "type": "Competition participation",
+      "description": "Participated in the Sembawang GRC Dementia Hackathon 2022: Safe in the Woods. Reached the top six and presented to the GRC judges.",
+      "headerPhotos": ["/achievements/Hackathon 2022 Safe in the Woods.pdf"],
+      "featured": false
+    }
+  ]
+}

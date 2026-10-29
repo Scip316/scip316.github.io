@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      if (new URLSearchParams(location.search).get('diagnostics') === '1') {
+        const state = (window.__portfolioDiagnostics = { mounted: false, errors: [] })
+        const record = (kind, message) => {
+          const item = { kind, atMs: Math.round(performance.now()), message }
+          if (state.errors.length === 100) state.errors.shift()
+          state.errors.push(item)
+          console.error('[portfolio diagnostics]', item)
+        }
+        window.addEventListener('error', (event) => {
+          const target = event.target
+          if (target instanceof HTMLImageElement || target instanceof HTMLScriptElement || target instanceof HTMLLinkElement) {
+            const url = new URL(target.currentSrc || target.src || target.href, location.href)
+            record('resource failure', url.origin + url.pathname)
+          } else record('runtime error', event.message)
+        }, true)
+        window.addEventListener('unhandledrejection', (event) => {
+          record('unhandled promise rejection', String(event.reason))
+        })
+        setTimeout(() => {
+          if (!state.mounted) console.warn('[portfolio diagnostics] App has not mounted after 10 seconds. Check the JavaScript/CSS requests in Network.', state.errors)
+        }, 10000)
+        console.info('[portfolio diagnostics] Early startup monitoring enabled.')
+      }
+    </script>
+    <script>
+      // Apply the saved choice before CSS loads to avoid a theme flash.
+      try {
+        const theme = localStorage.getItem('portfolio-theme')
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
+      } catch (error) {
+        console.warn('Unable to read the portfolio theme preference.', error)
+      }
+    </script>
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+    />
+    <meta name="description" content="The portfolio of Darrel Lim — Cloud enthusiast." />
+    <title>Darrel Lim — Portfolio</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
